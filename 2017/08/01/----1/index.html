@@ -8,20 +8,20 @@
   <link rel="dns-prefetch" href="http://www.forwardlee.com">
   <title>Laravel 5.x进阶笔记（一） | 不忘初心</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Laravel 5.x进阶笔记（一）默认条件MacOS，&amp;gt;=PHP5.4，翻墙环境（默认创建的项目会请求*.google.com）懂得PHP基础知识和MVC的基本架构，开发环境已经安装Laravel所需的命令环境。 配置composer中国镜像，使得本地开发环境下载依赖速度更快。1composer config -g repo.packagist composer https://packa">
+  <meta name="description" content="默认条件MacOS，&amp;gt;=PHP5.4，翻墙环境（默认创建的项目会请求*.google.com）懂得PHP基础知识和MVC的基本架构，开发环境已经安装Laravel所需的命令环境。 配置composer中国镜像，使得本地开发环境下载依赖速度更快。1composer config -g repo.packagist composer https://packagist.phpcomposer.c">
 <meta name="keywords" content="PHP，Laravel5">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Laravel 5.x进阶笔记（一）">
 <meta property="og:url" content="http://www.forwardlee.com/2017/08/01/----1/index.html">
 <meta property="og:site_name" content="不忘初心">
-<meta property="og:description" content="Laravel 5.x进阶笔记（一）默认条件MacOS，&amp;gt;=PHP5.4，翻墙环境（默认创建的项目会请求*.google.com）懂得PHP基础知识和MVC的基本架构，开发环境已经安装Laravel所需的命令环境。 配置composer中国镜像，使得本地开发环境下载依赖速度更快。1composer config -g repo.packagist composer https://packa">
+<meta property="og:description" content="默认条件MacOS，&amp;gt;=PHP5.4，翻墙环境（默认创建的项目会请求*.google.com）懂得PHP基础知识和MVC的基本架构，开发环境已经安装Laravel所需的命令环境。 配置composer中国镜像，使得本地开发环境下载依赖速度更快。1composer config -g repo.packagist composer https://packagist.phpcomposer.c">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://www.forwardlee.com/2017/08/01/----1/images/15011226008351.jpg">
 <meta property="og:image" content="http://www.forwardlee.com/2017/08/01/----1/images/15011235293792.jpg">
-<meta property="og:updated_time" content="2017-08-01T06:56:00.000Z">
+<meta property="og:updated_time" content="2017-08-01T06:57:15.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Laravel 5.x进阶笔记（一）">
-<meta name="twitter:description" content="Laravel 5.x进阶笔记（一）默认条件MacOS，&amp;gt;=PHP5.4，翻墙环境（默认创建的项目会请求*.google.com）懂得PHP基础知识和MVC的基本架构，开发环境已经安装Laravel所需的命令环境。 配置composer中国镜像，使得本地开发环境下载依赖速度更快。1composer config -g repo.packagist composer https://packa">
+<meta name="twitter:description" content="默认条件MacOS，&amp;gt;=PHP5.4，翻墙环境（默认创建的项目会请求*.google.com）懂得PHP基础知识和MVC的基本架构，开发环境已经安装Laravel所需的命令环境。 配置composer中国镜像，使得本地开发环境下载依赖速度更快。1composer config -g repo.packagist composer https://packagist.phpcomposer.c">
 <meta name="twitter:image" content="http://www.forwardlee.com/2017/08/01/----1/images/15011226008351.jpg">
   
     <link rel="alternative" href="/atom.xml" title="不忘初心" type="application/atom+xml">
@@ -190,7 +190,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="Laravel-5-x进阶笔记（一）"><a href="#Laravel-5-x进阶笔记（一）" class="headerlink" title="Laravel 5.x进阶笔记（一）"></a>Laravel 5.x进阶笔记（一）</h1><h2 id="默认条件"><a href="#默认条件" class="headerlink" title="默认条件"></a>默认条件</h2><p>MacOS，&gt;=PHP5.4，翻墙环境（默认创建的项目会请求*.google.com）<br>懂得PHP基础知识和MVC的基本架构，开发环境已经安装Laravel所需的命令环境。</p>
+        <h2 id="默认条件"><a href="#默认条件" class="headerlink" title="默认条件"></a>默认条件</h2><p>MacOS，&gt;=PHP5.4，翻墙环境（默认创建的项目会请求*.google.com）<br>懂得PHP基础知识和MVC的基本架构，开发环境已经安装Laravel所需的命令环境。</p>
 <h2 id="配置composer中国镜像，使得本地开发环境下载依赖速度更快。"><a href="#配置composer中国镜像，使得本地开发环境下载依赖速度更快。" class="headerlink" title="配置composer中国镜像，使得本地开发环境下载依赖速度更快。"></a>配置composer中国镜像，使得本地开发环境下载依赖速度更快。</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">composer config -g repo.packagist composer https://packagist.phpcomposer.com</div></pre></td></tr></table></figure>
 <h2 id="创建Laravel项目"><a href="#创建Laravel项目" class="headerlink" title="创建Laravel项目"></a>创建Laravel项目</h2><p>进入项目的工作空间目录</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cd ~/workspace</div></pre></td></tr></table></figure>
@@ -341,11 +341,15 @@
   
 <nav id="article-nav">
   
-  
-    <a href="/2017/08/01/---/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">Laravel 5.x进阶笔记（二）</div>
-      <i class="icon-circle-right"></i>
+    <a href="/2017/08/01/---/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          Laravel 5.x进阶笔记（二）
+        
+      </div>
     </a>
+  
   
 </nav>
 
@@ -467,11 +471,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">PHP，Laravel5</a>
+                <a href="javascript:void(0)" class="js-tag color3">PHP,Laravel5</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">PHP,Laravel5</a>
+                <a href="javascript:void(0)" class="js-tag color3">PHP，Laravel5</a>
               </li>
             
             <div class="clearfix"></div>
