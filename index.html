@@ -167,19 +167,19 @@
           <div id="js-content" class="content-ll">
             
   
-    <article id="post----" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-----1" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2017/08/01/---/">Laravel 5.x进阶笔记（一）</a>
+      <a class="article-title" href="/2017/08/01/----1/">Laravel 5.x进阶笔记（一）</a>
     </h1>
   
 
         
-        <a href="/2017/08/01/---/" class="archive-article-date">
+        <a href="/2017/08/01/----1/" class="archive-article-date">
   	<time datetime="2017-08-01T06:42:53.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-08-01</time>
 </a>
         
@@ -187,30 +187,26 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="Laravel-5-x进阶笔记（一）"><a href="#Laravel-5-x进阶笔记（一）" class="headerlink" title="Laravel 5.x进阶笔记（一）"></a>Laravel 5.x进阶笔记（一）</h1><p>##默认条件<br>MacOS，&gt;=PHP5.4，翻墙环境（默认创建的项目会请求*.google.com）<br>懂得PHP基础知识和MVC的基本架构，开发环境已经安装Laravel所需的命令环境。</p>
-<p>##配置composer中国镜像，使得本地开发环境下载依赖速度更快。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">composer config -g repo.packagist composer https://packagist.phpcomposer.com</div></pre></td></tr></table></figure>
-<p>##创建Laravel项目<br>进入项目的工作空间目录</p>
+        <h1 id="Laravel-5-x进阶笔记（一）"><a href="#Laravel-5-x进阶笔记（一）" class="headerlink" title="Laravel 5.x进阶笔记（一）"></a>Laravel 5.x进阶笔记（一）</h1><h2 id="默认条件"><a href="#默认条件" class="headerlink" title="默认条件"></a>默认条件</h2><p>MacOS，&gt;=PHP5.4，翻墙环境（默认创建的项目会请求*.google.com）<br>懂得PHP基础知识和MVC的基本架构，开发环境已经安装Laravel所需的命令环境。</p>
+<h2 id="配置composer中国镜像，使得本地开发环境下载依赖速度更快。"><a href="#配置composer中国镜像，使得本地开发环境下载依赖速度更快。" class="headerlink" title="配置composer中国镜像，使得本地开发环境下载依赖速度更快。"></a>配置composer中国镜像，使得本地开发环境下载依赖速度更快。</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">composer config -g repo.packagist composer https://packagist.phpcomposer.com</div></pre></td></tr></table></figure>
+<h2 id="创建Laravel项目"><a href="#创建Laravel项目" class="headerlink" title="创建Laravel项目"></a>创建Laravel项目</h2><p>进入项目的工作空间目录</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cd ~/workspace</div></pre></td></tr></table></figure>
 <p>创建Laravel项目<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">composer -vvv create-project laravel/laravel learnlaravel5 5.2.31</div></pre></td></tr></table></figure></p>
 <p>项目创建完成，进入刚刚创建的项目，并使用PHP内置server服务启动项目，访问页面验证。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">cd learnlaravel5/public</div><div class="line">php -S 0.0.0.0:1024</div></pre></td></tr></table></figure>
-<p>页面效果<br><img src="media/14993294122562/15011226008351.jpg" alt=""><br>使用1024端口访问的目的是Unix系统的动态端口的开始端口，不需要进行端口配置，就可以启动监听。<br>如果单纯要学习Laravel或者PHP，请不要使用apache或者nginx这样的web服务器启动项目，对学习本身带来影响。</p>
-<p>##启用Laravel针对PHP5.4版本的trait特性实现用户注册登录的功能，实现简单的用户权限管理</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">cd .. ##cd ~/workspace/learnlaravel5</div><div class="line">php artisan make:auth</div></pre></td></tr></table></figure>
-<p>不需要停止php -S即可直接访问localhost:1024/login查看生成登录页面<br><img src="media/14993294122562/15011235293792.jpg" alt=""></p>
-<p>##Mysql创建数据库laravel5，用户名和密码均为root</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">create database laravel5</div></pre></td></tr></table></figure>
-<p>##修改learnlaravel5项目的配置文件</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">cd ~/workspace/learnlaravel5</div><div class="line">open .env ##.env文件不存在，需要拷贝一份.env.example</div></pre></td></tr></table></figure>
+<p>页面效果<br><img src="images/15011226008351.jpg" alt=""><br>使用1024端口访问的目的是Unix系统的动态端口的开始端口，不需要进行端口配置，就可以启动监听。<br>如果单纯要学习Laravel或者PHP，请不要使用apache或者nginx这样的web服务器启动项目，对学习本身带来影响。</p>
+<h2 id="启用Laravel针对PHP5-4版本的trait特性实现用户注册登录的功能，实现简单的用户权限管理"><a href="#启用Laravel针对PHP5-4版本的trait特性实现用户注册登录的功能，实现简单的用户权限管理" class="headerlink" title="启用Laravel针对PHP5.4版本的trait特性实现用户注册登录的功能，实现简单的用户权限管理"></a>启用Laravel针对PHP5.4版本的trait特性实现用户注册登录的功能，实现简单的用户权限管理</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">cd .. ##cd ~/workspace/learnlaravel5</div><div class="line">php artisan make:auth</div></pre></td></tr></table></figure>
+<p>不需要停止php -S即可直接访问localhost:1024/login查看生成登录页面<br><img src="images/15011235293792.jpg" alt=""></p>
+<h2 id="Mysql创建数据库laravel5，用户名和密码均为root"><a href="#Mysql创建数据库laravel5，用户名和密码均为root" class="headerlink" title="Mysql创建数据库laravel5，用户名和密码均为root"></a>Mysql创建数据库laravel5，用户名和密码均为root</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">create database laravel5</div></pre></td></tr></table></figure>
+<h2 id="修改learnlaravel5项目的配置文件"><a href="#修改learnlaravel5项目的配置文件" class="headerlink" title="修改learnlaravel5项目的配置文件"></a>修改learnlaravel5项目的配置文件</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">cd ~/workspace/learnlaravel5</div><div class="line">open .env ##.env文件不存在，需要拷贝一份.env.example</div></pre></td></tr></table></figure>
 <p>修改配置项</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">DB_CONNECTION=mysql</div><div class="line">DB_HOST=127.0.0.1</div><div class="line">DB_PORT=3306</div><div class="line">DB_DATABASE=laravel5</div><div class="line">DB_USERNAME=root</div><div class="line">DB_PASSWORD=root</div></pre></td></tr></table></figure>
-<p>##使用laravel默认的数据库描述文件创建表<br>执行命令创建表</p>
+<h2 id="使用laravel默认的数据库描述文件创建表"><a href="#使用laravel默认的数据库描述文件创建表" class="headerlink" title="使用laravel默认的数据库描述文件创建表"></a>使用laravel默认的数据库描述文件创建表</h2><p>执行命令创建表</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">php artisan migrate</div></pre></td></tr></table></figure>
 <p>migrate命令要执行的php描述文件是learnlaravel5/database/migrations下的文件</p>
 <ul>
 <li>2014_10_12_000000_create_users_table.php</li>
-<li>2014_10_12_100000_create_password_resets_table.php<br>再查看一下laravel5数据库中是否创建了这两个描述文件中的表，如果已经创建，说明命令执行成功，就可以用注册页面注册用户了，赶快试一试。<br>##使用 Laravel 的“葵花宝典”：Eloquent<br>Eloquent是Laravel定义的Model基类，只要Larave创建Model就会继承Eloquent类，此时创建的Model就具有了十个异常强大的函数，从此想干啥事儿都是一行代码就搞定，创建一个Article的Model体验一下：</li>
+<li>2014_10_12_100000_create_password_resets_table.php<br>再查看一下laravel5数据库中是否创建了这两个描述文件中的表，如果已经创建，说明命令执行成功，就可以用注册页面注册用户了，赶快试一试。<h2 id="使用-Laravel-的“葵花宝典”：Eloquent"><a href="#使用-Laravel-的“葵花宝典”：Eloquent" class="headerlink" title="使用 Laravel 的“葵花宝典”：Eloquent"></a>使用 Laravel 的“葵花宝典”：Eloquent</h2>Eloquent是Laravel定义的Model基类，只要Larave创建Model就会继承Eloquent类，此时创建的Model就具有了十个异常强大的函数，从此想干啥事儿都是一行代码就搞定，创建一个Article的Model体验一下：</li>
 </ul>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">php artisan make:model Article</div></pre></td></tr></table></figure>
 <p>创建Article对应的数据库描述文件</p>
@@ -256,7 +252,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2017/08/01/---/">展开全文 >></a>
+          <a class="article-more-a" href="/2017/08/01/----1/">展开全文 >></a>
         </p>
       
 
@@ -286,19 +282,19 @@
 
 
   
-    <article id="post-----1" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post----" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2017/08/01/----1/">Laravel 5.x进阶笔记（二）</a>
+      <a class="article-title" href="/2017/08/01/---/">Laravel 5.x进阶笔记（二）</a>
     </h1>
   
 
         
-        <a href="/2017/08/01/----1/" class="archive-article-date">
+        <a href="/2017/08/01/---/" class="archive-article-date">
   	<time datetime="2017-08-01T06:42:53.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-08-01</time>
 </a>
         
@@ -329,7 +325,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2017/08/01/----1/">展开全文 >></a>
+          <a class="article-more-a" href="/2017/08/01/---/">展开全文 >></a>
         </p>
       
 
