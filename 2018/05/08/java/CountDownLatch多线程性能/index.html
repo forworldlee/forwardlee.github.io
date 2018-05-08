@@ -6,19 +6,20 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://www.forwardlee.com">
-  <title>“新日志” | 不忘初心</title>
+  <title>CountDownLatch多线程性能 | 不忘初心</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="总结学习方法，实践技术技能。">
+  <meta name="description" content="cn.klxx.multithread;123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798081828384858687888990919293949">
+<meta name="keywords" content="JAVA">
 <meta property="og:type" content="article">
-<meta property="og:title" content="“新日志”">
-<meta property="og:url" content="http://www.forwardlee.com/2018/05/08/“新日志”/index.html">
+<meta property="og:title" content="CountDownLatch多线程性能">
+<meta property="og:url" content="http://www.forwardlee.com/2018/05/08/java/CountDownLatch多线程性能/index.html">
 <meta property="og:site_name" content="不忘初心">
-<meta property="og:description" content="总结学习方法，实践技术技能。">
+<meta property="og:description" content="cn.klxx.multithread;123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798081828384858687888990919293949">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-05-08T10:49:52.753Z">
+<meta property="og:updated_time" content="2018-05-08T11:29:44.557Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="“新日志”">
-<meta name="twitter:description" content="总结学习方法，实践技术技能。">
+<meta name="twitter:title" content="CountDownLatch多线程性能">
+<meta name="twitter:description" content="cn.klxx.multithread;123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798081828384858687888990919293949">
   
     <link rel="alternative" href="/atom.xml" title="不忘初心" type="application/atom+xml">
   
@@ -174,27 +175,28 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-“新日志”" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-java/CountDownLatch多线程性能" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      “新日志”
+      CountDownLatch多线程性能
     </h1>
   
 
         
-        <a href="/2018/05/08/“新日志”/" class="archive-article-date">
-  	<time datetime="2018-05-08T10:49:52.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-05-08</time>
+        <a href="/2018/05/08/java/CountDownLatch多线程性能/" class="archive-article-date">
+  	<time datetime="2018-05-08T11:26:19.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-05-08</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        
+        <figure class="highlight plain"><figcaption><span>cn.klxx.multithread;</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div><div class="line">import java.util.ArrayList;</div><div class="line">import java.util.List;</div><div class="line">import java.util.concurrent.CountDownLatch;</div><div class="line"></div><div class="line">/**</div><div class="line"> * Object方法wait()、notify()两个方法需要配合sychronized关键字使用，</div><div class="line"> * wait()方法释放锁，notify()方法占有锁，所以要先调用wait()方法，再调用notify()方法</div><div class="line"> */</div><div class="line">public class MyCountDownLatch &#123;</div><div class="line"></div><div class="line">static List list = new ArrayList();</div><div class="line"></div><div class="line">public void addString(String a)&#123;</div><div class="line">    list.add(a);</div><div class="line">    System.out.println(&quot;list add string!&quot;);</div><div class="line">&#125;</div><div class="line"></div><div class="line">public int getSize()&#123;</div><div class="line">    return list.size();</div><div class="line">&#125;</div><div class="line"></div><div class="line">static final Object lock = new Object();</div><div class="line"></div><div class="line">    public static void main(String[] args) &#123;</div><div class="line"></div><div class="line">        final MyCountDownLatch myCountDownLatch = new MyCountDownLatch();</div><div class="line"></div><div class="line">        Thread t1 = new Thread(new Runnable() &#123;</div><div class="line">            @Override</div><div class="line">            public void run() &#123;</div><div class="line">                try &#123;</div><div class="line">                    synchronized (lock)&#123;</div><div class="line">                        for (int i = 0; i &lt; 10; i++) &#123;</div><div class="line">                            myCountDownLatch.addString(&quot;abc&quot;);</div><div class="line">                            Thread.sleep(500);</div><div class="line">                            if(list.size()==5)&#123;</div><div class="line">                                lock.notify();</div><div class="line">                                System.out.println(&quot;发出通知...&quot;);</div><div class="line">                            &#125;</div><div class="line">                        &#125;</div><div class="line">                        System.out.println(&quot;执行完这句话释放锁...&quot;);</div><div class="line">                    &#125;</div><div class="line">                &#125; catch (InterruptedException e) &#123;</div><div class="line">                    e.printStackTrace();</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;,&quot;t1&quot;) ;</div><div class="line"></div><div class="line">        Thread t2 = new Thread(new Runnable() &#123;</div><div class="line">            @Override</div><div class="line">            public void run() &#123;</div><div class="line">                try &#123;</div><div class="line">                    synchronized (lock) &#123;</div><div class="line">                        if (list.size()!=5) &#123;</div><div class="line">                            lock.wait();//此时t2处于等待中，不再继续往下执行代码，直到收到通知才继续执行</div><div class="line">                        &#125;</div><div class="line">                        System.out.println(&quot;t2 收到停止通知&quot;);</div><div class="line">                        throw new RuntimeException();</div><div class="line">                    &#125;</div><div class="line">                &#125; catch (Exception e) &#123;</div><div class="line">                    e.printStackTrace();</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;,&quot;t2&quot;) ;</div><div class="line">        /**</div><div class="line">         * t2必须先启动，因为wait方法不会占有锁，不影响t1执行；如果t1先启动会占有锁，而t2则不能使用锁无法执行。</div><div class="line">         * 用wait和notify配合关键字sychronized关键字，使用等notify所在的sychronized关键字代码块执行完，</div><div class="line">         * wait所在的sychronized代码块才会继续执行，这样的最大问题就是收到通知的时间严重滞后于发送通知的时间。</div><div class="line">         * 所以要借助CountDownLatch来解决这个问题，CountDownLatch使用countDown方法发送完通知后也会继续执行，</div><div class="line">         * 但是await方法会马上收到通知继续执行代码，避免了收到通知的严重滞后问题。</div><div class="line">         */</div><div class="line">        t2.start();</div><div class="line">        t1.start();</div><div class="line"></div><div class="line">        try &#123;</div><div class="line">            Thread.sleep(10000);</div><div class="line">            list.clear();</div><div class="line">            System.out.println(&quot;-----------------------------&quot;);</div><div class="line">            System.out.println(&quot;list.size:&quot;+list.size());</div><div class="line">            System.out.println(&quot;-----------------------------&quot;);</div><div class="line">        &#125; catch (InterruptedException e) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        final CountDownLatch countDownLatch = new CountDownLatch(1);</div><div class="line">        Thread t3 = new Thread(new Runnable() &#123;</div><div class="line">            @Override</div><div class="line">            public void run() &#123;</div><div class="line">                try &#123;</div><div class="line">                    for (int i = 0; i &lt; 10; i++) &#123;</div><div class="line">                        list.add(&quot;abc&quot;);</div><div class="line">                        System.out.println(&quot;list add string!&quot;);</div><div class="line">                        Thread.sleep(500);</div><div class="line">                        if (list.size()==5) &#123;</div><div class="line">                            System.out.println(&quot;发送通知&quot;);</div><div class="line">                            countDownLatch.countDown();</div><div class="line">                        &#125;</div><div class="line">                    &#125;</div><div class="line">                &#125; catch (InterruptedException e) &#123;</div><div class="line">                    e.printStackTrace();</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;, &quot;t3&quot;);</div><div class="line"></div><div class="line">        Thread t4 = new Thread(new Runnable() &#123;</div><div class="line">            @Override</div><div class="line">            public void run() &#123;</div><div class="line">                try &#123;</div><div class="line">                    if (list.size()!=5) &#123;</div><div class="line">                        System.out.println(&quot;t4 等待...&quot;);</div><div class="line">                        countDownLatch.await();</div><div class="line">                    &#125;</div><div class="line">                    System.out.println(&quot;list.size:&quot;+list.size()+&quot; ,t4 停止&quot;);</div><div class="line">                    throw new RuntimeException();</div><div class="line">                &#125; catch (InterruptedException e) &#123;</div><div class="line">                    e.printStackTrace();</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;, &quot;t4&quot;);</div><div class="line"></div><div class="line">        t3.start();</div><div class="line">        t4.start();</div><div class="line"></div><div class="line"></div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
       
 
       
@@ -228,6 +230,17 @@
     <div class="article-info article-info-index">
       
       
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">JAVA</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
       
 
       
@@ -278,7 +291,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="http://s.jiathis.com/qrcode.php?url=http://www.forwardlee.com/2018/05/08/“新日志”/" alt="微信分享二维码">
+      <img src="http://s.jiathis.com/qrcode.php?url=http://www.forwardlee.com/2018/05/08/java/CountDownLatch多线程性能/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -417,6 +430,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
             <input type="checkbox" q-on="click:toggleTag(e)" q-attr="checked:showTags">
           </label>
           <ul class="article-tag-list" q-show="showTags">
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">JAVA</a>
+              </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">PHP</a>
