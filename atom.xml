@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.forwardlee.com/"/>
-  <updated>2018-05-17T02:42:15.039Z</updated>
+  <updated>2018-05-17T04:26:18.770Z</updated>
   <id>http://www.forwardlee.com/</id>
   
   <author>
@@ -14,6 +14,72 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>MySql分区操作（三）</title>
+    <link href="http://www.forwardlee.com/2018/05/17/MySql%E5%88%86%E5%8C%BA%E6%93%8D%E4%BD%9C%EF%BC%88%E4%B8%89%EF%BC%89/"/>
+    <id>http://www.forwardlee.com/2018/05/17/MySql分区操作（三）/</id>
+    <published>2018-05-17T02:51:51.000Z</published>
+    <updated>2018-05-17T04:26:18.770Z</updated>
+    
+    <content type="html"><![CDATA[<p><strong>子分区操作</strong><br>常用RANGE和HASH复合分区实现子分区</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">CREATE TABLE myblog.tbl_users_2 (</div><div class="line">  `pkid` INT NOT NULL ,</div><div class="line">  `username` VARCHAR(255) NOT NULL,</div><div class="line">  `password` VARCHAR(255) NOT NULL,</div><div class="line">  `email` VARCHAR(255) NULL,</div><div class="line">  `sex` CHAR(1) NULL,</div><div class="line">  `create_time` DATE NULL)</div><div class="line">ENGINE = InnoDB</div><div class="line">DEFAULT CHARACTER SET = utf8 </div><div class="line">PARTITION BY RANGE(YEAR(create_time))</div><div class="line">SUBPARTITION BY HASH(TO_DAYS(create_time))</div><div class="line">SUBPARTITIONS 2</div><div class="line">(</div><div class="line">PARTITION p0 VALUES LESS THAN (2010),</div><div class="line">PARTITION p1 VALUES LESS THAN (2017),</div><div class="line">PARTITION p2 VALUES LESS THAN (MAXVALUE)</div><div class="line">);</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">INSERT INTO TBL_USERS_2 VALUES (1,&apos;1&apos;,&apos;1&apos;,&apos;1&apos;,1,&apos;2009-08-08&apos;);</div><div class="line">INSERT INTO TBL_USERS_2 VALUES (2,&apos;1&apos;,&apos;1&apos;,&apos;1&apos;,1,&apos;2016-08-07&apos;);</div><div class="line">INSERT INTO TBL_USERS_2 VALUES (3,&apos;1&apos;,&apos;1&apos;,&apos;1&apos;,1,&apos;2018-08-08&apos;);</div></pre></td></tr></table></figure>
+<p><strong>查看产生的分区</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">EXPLAIN PARTITIONS SELECT *                    FROM tbl_users_2 \G;</div><div class="line">*************************** 1. row ***************************</div><div class="line">           id: 1</div><div class="line">  select_type: SIMPLE</div><div class="line">        table: tbl_users_2</div><div class="line">   partitions: p0_p0sp0,p0_p0sp1,p1_p1sp0,p1_p1sp1,p2_p2sp0,p2_p2sp1</div><div class="line">         type: ALL</div><div class="line">possible_keys: NULL</div><div class="line">          key: NULL</div><div class="line">      key_len: NULL</div><div class="line">          ref: NULL</div><div class="line">         rows: 3</div><div class="line">     filtered: 100.00</div><div class="line">        Extra: NULL</div><div class="line">1 row in set, 2 warnings (0.00 sec)</div><div class="line"></div><div class="line">ERROR: </div><div class="line">No query specified</div></pre></td></tr></table></figure>
+<p><strong>查看其中一条数据所在分区</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">EXPLAIN PARTITIONS SELECT *                    FROM tbl_users_2 where create_time = &apos;2017-08-07&apos;\G;</div><div class="line">*************************** 1. row ***************************</div><div class="line">           id: 1</div><div class="line">  select_type: SIMPLE</div><div class="line">        table: tbl_users_2</div><div class="line">   partitions: p2_p2sp1</div><div class="line">         type: ALL</div><div class="line">possible_keys: NULL</div><div class="line">          key: NULL</div><div class="line">      key_len: NULL</div><div class="line">          ref: NULL</div><div class="line">         rows: 1</div><div class="line">     filtered: 100.00</div><div class="line">        Extra: Using where</div><div class="line">1 row in set, 2 warnings (0.00 sec)</div></pre></td></tr></table></figure>
+<p><strong>分区字段特殊性</strong></p>
+<p>按字段分区的字段不能为NULL，所以在建表时需要指定分区字段为NOT NULL。</p>
+<p><strong>分区管理</strong></p>
+<p>删除分区和分区上的数据 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">alter table tbl_user drop partiton p0;</div></pre></td></tr></table></figure>
+<p>增加分区<br>对于RANGE分区，只能添加比已经存在的分区范围更大的值。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">alter table tbl_user add partition ( partition p0 values less than (100));</div></pre></td></tr></table></figure></p>
+<p>对于LIST分区，只能添加不存在与分区列表中的值。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">alter table tbl_user add partition ( partition p0 values in (100,101,102));</div></pre></td></tr></table></figure>
+<p>也就是说，100，101，102不在已定义的LIST分区内。</p>
+<p><strong>不丢失数据修改分区</strong><br> 如果原来的分区是这样的：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">create table tbl_user(</div><div class="line"> pkid int not null,</div><div class="line"> name varchar(255)</div><div class="line"> )</div><div class="line"> partition by range(pkid) partitions 3(</div><div class="line"> partition p0 values less than(100),</div><div class="line"> partition p1 values less than(200),</div><div class="line"> partition p2 values  less than(300)</div><div class="line"> );</div></pre></td></tr></table></figure>
+<p>==修改(拆分)分区：==</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">alter table tbl_user reorganize partition p0 into</div><div class="line"> ( partition s0 values less than(50),</div><div class="line"> partition s1 values less than(100)</div><div class="line"> );</div></pre></td></tr></table></figure>
+<p>相当于原来的分区是这样创建的：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">create table tbl_user(</div><div class="line"> pkid int not null,</div><div class="line"> name varchar(255)</div><div class="line"> )</div><div class="line"> partition by range(pkid) partitions 4(</div><div class="line"> partition s0 values less than(50),</div><div class="line"> partition s1 values less than(100),</div><div class="line"> partition p1 values less than(200),</div><div class="line"> partition p2 values  less than(300)</div><div class="line"> );</div></pre></td></tr></table></figure>
+<p>LIST分区修改（拆分）同理。<br>==修改(合并)分区：==</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">alter table tbl_user reorganize partition s0,s1 into</div><div class="line"> ( partition p0 values less than(100)</div><div class="line"> );</div></pre></td></tr></table></figure>
+<p>删除分区，不删除数据</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">alter table tbl_user remove partitioning</div></pre></td></tr></table></figure>
+<p><strong>HASH和KEY分区管理</strong></p>
+<p>在没有数据的时候进行修改分区操作是可以的，如果在数据存在后再减少和增加分区，数据分布就不均匀了。</p>
+<p>减少n个分区</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">alter table tbl_user coalesce partition 2;</div></pre></td></tr></table></figure>
+<p>增加n个分区</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">alter table tbl_user add partition 2;</div></pre></td></tr></table></figure>
+<p><strong>其他分区管理语句</strong></p>
+<p>重建分区</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">alter table tbl_user rebuild partition p0,p1,p2,p3;</div></pre></td></tr></table></figure>
+<p>优化分区(包括分析、检查、修补分区）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">alter table tbl_user optimize partition p0,p1,p2,p3;</div></pre></td></tr></table></figure>
+<p>分析分区</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">alter table tbl_user analyze partiton p0,p1,p2,p3;</div></pre></td></tr></table></figure>
+<p>检查分区</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">alter table tbl_user check partition p0,p1,p2,p3;</div></pre></td></tr></table></figure>
+<p>修补分区</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">alter table tbl_user repair partition p0,p1,p2,p3;</div></pre></td></tr></table></figure>
+<p><strong>其他细节</strong></p>
+<p><em>分区数最大不超过1024个，实际应用中分区数不超过150个；<br>如果有唯一索引或者主键，分区列必须包含所有的唯一索引或者主键；<br>不支持外键；<br>不支持全区索引；<br>常用日期进行分区；<br>临时表不能被分区；<br>单条数据查询分区管理意义不大，除非指定数据所在分区；<br>计算分区成本，因为每次插入数据都会进行分区计算，分区函数不能过于复杂；<br>分区字段不能为NULL；</em></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;&lt;strong&gt;子分区操作&lt;/strong&gt;&lt;br&gt;常用RANGE和HASH复合分区实现子分区&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;
+    
+    </summary>
+    
+    
+      <category term="MySql" scheme="http://www.forwardlee.com/tags/MySql/"/>
+    
+  </entry>
   
   <entry>
     <title>MySql分区操作（二）</title>
@@ -244,6 +310,24 @@
   </entry>
   
   <entry>
+    <title>Laravel 5.x进阶笔记（二）</title>
+    <link href="http://www.forwardlee.com/2017/08/01/p/Laravel5.x%E8%BF%9B%E9%98%B6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89/"/>
+    <id>http://www.forwardlee.com/2017/08/01/p/Laravel5.x进阶笔记（三）/</id>
+    <published>2017-08-01T06:42:53.000Z</published>
+    <updated>2017-08-01T08:21:34.000Z</updated>
+    
+    <summary type="html">
+    
+    </summary>
+    
+    
+      <category term="PHP" scheme="http://www.forwardlee.com/tags/PHP/"/>
+    
+      <category term="Laravel5" scheme="http://www.forwardlee.com/tags/Laravel5/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Laravel 5.x进阶笔记（一）</title>
     <link href="http://www.forwardlee.com/2017/08/01/p/Laravel5.x%E8%BF%9B%E9%98%B6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/"/>
     <id>http://www.forwardlee.com/2017/08/01/p/Laravel5.x进阶笔记（一）/</id>
@@ -297,24 +381,6 @@
     <summary type="html">
     
       &lt;h2 id=&quot;默认条件&quot;&gt;&lt;a href=&quot;#默认条件&quot; class=&quot;headerlink&quot; title=&quot;默认条件&quot;&gt;&lt;/a&gt;默认条件&lt;/h2&gt;&lt;p&gt;MacOS，&amp;gt;=PHP5.4，翻墙环境（默认创建的项目会请求*.google.com）&lt;br&gt;懂得PHP基础知识和MV
-    
-    </summary>
-    
-    
-      <category term="PHP" scheme="http://www.forwardlee.com/tags/PHP/"/>
-    
-      <category term="Laravel5" scheme="http://www.forwardlee.com/tags/Laravel5/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Laravel 5.x进阶笔记（二）</title>
-    <link href="http://www.forwardlee.com/2017/08/01/p/Laravel5.x%E8%BF%9B%E9%98%B6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89/"/>
-    <id>http://www.forwardlee.com/2017/08/01/p/Laravel5.x进阶笔记（三）/</id>
-    <published>2017-08-01T06:42:53.000Z</published>
-    <updated>2017-08-01T08:21:34.000Z</updated>
-    
-    <summary type="html">
     
     </summary>
     
