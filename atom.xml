@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.forwardlee.com/"/>
-  <updated>2018-05-16T11:24:35.333Z</updated>
+  <updated>2018-05-17T02:42:15.039Z</updated>
   <id>http://www.forwardlee.com/</id>
   
   <author>
@@ -14,6 +14,60 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>MySql分区操作（二）</title>
+    <link href="http://www.forwardlee.com/2018/05/17/MySql%E5%88%86%E5%8C%BA%E6%93%8D%E4%BD%9C%EF%BC%88%E4%BA%8C%EF%BC%89/"/>
+    <id>http://www.forwardlee.com/2018/05/17/MySql分区操作（二）/</id>
+    <published>2018-05-17T02:07:57.000Z</published>
+    <updated>2018-05-17T02:42:15.039Z</updated>
+    
+    <content type="html"><![CDATA[<p><strong>【转自】<a href="https://blog.csdn.net/tjcyjd/article/details/11194489" target="_blank" rel="external">https://blog.csdn.net/tjcyjd/article/details/11194489</a></strong><br><strong>HASH分区和线性LINEAR HASH分区</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">CREATE TABLE `myblog`.`tbl_user_friends_linear_hash` (</div><div class="line">  `pkid` INT NOT NULL AUTO_INCREMENT,</div><div class="line">  `user_id` INT NOT NULL,</div><div class="line">  `friend_id` INT NOT NULL,</div><div class="line">  `create_time` DATETIME NOT NULL,</div><div class="line">  PRIMARY KEY (`pkid`))</div><div class="line">ENGINE = InnoDB</div><div class="line">DEFAULT CHARACTER SET = utf8</div><div class="line">COMMENT = &apos;用户好友&apos; PARTITION BY LINEAR HASH(pkid) PARTITIONS 3 ;</div></pre></td></tr></table></figure>
+<p>MySQL还支持线性哈希功能，它与常规哈希的区别在于，线性哈希功能使用的一个线性的2的幂（powers-of-two）运算法则，而常规 哈希使用的是求哈希函数值的模数。</p>
+<p>线性哈希分区和常规哈希分区在语法上的唯一区别在于，在“PARTITION BY” 子句中添加“LINEAR”关键字，如下面所示：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">CREATE TABLE employees (</div><div class="line">    id INT NOT NULL,</div><div class="line">    fname VARCHAR(30),</div><div class="line">    lname VARCHAR(30),</div><div class="line">    hired DATE NOT NULL DEFAULT &apos;1970-01-01&apos;,</div><div class="line">    separated DATE NOT NULL DEFAULT &apos;9999-12-31&apos;,</div><div class="line">    job_code INT,</div><div class="line">    store_id INT</div><div class="line">)</div><div class="line">PARTITION BY LINEAR HASH(YEAR(hired))</div><div class="line">PARTITIONS 4；</div></pre></td></tr></table></figure>
+<p>假设一个表达式expr, 当使用线性哈希功能时，记录将要保存到的分区是num 个分区中的分区N，其中N是根据下面的算法得到： </p>
+<ol>
+<li><p>找到下一个大于num.的、2的幂，我们把这个值称为V ，它可以通过下面的公式得到： </p>
+</li>
+<li><p>V = POWER(2, CEILING(LOG(2, num)))<br>（例如，假定num是13。那么LOG(2,13)就是3.7004397181411。 CEILING(3.7004397181411)就是4，则V = POWER(2,4), 即等于16）。 </p>
+</li>
+<li><p>设置 N = F(column_list) &amp; (V - 1). </p>
+</li>
+<li><p>当 N &gt;= num: </p>
+</li>
+</ol>
+<p>·         设置 V = CEIL(V / 2) </p>
+<p>·         设置 N = N &amp; (V - 1) </p>
+<p>例如，假设表t1，使用线性哈希分区且有4个分区，是通过下面的语句创建的：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">CREATE TABLE t1 (col1 INT, col2 CHAR(5), col3 DATE)</div><div class="line">    PARTITION BY LINEAR HASH( YEAR(col3) )</div><div class="line">    PARTITIONS 6;</div></pre></td></tr></table></figure>
+<p>现在假设要插入两行记录到表t1中，其中一条记录col3列值为’2003-04-14’，另一条记录col3列值为’1998-10-19’。第一条记录将要保存到的分区确定如下：</p>
+<p>V = POWER(2, CEILING(LOG(2,7))) = 8<br>N = YEAR(‘2003-04-14’) &amp; (8 - 1)<br>   = 2003 &amp; 7<br>   = 3</p>
+<p>(3 &gt;= 6 为假（FALSE）: 记录将被保存到#3号分区中)<br>第二条记录将要保存到的分区序号计算如下： </p>
+<p>V = 8<br>N = YEAR(‘1998-10-19’) &amp; (8-1)<br>  = 1998 &amp; 7<br>  = 6</p>
+<p>(6 &gt;= 4 为真（TRUE）: 还需要附加的步骤)</p>
+<p>N = 6 &amp; CEILING(5 / 2)<br>  = 6 &amp; 3<br>  = 2</p>
+<p>(2 &gt;= 4 为假（FALSE）: 记录将被保存到#2分区中)<br>按照线性哈希分区的优点在于增加、删除、合并和拆分分区将变得更加快捷，有利于处理含有极其大量（1000吉）数据的表。它的缺点在于，与使用常规HASH分区得到的数据分布相比，各个分区间数据的分布不大可能均衡。</p>
+<p><strong>KEY分区和LINEAR KEY分区</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">CREATE TABLE `myblog`.`tbl_user_friends_linear_key` (</div><div class="line">  `pkid` INT NOT NULL AUTO_INCREMENT,</div><div class="line">  `user_id` INT NOT NULL,</div><div class="line">  `friend_id` INT NOT NULL,</div><div class="line">  `create_time` DATETIME NOT NULL,</div><div class="line">  primary key(pkid))</div><div class="line">ENGINE = InnoDB</div><div class="line">DEFAULT CHARACTER SET = utf8</div><div class="line">COMMENT = &apos;用户好友&apos; PARTITION BY LINEAR KEY(pkid) PARTITIONS 3 ;</div></pre></td></tr></table></figure>
+<p>按照KEY进行分区类似于按照HASH分区，除了HASH分区使用的用户定义的表达式，而KEY分区的 哈希函数是由MySQL 服务器提供。MySQL 簇（Cluster）使用函数MD5()来实现KEY分区；对于使用其他存储引擎的表，服务器使用其自己内部的 哈希函数，这些函数是基于与PASSWORD()一样的运算法则。 </p>
+<p>“CREATE TABLE … PARTITION BY KEY”的语法规则类似于创建一个通过HASH分区的表的规则。它们唯一的区别在于使用的关键字是KEY而不是HASH，并且KEY分区只采用一个或多个列名的一个列表。 </p>
+<p>通过线性KEY分割一个表也是可能的。下面是一个简单的例子： </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">CREATE TABLE tk (</div><div class="line">    col1 INT NOT NULL,</div><div class="line">    col2 CHAR(5),</div><div class="line">    col3 DATE</div><div class="line">) </div><div class="line">PARTITION BY LINEAR KEY (col1)</div><div class="line">PARTITIONS 3;</div></pre></td></tr></table></figure>
+<p>在KEY分区中使用关键字LINEAR和在HASH分区中使用具有同样的作用，分区的编号是通过2的幂（powers-of-two）算法得到，而不是通过模数算法。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;&lt;strong&gt;【转自】&lt;a href=&quot;https://blog.csdn.net/tjcyjd/article/details/11194489&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;https://blog.csdn.net/tjcyjd/a
+    
+    </summary>
+    
+    
+      <category term="MySql" scheme="http://www.forwardlee.com/tags/MySql/"/>
+    
+  </entry>
   
   <entry>
     <title>为未来而学</title>
