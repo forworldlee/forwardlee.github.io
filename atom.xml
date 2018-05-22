@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.forwardlee.com/"/>
-  <updated>2018-05-17T04:26:18.770Z</updated>
+  <updated>2018-05-22T10:51:00.402Z</updated>
   <id>http://www.forwardlee.com/</id>
   
   <author>
@@ -14,6 +14,48 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Docker Galera Cluster环境快速搭建</title>
+    <link href="http://www.forwardlee.com/2018/05/22/Docker-Galera-Cluster%E7%8E%AF%E5%A2%83%E5%BF%AB%E9%80%9F%E6%90%AD%E5%BB%BA/"/>
+    <id>http://www.forwardlee.com/2018/05/22/Docker-Galera-Cluster环境快速搭建/</id>
+    <published>2018-05-22T03:12:14.000Z</published>
+    <updated>2018-05-22T10:51:00.402Z</updated>
+    
+    <content type="html"><![CDATA[<p>使用Docker快速创建MariaDB（与MySql同源） Galera集群环境</p>
+<p>Docker开发环境：MacOS High Sieera 10.13.2 (17C88)<br>MariaDB Galera Cluster容器环境：CentOS 7.3 + MariaDB 10.1.23</p>
+<p>1.执行Docker拉取镜像</p>
+<p><code>docker pull mjstealey/mariadb-galera:10.1</code></p>
+<p>2.下载测试脚本</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">git clone https://github.com/mjstealey/mariadb-galera.git</div><div class="line"></div><div class="line">cd mariadb-galera/</div></pre></td></tr></table></figure>
+<p>下载好的代码中包括创建docker容器的脚本和测试脚本。</p>
+<p>3.创建集群节点并执行测试语句</p>
+<p><code>./three-node-test.sh</code></p>
+<p>命令执行过程中会创建三个节点，并且执行测试sql查看集群节点数据同步是否正确。测试通过后，可以使用后续命令分别操作三个节点的数据库。</p>
+<p>4.查看已经运行的节点进程</p>
+<p><code>docker container ls</code></p>
+<p>输出结果</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">CONTAINER ID        IMAGE                           COMMAND                  CREATED              STATUS              PORTS                                                                                                NAMES</div><div class="line">0a06b6789c1c        mjstealey/mariadb-galera:10.1   &quot;/docker-entrypoint.…&quot;   58 seconds ago       Up 59 seconds       0.0.0.0:32791-&gt;3306/tcp, 0.0.0.0:32790-&gt;4444/tcp, 0.0.0.0:32789-&gt;4567/tcp, 0.0.0.0:32788-&gt;4568/tcp   galera-node-3</div><div class="line">c4e5eb6d2ba1        mjstealey/mariadb-galera:10.1   &quot;/docker-entrypoint.…&quot;   About a minute ago   Up About a minute   0.0.0.0:32787-&gt;3306/tcp, 0.0.0.0:32786-&gt;4444/tcp, 0.0.0.0:32785-&gt;4567/tcp, 0.0.0.0:32784-&gt;4568/tcp   galera-node-2</div><div class="line">bf53b99d540c        mjstealey/mariadb-galera:10.1   &quot;/docker-entrypoint.…&quot;   About a minute ago   Up About a minute   0.0.0.0:32783-&gt;3306/tcp, 0.0.0.0:32782-&gt;4444/tcp, 0.0.0.0:32781-&gt;4567/tcp, 0.0.0.0:32780-&gt;4568/tcp   galera-node-1</div></pre></td></tr></table></figure>
+<p>5.单独进入节点操作数据库<br><code>docker exec -it bf53b99d540c mysql -uroot -ptemppassword</code></p>
+<p>MariaDB数据库的root用户密码是Docker在创建容器的时候配置的，可以从Dockerfile中找到配置，直接从镜像中拉取的容器镜像，是已经配置好的。如果本地执行Docker容器创建，那么可以修改Dockerfile中的相关配置。</p>
+<p>命令中bf53b99d540c是指容器进程的CONTAINER ID的值。</p>
+<p>参数解释<br>-i 可交互<br>-t 分配终端</p>
+<p>命令执行完会进入MariaDB的命令行交互窗口。</p>
+<p>6.在任一一个节点操作数据库，数据都会在其他节点同步（接近同步）更新。<br>==Galera规则要求创建的表必须要有主键，没有主键也要指定自增列。==</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">create table tbl_user</div><div class="line">(</div><div class="line">	pkid int auto_increment primary key,</div><div class="line">	username varchar(255) not null</div><div class="line">);</div></pre></td></tr></table></figure>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;使用Docker快速创建MariaDB（与MySql同源） Galera集群环境&lt;/p&gt;
+&lt;p&gt;Docker开发环境：MacOS High Sieera 10.13.2 (17C88)&lt;br&gt;MariaDB Galera Cluster容器环境：CentOS 7.3 + M
+    
+    </summary>
+    
+    
+      <category term="Docker,MySql" scheme="http://www.forwardlee.com/tags/Docker-MySql/"/>
+    
+  </entry>
   
   <entry>
     <title>MySql分区操作（三）</title>
@@ -310,24 +352,6 @@
   </entry>
   
   <entry>
-    <title>Laravel 5.x进阶笔记（二）</title>
-    <link href="http://www.forwardlee.com/2017/08/01/p/Laravel5.x%E8%BF%9B%E9%98%B6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89/"/>
-    <id>http://www.forwardlee.com/2017/08/01/p/Laravel5.x进阶笔记（三）/</id>
-    <published>2017-08-01T06:42:53.000Z</published>
-    <updated>2017-08-01T08:21:34.000Z</updated>
-    
-    <summary type="html">
-    
-    </summary>
-    
-    
-      <category term="PHP" scheme="http://www.forwardlee.com/tags/PHP/"/>
-    
-      <category term="Laravel5" scheme="http://www.forwardlee.com/tags/Laravel5/"/>
-    
-  </entry>
-  
-  <entry>
     <title>Laravel 5.x进阶笔记（一）</title>
     <link href="http://www.forwardlee.com/2017/08/01/p/Laravel5.x%E8%BF%9B%E9%98%B6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/"/>
     <id>http://www.forwardlee.com/2017/08/01/p/Laravel5.x进阶笔记（一）/</id>
@@ -381,6 +405,24 @@
     <summary type="html">
     
       &lt;h2 id=&quot;默认条件&quot;&gt;&lt;a href=&quot;#默认条件&quot; class=&quot;headerlink&quot; title=&quot;默认条件&quot;&gt;&lt;/a&gt;默认条件&lt;/h2&gt;&lt;p&gt;MacOS，&amp;gt;=PHP5.4，翻墙环境（默认创建的项目会请求*.google.com）&lt;br&gt;懂得PHP基础知识和MV
+    
+    </summary>
+    
+    
+      <category term="PHP" scheme="http://www.forwardlee.com/tags/PHP/"/>
+    
+      <category term="Laravel5" scheme="http://www.forwardlee.com/tags/Laravel5/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Laravel 5.x进阶笔记（二）</title>
+    <link href="http://www.forwardlee.com/2017/08/01/p/Laravel5.x%E8%BF%9B%E9%98%B6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89/"/>
+    <id>http://www.forwardlee.com/2017/08/01/p/Laravel5.x进阶笔记（三）/</id>
+    <published>2017-08-01T06:42:53.000Z</published>
+    <updated>2017-08-01T08:21:34.000Z</updated>
+    
+    <summary type="html">
     
     </summary>
     
