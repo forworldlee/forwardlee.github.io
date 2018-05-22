@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.forwardlee.com/"/>
-  <updated>2018-05-22T10:51:00.402Z</updated>
+  <updated>2018-05-22T10:55:17.169Z</updated>
   <id>http://www.forwardlee.com/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://www.forwardlee.com/2018/05/22/Docker-Galera-Cluster%E7%8E%AF%E5%A2%83%E5%BF%AB%E9%80%9F%E6%90%AD%E5%BB%BA/"/>
     <id>http://www.forwardlee.com/2018/05/22/Docker-Galera-Cluster环境快速搭建/</id>
     <published>2018-05-22T03:12:14.000Z</published>
-    <updated>2018-05-22T10:51:00.402Z</updated>
+    <updated>2018-05-22T10:55:17.169Z</updated>
     
     <content type="html"><![CDATA[<p>使用Docker快速创建MariaDB（与MySql同源） Galera集群环境</p>
 <p>Docker开发环境：MacOS High Sieera 10.13.2 (17C88)<br>MariaDB Galera Cluster容器环境：CentOS 7.3 + MariaDB 10.1.23</p>
@@ -53,7 +53,7 @@
     </summary>
     
     
-      <category term="Docker,MySql" scheme="http://www.forwardlee.com/tags/Docker-MySql/"/>
+      <category term="MySql" scheme="http://www.forwardlee.com/tags/MySql/"/>
     
   </entry>
   
@@ -352,6 +352,24 @@
   </entry>
   
   <entry>
+    <title>Laravel 5.x进阶笔记（二）</title>
+    <link href="http://www.forwardlee.com/2017/08/01/p/Laravel5.x%E8%BF%9B%E9%98%B6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89/"/>
+    <id>http://www.forwardlee.com/2017/08/01/p/Laravel5.x进阶笔记（三）/</id>
+    <published>2017-08-01T06:42:53.000Z</published>
+    <updated>2017-08-01T08:21:34.000Z</updated>
+    
+    <summary type="html">
+    
+    </summary>
+    
+    
+      <category term="PHP" scheme="http://www.forwardlee.com/tags/PHP/"/>
+    
+      <category term="Laravel5" scheme="http://www.forwardlee.com/tags/Laravel5/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Laravel 5.x进阶笔记（一）</title>
     <link href="http://www.forwardlee.com/2017/08/01/p/Laravel5.x%E8%BF%9B%E9%98%B6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/"/>
     <id>http://www.forwardlee.com/2017/08/01/p/Laravel5.x进阶笔记（一）/</id>
@@ -405,24 +423,6 @@
     <summary type="html">
     
       &lt;h2 id=&quot;默认条件&quot;&gt;&lt;a href=&quot;#默认条件&quot; class=&quot;headerlink&quot; title=&quot;默认条件&quot;&gt;&lt;/a&gt;默认条件&lt;/h2&gt;&lt;p&gt;MacOS，&amp;gt;=PHP5.4，翻墙环境（默认创建的项目会请求*.google.com）&lt;br&gt;懂得PHP基础知识和MV
-    
-    </summary>
-    
-    
-      <category term="PHP" scheme="http://www.forwardlee.com/tags/PHP/"/>
-    
-      <category term="Laravel5" scheme="http://www.forwardlee.com/tags/Laravel5/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Laravel 5.x进阶笔记（二）</title>
-    <link href="http://www.forwardlee.com/2017/08/01/p/Laravel5.x%E8%BF%9B%E9%98%B6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89/"/>
-    <id>http://www.forwardlee.com/2017/08/01/p/Laravel5.x进阶笔记（三）/</id>
-    <published>2017-08-01T06:42:53.000Z</published>
-    <updated>2017-08-01T08:21:34.000Z</updated>
-    
-    <summary type="html">
     
     </summary>
     
