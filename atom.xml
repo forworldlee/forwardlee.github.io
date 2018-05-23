@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.forwardlee.com/"/>
-  <updated>2018-05-22T10:55:17.169Z</updated>
+  <updated>2018-05-23T08:10:34.388Z</updated>
   <id>http://www.forwardlee.com/</id>
   
   <author>
@@ -14,6 +14,52 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>CentOS 6.8+MySQL 5.5 with Galera Cluster环境搭建</title>
+    <link href="http://www.forwardlee.com/2018/05/23/CentOS-6-8-MySQL-5-5-with-Galera-Cluster%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/"/>
+    <id>http://www.forwardlee.com/2018/05/23/CentOS-6-8-MySQL-5-5-with-Galera-Cluster环境搭建/</id>
+    <published>2018-05-22T16:13:16.000Z</published>
+    <updated>2018-05-23T08:10:34.388Z</updated>
+    
+    <content type="html"><![CDATA[<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">##先安装依赖库</div><div class="line">yum install libaio gcc gcc-c++ boost-devel scons check-devel openssl-devel</div><div class="line">ln -sf /usr/lib64/libssl.so.10 /usr/lib64/libssl.so.6</div><div class="line">ln -sf /usr/lib64/libcrypto.so.10 /usr/lib64/libcrypto.so.6</div><div class="line">##下载MySQL with wsrep源码包，目前最新版本是5.5.34-25.9</div><div class="line">wget https://launchpad.net/codership-mysql/5.5/5.5.34-25.9/+download/mysql-5.5.34_wsrep_25.9-linux-x86_64.tar.gz</div><div class="line">tar zxvf mysql-5.5*</div><div class="line">mv mysql-5.5.34_wsrep_25.9-linux-x86_64 /usr/local/mysql</div><div class="line">cd /usr/local/mysql/</div><div class="line">groupadd mysql</div><div class="line">useradd -r -g mysql mysql</div><div class="line">chown -R mysql:mysql .</div><div class="line">./scripts/mysql_install_db --no-defaults --datadir=/opt/mysqldb/ --user=mysql</div><div class="line">chown -R root .</div><div class="line">chown -R mysql /opt/mysqldb/</div><div class="line">echo &quot;export PATH=$PATH:/usr/local/mysql/bin&quot; &gt;&gt; /etc/profile</div><div class="line">source /etc/profile</div><div class="line">[root@localhost mysql]# vi /etc/my.cnf</div></pre></td></tr></table></figure>
+<p>[mysqld]<br>datadir=/opt/mysqldb<br>socket = /tmp/mysql.sock<br>user=mysql</p>
+<p>symbolic-links=0</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">##启动Mysql</div><div class="line">mysqld_safe --wsrep_cluster_address=gcomm:// &gt;/dev/null &amp;</div><div class="line"></div><div class="line">##安装Xtrabackup</div><div class="line">yum install perl-DBD-MySQL perl-Time-HiRes nc</div><div class="line"></div><div class="line">wget https://www.percona.com/downloads/XtraBackup/XtraBackup-2.1.9/RPM/rhel6/x86_64/percona-xtrabackup-2.1.9-744.rhel6.x86_64.rpm</div><div class="line"></div><div class="line">rpm -ivh percona-xtrabackup-2.1.9-744.rhel6.x86_64.rpm</div><div class="line"></div><div class="line">##安装Galera复制插件</div><div class="line">wget https://launchpad.net/galera/3.x/25.3.5/+download/galera-25.3.5-src.tar.gz</div><div class="line"></div><div class="line">tar zxvf galera-25.3.5-src.tar.gz</div><div class="line"></div><div class="line">cd galera-25.3.5-src</div><div class="line"></div><div class="line">scons</div><div class="line"></div><div class="line">cp garb/garbd /usr/local/mysql/bin/</div><div class="line"></div><div class="line">cp libgalera_smm.so /usr/local/mysql/lib/plugin/</div></pre></td></tr></table></figure>
+<p>mysql初始化配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">mkdir -p /var/lib/mysql</div><div class="line">mkdir -p /etc/mysql/conf.d/</div><div class="line">chown mysql:mysql /var/lib/mysql</div><div class="line">cp /usr/local/mysql/support-files/mysql.server /etc/init.d/mysql</div><div class="line">/usr/local/mysql/bin/mysqld_safe --wsrep_cluster_address=gcomm:// &gt;/dev/null &amp;</div><div class="line">##创建用于同步的帐号，注意替换掉示例值。</div><div class="line">mysql  -e &quot;SET wsrep_on=OFF; GRANT ALL ON *.* TO &apos;galera&apos;@&apos;%&apos; IDENTIFIED BY &apos;galera&apos;&quot;;</div><div class="line">##我使用的mysql版本再执行上述授权语句后，%代表任意主机，却不包含localhost，所以要给防伪localhost单独授权。</div><div class="line">mysql  -e &quot;SET wsrep_on=OFF; GRANT ALL ON *.* TO &apos;galera&apos;@&apos;localhost&apos; IDENTIFIED BY &apos;galera&apos;&quot;;</div><div class="line">##修改root帐号密码，注意替换掉示例值。</div><div class="line">mysql -e &quot;SET wsrep_on=OFF;GRANT ALL PRIVILEGES ON * . * TO &apos;root&apos;@&apos;localhost&apos; IDENTIFIED BY &apos;root&apos; WITH GRANT OPTION MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0 ; &quot;</div><div class="line"></div><div class="line">##查看授权</div><div class="line">mysql -uroot -proot;</div><div class="line">show grants for galera@&quot;%&quot;;</div><div class="line">show grants for galera@&quot;localhost&quot;;</div><div class="line"></div><div class="line">##关闭MySQL</div><div class="line">pkill mysql</div></pre></td></tr></table></figure>
+<p>Galera集群配置</p>
+<p>修改my.cnf</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">vi /etc/my.cnf</div></pre></td></tr></table></figure>
+<p>my.cnf配置：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line">[mysqld]</div><div class="line">datadir=/opt/mysqldb</div><div class="line">socket = /tmp/mysql.sock</div><div class="line">user=mysql</div><div class="line"></div><div class="line">symbolic-links=0</div><div class="line"></div><div class="line">######galera conf start########</div><div class="line">server-id=101</div><div class="line">wsrep_node_name = mysql1</div><div class="line">wsrep_provider = /usr/local/mysql/lib/plugin/libgalera_smm.so</div><div class="line">wsrep_sst_method = rsync</div><div class="line">#使用sst的用户和密码，这里如果开启，需要在mysql上创建该用户，并授予其足够的权限</div><div class="line">wsrep_sst_auth=galera:galera</div><div class="line"># 配置集群的所有节点</div><div class="line">wsrep_cluster_address=gcomm://192.168.1.150:4567,192.168.1.151:4567</div><div class="line"># 配置自己的ip:port，每个配置各不相同</div><div class="line">wsrep_node_address=192.168.1.150:4567</div><div class="line">default_storage_engine=InnoDB</div><div class="line">innodb_autoinc_lock_mode=2</div><div class="line">innodb_locks_unsafe_for_binlog=1</div><div class="line">innodb_flush_log_at_trx_commit=1</div><div class="line">innodb_file_per_table=1</div><div class="line">binlog_format=ROW</div><div class="line">log-bin=mysql-bin</div><div class="line">relay-log=mysql-relay-bin</div><div class="line">log-slave-updates=1</div><div class="line"></div><div class="line">#[mysqld_safe]</div><div class="line">#log-error=/var/lib/mysql/mysqld.log</div><div class="line">#pid-file=/var/lib/mysql/mysqld.pid</div></pre></td></tr></table></figure>
+<p>节点mysql1启动</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">/usr/local/mysql/bin/mysqld_safe --wsrep_cluster_address=gcomm:// &gt;/dev/null &amp;</div></pre></td></tr></table></figure>
+<p>检查启动的端口，应该有3306和4567两个端口</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">netstat -tunlp |grep 4567</div><div class="line">netstat -tunlp |grep 3306</div></pre></td></tr></table></figure>
+<p>在集群中添加新的节点，并执行启动脚本。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">/etc/init.d/mysql start</div></pre></td></tr></table></figure>
+<p>PS：复制虚拟机，设置新IP</p>
+<p>在新的虚拟机中修改ifconfig-eth0，设置IP为192.168.1.151，去掉UUID、MAC两个参数。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">vi /etc/sysconfig/network-scripts/ifcfg-eth0</div></pre></td></tr></table></figure>
+<p>重建路由</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">rm -rf /etc/udev/rules.d/70-persistent-net.rules</div></pre></td></tr></table></figure>
+<p>重启虚拟机</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">shutown -r now</div></pre></td></tr></table></figure>
+<p>测试网络</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ping 192.168.1.150</div></pre></td></tr></table></figure>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;3&lt;/di
+    
+    </summary>
+    
+    
+      <category term="MySQL" scheme="http://www.forwardlee.com/tags/MySQL/"/>
+    
+  </entry>
   
   <entry>
     <title>Docker Galera Cluster环境快速搭建</title>
@@ -352,24 +398,6 @@
   </entry>
   
   <entry>
-    <title>Laravel 5.x进阶笔记（二）</title>
-    <link href="http://www.forwardlee.com/2017/08/01/p/Laravel5.x%E8%BF%9B%E9%98%B6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89/"/>
-    <id>http://www.forwardlee.com/2017/08/01/p/Laravel5.x进阶笔记（三）/</id>
-    <published>2017-08-01T06:42:53.000Z</published>
-    <updated>2017-08-01T08:21:34.000Z</updated>
-    
-    <summary type="html">
-    
-    </summary>
-    
-    
-      <category term="PHP" scheme="http://www.forwardlee.com/tags/PHP/"/>
-    
-      <category term="Laravel5" scheme="http://www.forwardlee.com/tags/Laravel5/"/>
-    
-  </entry>
-  
-  <entry>
     <title>Laravel 5.x进阶笔记（一）</title>
     <link href="http://www.forwardlee.com/2017/08/01/p/Laravel5.x%E8%BF%9B%E9%98%B6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/"/>
     <id>http://www.forwardlee.com/2017/08/01/p/Laravel5.x进阶笔记（一）/</id>
@@ -423,6 +451,24 @@
     <summary type="html">
     
       &lt;h2 id=&quot;默认条件&quot;&gt;&lt;a href=&quot;#默认条件&quot; class=&quot;headerlink&quot; title=&quot;默认条件&quot;&gt;&lt;/a&gt;默认条件&lt;/h2&gt;&lt;p&gt;MacOS，&amp;gt;=PHP5.4，翻墙环境（默认创建的项目会请求*.google.com）&lt;br&gt;懂得PHP基础知识和MV
+    
+    </summary>
+    
+    
+      <category term="PHP" scheme="http://www.forwardlee.com/tags/PHP/"/>
+    
+      <category term="Laravel5" scheme="http://www.forwardlee.com/tags/Laravel5/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Laravel 5.x进阶笔记（二）</title>
+    <link href="http://www.forwardlee.com/2017/08/01/p/Laravel5.x%E8%BF%9B%E9%98%B6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89/"/>
+    <id>http://www.forwardlee.com/2017/08/01/p/Laravel5.x进阶笔记（三）/</id>
+    <published>2017-08-01T06:42:53.000Z</published>
+    <updated>2017-08-01T08:21:34.000Z</updated>
+    
+    <summary type="html">
     
     </summary>
     

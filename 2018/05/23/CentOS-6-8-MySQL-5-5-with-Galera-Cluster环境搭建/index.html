@@ -6,18 +6,20 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://www.forwardlee.com">
-  <title>Tag: MySQL | 不忘初心</title>
+  <title>CentOS 6.8+MySQL 5.5 with Galera Cluster环境搭建 | 不忘初心</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="总结学习方法，实践技术技能。">
-<meta property="og:type" content="website">
-<meta property="og:title" content="不忘初心">
-<meta property="og:url" content="http://www.forwardlee.com/tags/MySQL/index.html">
+  <meta name="description" content="123456789101112131415161718##先安装依赖库yum install libaio gcc gcc-c++ boost-devel scons check-devel openssl-develln -sf /usr/lib64/libssl.so.10 /usr/lib64/libssl.so.6ln -sf /usr/lib64/libcrypto.so.10 /usr">
+<meta name="keywords" content="MySQL">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CentOS 6.8+MySQL 5.5 with Galera Cluster环境搭建">
+<meta property="og:url" content="http://www.forwardlee.com/2018/05/23/CentOS-6-8-MySQL-5-5-with-Galera-Cluster环境搭建/index.html">
 <meta property="og:site_name" content="不忘初心">
-<meta property="og:description" content="总结学习方法，实践技术技能。">
+<meta property="og:description" content="123456789101112131415161718##先安装依赖库yum install libaio gcc gcc-c++ boost-devel scons check-devel openssl-develln -sf /usr/lib64/libssl.so.10 /usr/lib64/libssl.so.6ln -sf /usr/lib64/libcrypto.so.10 /usr">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-05-23T08:10:34.388Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="不忘初心">
-<meta name="twitter:description" content="总结学习方法，实践技术技能。">
+<meta name="twitter:title" content="CentOS 6.8+MySQL 5.5 with Galera Cluster环境搭建">
+<meta name="twitter:description" content="123456789101112131415161718##先安装依赖库yum install libaio gcc gcc-c++ boost-devel scons check-devel openssl-develln -sf /usr/lib64/libssl.so.10 /usr/lib64/libssl.so.6ln -sf /usr/lib64/libcrypto.so.10 /usr">
   
     <link rel="alternative" href="/atom.xml" title="不忘初心" type="application/atom+xml">
   
@@ -185,36 +187,86 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-CentOS-6-8-MySQL-5-5-with-Galera-Cluster环境搭建" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2018" class="archive-year">2018</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/05/23/CentOS-6-8-MySQL-5-5-with-Galera-Cluster环境搭建/" class="archive-article-date">
-  	<time datetime="2018-05-22T16:13:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-05-23</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/05/23/CentOS-6-8-MySQL-5-5-with-Galera-Cluster环境搭建/">CentOS 6.8+MySQL 5.5 with Galera Cluster环境搭建</a>
+    <h1 class="article-title" itemprop="name">
+      CentOS 6.8+MySQL 5.5 with Galera Cluster环境搭建
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
+        
+        <a href="/2018/05/23/CentOS-6-8-MySQL-5-5-with-Galera-Cluster环境搭建/" class="archive-article-date">
+  	<time datetime="2018-05-22T16:13:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-05-23</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">##先安装依赖库</div><div class="line">yum install libaio gcc gcc-c++ boost-devel scons check-devel openssl-devel</div><div class="line">ln -sf /usr/lib64/libssl.so.10 /usr/lib64/libssl.so.6</div><div class="line">ln -sf /usr/lib64/libcrypto.so.10 /usr/lib64/libcrypto.so.6</div><div class="line">##下载MySQL with wsrep源码包，目前最新版本是5.5.34-25.9</div><div class="line">wget https://launchpad.net/codership-mysql/5.5/5.5.34-25.9/+download/mysql-5.5.34_wsrep_25.9-linux-x86_64.tar.gz</div><div class="line">tar zxvf mysql-5.5*</div><div class="line">mv mysql-5.5.34_wsrep_25.9-linux-x86_64 /usr/local/mysql</div><div class="line">cd /usr/local/mysql/</div><div class="line">groupadd mysql</div><div class="line">useradd -r -g mysql mysql</div><div class="line">chown -R mysql:mysql .</div><div class="line">./scripts/mysql_install_db --no-defaults --datadir=/opt/mysqldb/ --user=mysql</div><div class="line">chown -R root .</div><div class="line">chown -R mysql /opt/mysqldb/</div><div class="line">echo &quot;export PATH=$PATH:/usr/local/mysql/bin&quot; &gt;&gt; /etc/profile</div><div class="line">source /etc/profile</div><div class="line">[root@localhost mysql]# vi /etc/my.cnf</div></pre></td></tr></table></figure>
+<p>[mysqld]<br>datadir=/opt/mysqldb<br>socket = /tmp/mysql.sock<br>user=mysql</p>
+<p>symbolic-links=0</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">##启动Mysql</div><div class="line">mysqld_safe --wsrep_cluster_address=gcomm:// &gt;/dev/null &amp;</div><div class="line"></div><div class="line">##安装Xtrabackup</div><div class="line">yum install perl-DBD-MySQL perl-Time-HiRes nc</div><div class="line"></div><div class="line">wget https://www.percona.com/downloads/XtraBackup/XtraBackup-2.1.9/RPM/rhel6/x86_64/percona-xtrabackup-2.1.9-744.rhel6.x86_64.rpm</div><div class="line"></div><div class="line">rpm -ivh percona-xtrabackup-2.1.9-744.rhel6.x86_64.rpm</div><div class="line"></div><div class="line">##安装Galera复制插件</div><div class="line">wget https://launchpad.net/galera/3.x/25.3.5/+download/galera-25.3.5-src.tar.gz</div><div class="line"></div><div class="line">tar zxvf galera-25.3.5-src.tar.gz</div><div class="line"></div><div class="line">cd galera-25.3.5-src</div><div class="line"></div><div class="line">scons</div><div class="line"></div><div class="line">cp garb/garbd /usr/local/mysql/bin/</div><div class="line"></div><div class="line">cp libgalera_smm.so /usr/local/mysql/lib/plugin/</div></pre></td></tr></table></figure>
+<p>mysql初始化配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">mkdir -p /var/lib/mysql</div><div class="line">mkdir -p /etc/mysql/conf.d/</div><div class="line">chown mysql:mysql /var/lib/mysql</div><div class="line">cp /usr/local/mysql/support-files/mysql.server /etc/init.d/mysql</div><div class="line">/usr/local/mysql/bin/mysqld_safe --wsrep_cluster_address=gcomm:// &gt;/dev/null &amp;</div><div class="line">##创建用于同步的帐号，注意替换掉示例值。</div><div class="line">mysql  -e &quot;SET wsrep_on=OFF; GRANT ALL ON *.* TO &apos;galera&apos;@&apos;%&apos; IDENTIFIED BY &apos;galera&apos;&quot;;</div><div class="line">##我使用的mysql版本再执行上述授权语句后，%代表任意主机，却不包含localhost，所以要给防伪localhost单独授权。</div><div class="line">mysql  -e &quot;SET wsrep_on=OFF; GRANT ALL ON *.* TO &apos;galera&apos;@&apos;localhost&apos; IDENTIFIED BY &apos;galera&apos;&quot;;</div><div class="line">##修改root帐号密码，注意替换掉示例值。</div><div class="line">mysql -e &quot;SET wsrep_on=OFF;GRANT ALL PRIVILEGES ON * . * TO &apos;root&apos;@&apos;localhost&apos; IDENTIFIED BY &apos;root&apos; WITH GRANT OPTION MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0 ; &quot;</div><div class="line"></div><div class="line">##查看授权</div><div class="line">mysql -uroot -proot;</div><div class="line">show grants for galera@&quot;%&quot;;</div><div class="line">show grants for galera@&quot;localhost&quot;;</div><div class="line"></div><div class="line">##关闭MySQL</div><div class="line">pkill mysql</div></pre></td></tr></table></figure>
+<p>Galera集群配置</p>
+<p>修改my.cnf</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">vi /etc/my.cnf</div></pre></td></tr></table></figure>
+<p>my.cnf配置：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line">[mysqld]</div><div class="line">datadir=/opt/mysqldb</div><div class="line">socket = /tmp/mysql.sock</div><div class="line">user=mysql</div><div class="line"></div><div class="line">symbolic-links=0</div><div class="line"></div><div class="line">######galera conf start########</div><div class="line">server-id=101</div><div class="line">wsrep_node_name = mysql1</div><div class="line">wsrep_provider = /usr/local/mysql/lib/plugin/libgalera_smm.so</div><div class="line">wsrep_sst_method = rsync</div><div class="line">#使用sst的用户和密码，这里如果开启，需要在mysql上创建该用户，并授予其足够的权限</div><div class="line">wsrep_sst_auth=galera:galera</div><div class="line"># 配置集群的所有节点</div><div class="line">wsrep_cluster_address=gcomm://192.168.1.150:4567,192.168.1.151:4567</div><div class="line"># 配置自己的ip:port，每个配置各不相同</div><div class="line">wsrep_node_address=192.168.1.150:4567</div><div class="line">default_storage_engine=InnoDB</div><div class="line">innodb_autoinc_lock_mode=2</div><div class="line">innodb_locks_unsafe_for_binlog=1</div><div class="line">innodb_flush_log_at_trx_commit=1</div><div class="line">innodb_file_per_table=1</div><div class="line">binlog_format=ROW</div><div class="line">log-bin=mysql-bin</div><div class="line">relay-log=mysql-relay-bin</div><div class="line">log-slave-updates=1</div><div class="line"></div><div class="line">#[mysqld_safe]</div><div class="line">#log-error=/var/lib/mysql/mysqld.log</div><div class="line">#pid-file=/var/lib/mysql/mysqld.pid</div></pre></td></tr></table></figure>
+<p>节点mysql1启动</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">/usr/local/mysql/bin/mysqld_safe --wsrep_cluster_address=gcomm:// &gt;/dev/null &amp;</div></pre></td></tr></table></figure>
+<p>检查启动的端口，应该有3306和4567两个端口</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">netstat -tunlp |grep 4567</div><div class="line">netstat -tunlp |grep 3306</div></pre></td></tr></table></figure>
+<p>在集群中添加新的节点，并执行启动脚本。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">/etc/init.d/mysql start</div></pre></td></tr></table></figure>
+<p>PS：复制虚拟机，设置新IP</p>
+<p>在新的虚拟机中修改ifconfig-eth0，设置IP为192.168.1.151，去掉UUID、MAC两个参数。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">vi /etc/sysconfig/network-scripts/ifcfg-eth0</div></pre></td></tr></table></figure>
+<p>重建路由</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">rm -rf /etc/udev/rules.d/70-persistent-net.rules</div></pre></td></tr></table></figure>
+<p>重启虚拟机</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">shutown -r now</div></pre></td></tr></table></figure>
+<p>测试网络</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ping 192.168.1.150</div></pre></td></tr></table></figure>
+
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    
+                    <div class="reward-box-item">
+                      <img class="reward-img" src="/images/wxcode.jpeg">
+                      <span class="reward-type">微信</span>
+                    </div>
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
@@ -226,19 +278,104 @@
 		</ul>
 	</div>
 
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="http://s.jiathis.com/qrcode.php?url=http://www.forwardlee.com/2018/05/23/CentOS-6-8-MySQL-5-5-with-Galera-Cluster环境搭建/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
   
   
-    </div></section>
+    <a href="/2018/05/22/Docker-Galera-Cluster环境快速搭建/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Docker Galera Cluster环境快速搭建</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+  
+  
   
 
-    
+  
+
+  
 
 
           </div>
@@ -261,9 +398,9 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
+		isPost: true,
 		isArchive: false,
-		isTag: true,
+		isTag: false,
 		isCategory: false,
 		open_in_new: true,
 		toc_hide_index: true,
@@ -415,95 +552,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               <a href="http://www.laruence.com/" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>鸟哥</a>
             </li>
           
-            <li class="search-li">
-              <a href="https://lvwenhan.com/" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>岁寒</a>
-            </li>
-          
-        </ul>
-  		
-    	</section>
-    
-
-    
-    	<section class="tools-section tools-section-me" q-show="aboutme">
-  	  	
-  	  		<div class="aboutme-wrap" id="js-aboutme">很惭愧&lt;br&gt;&lt;br&gt;只做了一点微小的工作&lt;br&gt;谢谢大家</div>
-  	  	
-    	</section>
-    
-  </div>
-  
-</div>
-    <!-- Root element of PhotoSwipe. Must have class pswp. -->
-<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
-
-    <!-- Background of PhotoSwipe. 
-         It's a separate element as animating opacity is faster than rgba(). -->
-    <div class="pswp__bg"></div>
-
-    <!-- Slides wrapper with overflow:hidden. -->
-    <div class="pswp__scroll-wrap">
-
-        <!-- Container that holds slides. 
-            PhotoSwipe keeps only 3 of them in the DOM to save memory.
-            Don't modify these 3 pswp__item elements, data is added later on. -->
-        <div class="pswp__container">
-            <div class="pswp__item"></div>
-            <div class="pswp__item"></div>
-            <div class="pswp__item"></div>
-        </div>
-
-        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
-        <div class="pswp__ui pswp__ui--hidden">
-
-            <div class="pswp__top-bar">
-
-                <!--  Controls are self-explanatory. Order can be changed. -->
-
-                <div class="pswp__counter"></div>
-
-                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
-
-                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
-
-                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
-
-                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
-
-                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
-                <!-- element will get class pswp__preloader--active when preloader is running -->
-                <div class="pswp__preloader">
-                    <div class="pswp__preloader__icn">
-                      <div class="pswp__preloader__cut">
-                        <div class="pswp__preloader__donut"></div>
-                      </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
-                <div class="pswp__share-tooltip"></div> 
-            </div>
-
-            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
-            </button>
-
-            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
-            </button>
-
-            <div class="pswp__caption">
-                <div class="pswp__caption__center"></div>
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
-  </div>
-</body>
-</html>
-     
             <li class="search-li">
               <a href="https://lvwenhan.com/" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>岁寒</a>
             </li>

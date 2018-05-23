@@ -4,6 +4,23 @@
 
     
   <url>
+    <loc>http://www.forwardlee.com/2018/05/23/CentOS-6-8-MySQL-5-5-with-Galera-Cluster%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/</loc>
+    <lastmod>2018-05-23T08:10:34.388Z</lastmod>
+    <data>
+        <display>
+        <title>CentOS 6.8+MySQL 5.5 with Galera Cluster环境搭建</title>
+        <pubTime>2018-05-22T16:13:16.000Z</pubTime>
+        
+        <tag>MySQL</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://www.forwardlee.com/2018/05/22/Docker-Galera-Cluster%E7%8E%AF%E5%A2%83%E5%BF%AB%E9%80%9F%E6%90%AD%E5%BB%BA/</loc>
     <lastmod>2018-05-22T10:55:17.169Z</lastmod>
     <data>
