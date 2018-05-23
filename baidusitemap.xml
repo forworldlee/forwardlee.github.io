@@ -4,6 +4,23 @@
 
     
   <url>
+    <loc>http://www.forwardlee.com/2018/05/23/Keepalived-HA-LVS-Galera-Cluster%E7%8E%AF%E5%A2%83/</loc>
+    <lastmod>2018-05-23T11:20:55.842Z</lastmod>
+    <data>
+        <display>
+        <title>Keepalived HA +LVS+ Galera Cluster环境</title>
+        <pubTime>2018-05-23T08:14:48.000Z</pubTime>
+        
+        <tag>MySQL</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://www.forwardlee.com/2018/05/23/CentOS-6-8-MySQL-5-5-with-Galera-Cluster%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/</loc>
     <lastmod>2018-05-23T08:10:34.388Z</lastmod>
     <data>
