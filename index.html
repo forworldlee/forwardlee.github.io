@@ -64,8 +64,6 @@
 	        
 				<li><a href="/tags/PHP/">PHP</a></li>
 	        
-				<li><a href="/tags/Laravel5">Laravel5</a></li>
-	        
 				<li><a href="/tags/学习力/">学习力</a></li>
 	        
 			</ul>
@@ -138,8 +136,6 @@
 			
 				
 			
-				
-			
 			
 			
 			<nav class="header-nav">
@@ -158,19 +154,17 @@
 				<ul style="width: 70%">
 				
 				
-					<li style="width: 14.285714285714286%"><a href="/">主页</a></li>
+					<li style="width: 16.666666666666668%"><a href="/">主页</a></li>
 		        
-					<li style="width: 14.285714285714286%"><a href="/tags/JAVA/">JAVA</a></li>
+					<li style="width: 16.666666666666668%"><a href="/tags/JAVA/">JAVA</a></li>
 		        
-					<li style="width: 14.285714285714286%"><a href="/tags/MySql/">MySql</a></li>
+					<li style="width: 16.666666666666668%"><a href="/tags/MySql/">MySql</a></li>
 		        
-					<li style="width: 14.285714285714286%"><a href="/tags/Docker/">Docker</a></li>
+					<li style="width: 16.666666666666668%"><a href="/tags/Docker/">Docker</a></li>
 		        
-					<li style="width: 14.285714285714286%"><a href="/tags/PHP/">PHP</a></li>
+					<li style="width: 16.666666666666668%"><a href="/tags/PHP/">PHP</a></li>
 		        
-					<li style="width: 14.285714285714286%"><a href="/tags/Laravel5">Laravel5</a></li>
-		        
-					<li style="width: 14.285714285714286%"><a href="/tags/学习力/">学习力</a></li>
+					<li style="width: 16.666666666666668%"><a href="/tags/学习力/">学习力</a></li>
 		        
 				</ul>
 			</nav>
@@ -186,6 +180,241 @@
           </div>
           <div id="js-content" class="content-ll">
             
+  
+    <article id="post-CentOS-6-8-MariaDB-10-0-with-Galera-Cluster-Keepalived高可用解决方案" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/05/24/CentOS-6-8-MariaDB-10-0-with-Galera-Cluster-Keepalived高可用解决方案/">CentOS 6.8 + MariaDB 10.0 with Galera Cluster+Keepalived高可用解决方案</a>
+    </h1>
+  
+
+        
+        <a href="/2018/05/24/CentOS-6-8-MariaDB-10-0-with-Galera-Cluster-Keepalived高可用解决方案/" class="archive-article-date">
+  	<time datetime="2018-05-24T11:40:46.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-05-24</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong>1.部署MariaDB Galera Cluster</strong></p>
+<p>使用三台最小化安装的CentOS 6.8 x86_64新环境。</p>
+<table>
+<thead>
+<tr>
+<th>节点</th>
+<th>节点名称</th>
+<th>节点IP</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>donor</td>
+<td>db1</td>
+<td>192.168.1.150</td>
+</tr>
+<tr>
+<td>node1</td>
+<td>db2</td>
+<td>192.168.1.151</td>
+</tr>
+<tr>
+<td>node2</td>
+<td>db3</td>
+<td>192.168.1.152</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Step 1- 设置MariaDB的yum安装源</strong></p>
+<p>创建/etc/yum.repos.d/mariadb.repo</p>
+<p>CentOS 6 – 64bit系统mariadb.repo内容如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">[mariadb]</div><div class="line">name = MariaDB</div><div class="line">baseurl = http://yum.mariadb.org/10.0/centos6-amd64</div><div class="line">gpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB</div><div class="line">gpgcheck=1</div></pre></td></tr></table></figure>
+<p>For CentOS 6 – 32bit系统mariadb.repo内容如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">[mariadb]</div><div class="line">name = MariaDB</div><div class="line">baseurl = http://yum.mariadb.org/10.0/centos6-x86</div><div class="line">gpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB</div><div class="line">gpgcheck=1</div></pre></td></tr></table></figure>
+<p><strong>Step 2 – 设置SELinux状态</strong></p>
+<p>在开始安装之前，先把三台机器的SELinux状态设置为permissive，临时设置如下，重启失效。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo setenforce 0</div></pre></td></tr></table></figure>
+<p>永久设置:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">vi /etc/selinux/config</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"># This file controls the state of SELinux on the system.</div><div class="line"># SELINUX= can take one of these three values:</div><div class="line">#     enforcing - SELinux security policy is enforced. default</div><div class="line">#     permissive - SELinux prints warnings instead of enforcing.</div><div class="line">#     disabled - No SELinux policy is loaded.</div><div class="line">SELINUX=permissive</div><div class="line"># SELINUXTYPE= can take one of these two values:</div><div class="line">#     targeted - Targeted processes are protected,</div><div class="line">#     mls - Multi Level Security protection.</div><div class="line">SELINUXTYPE=targeted</div></pre></td></tr></table></figure>
+<p><strong>Step 3 – 安装 MariaDB Galera Cluster 10.0</strong> </p>
+<p>使用yum安装MariaDB Galera Cluster，需要先安装socat工具包，用来确保yum可以找到安装源。<br>CentOS 6用以下方式安装：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo yum install -y http://dl.fedoraproject.org/pub/epel/6/x86_64/Packages/s/socat-1.7.2.3-1.el6.x86_64.rpm</div></pre></td></tr></table></figure>
+<p>CentOS 7用以下方式安装：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo yum install socat</div></pre></td></tr></table></figure>
+<p>开始安装数据库集群环境</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo yum install MariaDB-Galera-server MariaDB-client rsync galera</div></pre></td></tr></table></figure>
+<p><strong>Step 4:  MariaDB安全性设置</strong></p>
+<p>MariaDB是Mysql的一个分支，所以使用Mysql的命令启动数据库。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo service mysql start</div></pre></td></tr></table></figure>
+<p>执行以下脚本，并按提示进行相应操作，提升数据库安全。设置root初始密码为。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo /usr/bin/mysql_secure_installation</div></pre></td></tr></table></figure>
+<p>我把root用户密码设置为root。</p>
+<p><strong>Step 5 – 创建MariaDB Galera Cluster集群数据通信用户</strong></p>
+<p>创建一个集群节点之间进行数据状态快照转移（State Transfer Snapshot – SST）所使用的用户账号。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">mysql -u root -p</div><div class="line">mysql&gt; DELETE FROM mysql.user WHERE user=&apos;&apos;;</div><div class="line">mysql&gt; GRANT ALL ON *.* TO &apos;root&apos;@&apos;%&apos; IDENTIFIED BY &apos;dbpass&apos;;</div><div class="line">mysql&gt; GRANT USAGE ON *.* to galera@&apos;%&apos; IDENTIFIED BY &apos;galera&apos;;</div><div class="line">mysql&gt; GRANT ALL PRIVILEGES on *.* to galera@&apos;%&apos;;</div><div class="line">mysql&gt; FLUSH PRIVILEGES;</div><div class="line">mysql&gt; quit</div></pre></td></tr></table></figure>
+<p>在开发或测试环境中，使用%表示任意主机，也就是说允许root用户和<br>galera用户可以从任意主机登访问数据库。出于安全考虑，你可以把%替换成你所允许的主机名称或者主机IP地址。</p>
+<p><strong>Step 6 – MariaDB Galera Cluster 集群配置</strong></p>
+<p>停止Mysql服务</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo service mysql stop</div></pre></td></tr></table></figure>
+<p>先创建Donor节点的配置信息。<br>Donor节点只用来同步数据，不能有外部链接操作Donor节点数据，保证Donor节点的健康状态，维护正常的集群运行状态。其他节点只需要修改wsrep_node_address=’192.168.1.150’和wsrep_node_name=’db1’两个配置即可，其他配置相同。</p>
+<p>向/etc/my.cnf.d/server.cnf文件中添加以下配置信息:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo cat &gt;&gt; /etc/my.cnf.d/servebinlog_format=ROW</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">default-storage-engine=innodb</div><div class="line">innodb_autoinc_lock_mode=2</div><div class="line">innodb_locks_unsafe_for_binlog=1</div><div class="line">query_cache_size=0</div><div class="line">query_cache_type=0</div><div class="line">bind-address=0.0.0.0</div><div class="line">datadir=/var/lib/mysql</div><div class="line">innodb_log_file_size=100M</div><div class="line">innodb_file_per_table</div><div class="line">innodb_flush_log_at_trx_commit=2</div><div class="line">wsrep_provider=/usr/lib64/galera/libgalera_smm.so</div><div class="line">wsrep_cluster_address=&quot;gcomm://192.168.1.150,192.168.1.151,192.168.1.152&quot;</div><div class="line">wsrep_cluster_name=&apos;galera_cluster&apos;</div><div class="line">wsrep_node_address=&apos;192.168.1.150&apos;</div><div class="line">wsrep_node_name=&apos;db1&apos;</div><div class="line">wsrep_sst_method=rsync</div><div class="line">wsrep_sst_auth=sst_user:dbpass</div><div class="line">EOF</div></pre></td></tr></table></figure>
+<p>wsrep_cluster_address配置省略了默认端口4567。</p>
+<p>其他两个节点所需要修改的配置：</p>
+<p>node1节点 :</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">wsrep_node_address=&apos;192.168.1.151&apos;</div><div class="line">wsrep_node_name=&apos;db2&apos;</div></pre></td></tr></table></figure>
+<p>node2节点 :</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">wsrep_node_address=&apos;192.168.1.152&apos;</div><div class="line">wsrep_node_name=&apos;db3&apos;</div></pre></td></tr></table></figure>
+<p><strong>Step 7– 初始化Donor节点</strong><br>Donor节点是整个集群的优先初始化节点，只有Donor节点先启动，其他子节点才能正常加入到集群当中。启动Donor节点，需要配置‐‐wsrep-new-cluster参数。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo /etc/init.d/mysql start --wsrep-new-cluster</div></pre></td></tr></table></figure>
+<p>运行以下命令，查看集群的运行状态。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mysql -uroot -p -e&quot;show status like &apos;wsrep%&apos;&quot;</div></pre></td></tr></table></figure>
+<p>输出以下信息：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div></pre></td><td class="code"><pre><div class="line">+------------------------------+-----------------------------------------------+</div><div class="line">| Variable_name                | Value                                         |</div><div class="line">+------------------------------+-----------------------------------------------+</div><div class="line">| wsrep_local_state_uuid       | 47b3fdaa-5f43-11e8-8cbd-62ce6e10f564          |</div><div class="line">| wsrep_protocol_version       | 8                                             |</div><div class="line">| wsrep_last_committed         | 2                                             |</div><div class="line">| wsrep_replicated             | 0                                             |</div><div class="line">| wsrep_replicated_bytes       | 0                                             |</div><div class="line">| wsrep_repl_keys              | 0                                             |</div><div class="line">| wsrep_repl_keys_bytes        | 0                                             |</div><div class="line">| wsrep_repl_data_bytes        | 0                                             |</div><div class="line">| wsrep_repl_other_bytes       | 0                                             |</div><div class="line">| wsrep_received               | 10                                            |</div><div class="line">| wsrep_received_bytes         | 2304                                          |</div><div class="line">| wsrep_local_commits          | 0                                             |</div><div class="line">| wsrep_local_cert_failures    | 0                                             |</div><div class="line">| wsrep_local_replays          | 0                                             |</div><div class="line">| wsrep_local_send_queue       | 0                                             |</div><div class="line">| wsrep_local_send_queue_max   | 1                                             |</div><div class="line">| wsrep_local_send_queue_min   | 0                                             |</div><div class="line">| wsrep_local_send_queue_avg   | 0.000000                                      |</div><div class="line">| wsrep_local_recv_queue       | 0                                             |</div><div class="line">| wsrep_local_recv_queue_max   | 2                                             |</div><div class="line">| wsrep_local_recv_queue_min   | 0                                             |</div><div class="line">| wsrep_local_recv_queue_avg   | 0.100000                                      |</div><div class="line">| wsrep_local_cached_downto    | 1                                             |</div><div class="line">| wsrep_flow_control_paused_ns | 0                                             |</div><div class="line">| wsrep_flow_control_paused    | 0.000000                                      |</div><div class="line">| wsrep_flow_control_sent      | 0                                             |</div><div class="line">| wsrep_flow_control_recv      | 0                                             |</div><div class="line">| wsrep_cert_deps_distance     | 1.000000                                      |</div><div class="line">| wsrep_apply_oooe             | 0.000000                                      |</div><div class="line">| wsrep_apply_oool             | 0.000000                                      |</div><div class="line">| wsrep_apply_window           | 1.000000                                      |</div><div class="line">| wsrep_commit_oooe            | 0.000000                                      |</div><div class="line">| wsrep_commit_oool            | 0.000000                                      |</div><div class="line">| wsrep_commit_window          | 1.000000                                      |</div><div class="line">| wsrep_local_state            | 4                                             |</div><div class="line">| wsrep_local_state_comment    | Synced                                        |</div><div class="line">| wsrep_cert_index_size        | 1                                             |</div><div class="line">| wsrep_causal_reads           | 0                                             |</div><div class="line">| wsrep_cert_interval          | 0.000000                                      |</div><div class="line">| wsrep_incoming_addresses     | 192.168.1.150:3306                            |</div><div class="line">| wsrep_desync_count           | 0                                             |</div><div class="line">| wsrep_evs_delayed            |                                               |</div><div class="line">| wsrep_evs_evict_list         |                                               |</div><div class="line">| wsrep_evs_repl_latency       | 4.67e-06/9.14775e-06/1.1497e-05/2.63955e-06/4 |</div><div class="line">| wsrep_evs_state              | OPERATIONAL                                   |</div><div class="line">| wsrep_gcomm_uuid             | 559ef6a3-5f45-11e8-92a5-52514b1a7147          |</div><div class="line">| wsrep_cluster_conf_id        | 7                                             |</div><div class="line">| wsrep_cluster_size           | 1                                             |</div><div class="line">| wsrep_cluster_state_uuid     | 47b3fdaa-5f43-11e8-8cbd-62ce6e10f564          |</div><div class="line">| wsrep_cluster_status         | Primary                                       |</div><div class="line">| wsrep_connected              | ON                                            |</div><div class="line">| wsrep_local_bf_aborts        | 0                                             |</div><div class="line">| wsrep_local_index            | 0                                             |</div><div class="line">| wsrep_provider_name          | Galera                                        |</div><div class="line">| wsrep_provider_vendor        | Codership Oy &lt;info@codership.com&gt;             |</div><div class="line">| wsrep_provider_version       | 25.3.23(r3789)                                |</div><div class="line">| wsrep_ready                  | ON                                            |</div><div class="line">| wsrep_thread_count           | 2                                             |</div><div class="line">+------------------------------+-----------------------------------------------+</div><div class="line">58 rows in set (0.00 sec)</div></pre></td></tr></table></figure>
+<p>重点查看这些信息是否正确：<br>wsrep_cluster_size 当前集群中节点个数<br>wsrep_local_state_comment 集群数据同步状态<br>wsrep_incoming_addresses 数据提供方节点地址和端口<br>wsrep_ready ON集群状态正常<br>wsrep_connected ON集群连接状态正常</p>
+<p><strong>Step 8– 动态添加集群节点</strong><br>按照Step6的操作，配置node1和node2两个节点的配置文件，用以下命令启动集群子节点。注意与Donor节点的启动方式不同。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo service mysql start</div></pre></td></tr></table></figure>
+<p>检查node1和node2两个节点的状态，是否正常。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mysql -u root -p -e &quot;show status like &apos;wsrep%&apos;&quot;</div></pre></td></tr></table></figure>
+<p>node1和node2两个子节点启动后，状态查询结果如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div></pre></td><td class="code"><pre><div class="line">+------------------------------+----------------------------------------------------------+</div><div class="line">| Variable_name                | Value                                                    |</div><div class="line">+------------------------------+----------------------------------------------------------+</div><div class="line">| wsrep_local_state_uuid       | 47b3fdaa-5f43-11e8-8cbd-62ce6e10f564                     |</div><div class="line">| wsrep_protocol_version       | 8                                                        |</div><div class="line">| wsrep_last_committed         | 2                                                        |</div><div class="line">| wsrep_replicated             | 0                                                        |</div><div class="line">| wsrep_replicated_bytes       | 0                                                        |</div><div class="line">| wsrep_repl_keys              | 0                                                        |</div><div class="line">| wsrep_repl_keys_bytes        | 0                                                        |</div><div class="line">| wsrep_repl_data_bytes        | 0                                                        |</div><div class="line">| wsrep_repl_other_bytes       | 0                                                        |</div><div class="line">| wsrep_received               | 3                                                        |</div><div class="line">| wsrep_received_bytes         | 476                                                      |</div><div class="line">| wsrep_local_commits          | 0                                                        |</div><div class="line">| wsrep_local_cert_failures    | 0                                                        |</div><div class="line">| wsrep_local_replays          | 0                                                        |</div><div class="line">| wsrep_local_send_queue       | 0                                                        |</div><div class="line">| wsrep_local_send_queue_max   | 1                                                        |</div><div class="line">| wsrep_local_send_queue_min   | 0                                                        |</div><div class="line">| wsrep_local_send_queue_avg   | 0.000000                                                 |</div><div class="line">| wsrep_local_recv_queue       | 0                                                        |</div><div class="line">| wsrep_local_recv_queue_max   | 1                                                        |</div><div class="line">| wsrep_local_recv_queue_min   | 0                                                        |</div><div class="line">| wsrep_local_recv_queue_avg   | 0.000000                                                 |</div><div class="line">| wsrep_local_cached_downto    | 18446744073709551615                                     |</div><div class="line">| wsrep_flow_control_paused_ns | 0                                                        |</div><div class="line">| wsrep_flow_control_paused    | 0.000000                                                 |</div><div class="line">| wsrep_flow_control_sent      | 0                                                        |</div><div class="line">| wsrep_flow_control_recv      | 0                                                        |</div><div class="line">| wsrep_cert_deps_distance     | 0.000000                                                 |</div><div class="line">| wsrep_apply_oooe             | 0.000000                                                 |</div><div class="line">| wsrep_apply_oool             | 0.000000                                                 |</div><div class="line">| wsrep_apply_window           | 0.000000                                                 |</div><div class="line">| wsrep_commit_oooe            | 0.000000                                                 |</div><div class="line">| wsrep_commit_oool            | 0.000000                                                 |</div><div class="line">| wsrep_commit_window          | 0.000000                                                 |</div><div class="line">| wsrep_local_state            | 4                                                        |</div><div class="line">| wsrep_local_state_comment    | Synced                                                   |</div><div class="line">| wsrep_cert_index_size        | 0                                                        |</div><div class="line">| wsrep_causal_reads           | 0                                                        |</div><div class="line">| wsrep_cert_interval          | 0.000000                                                 |</div><div class="line">| wsrep_incoming_addresses     | 192.168.1.151:3306,192.168.1.152:3306,192.168.1.150:3306 |</div><div class="line">| wsrep_desync_count           | 0                                                        |</div><div class="line">| wsrep_evs_delayed            |                                                          |</div><div class="line">| wsrep_evs_evict_list         |                                                          |</div><div class="line">| wsrep_evs_repl_latency       | 0.00115351/0.00145445/0.0018473/0.000297523/4            |</div><div class="line">| wsrep_evs_state              | OPERATIONAL                                              |</div><div class="line">| wsrep_gcomm_uuid             | 273a3916-5f4f-11e8-88db-8ab9682bb4ca                     |</div><div class="line">| wsrep_cluster_conf_id        | 9                                                        |</div><div class="line">| wsrep_cluster_size           | 3                                                        |</div><div class="line">| wsrep_cluster_state_uuid     | 47b3fdaa-5f43-11e8-8cbd-62ce6e10f564                     |</div><div class="line">| wsrep_cluster_status         | Primary                                                  |</div><div class="line">| wsrep_connected              | ON                                                       |</div><div class="line">| wsrep_local_bf_aborts        | 0                                                        |</div><div class="line">| wsrep_local_index            | 0                                                        |</div><div class="line">| wsrep_provider_name          | Galera                                                   |</div><div class="line">| wsrep_provider_vendor        | Codership Oy &lt;info@codership.com&gt;                        |</div><div class="line">| wsrep_provider_version       | 25.3.23(r3789)                                           |</div><div class="line">| wsrep_ready                  | ON                                                       |</div><div class="line">| wsrep_thread_count           | 2                                                        |</div><div class="line">+------------------------------+----------------------------------------------------------+</div><div class="line">58 rows in set (0.00 sec)</div></pre></td></tr></table></figure>
+<p><strong>Step 9 – 验证数据同步复制</strong><br>模拟场景1：集群中三个节点全部正常启动。<br>在node1和node2两个节点分别创建库和表，查看donor节点是否正常的同步更新数据。</p>
+<p>模拟场景2：node1和node2中的一个节点宕机。<br>在没有宕机的节点（除donor节点）中进行数据CUD操作，先查看donor节点是否正常的同步更新数据，如果正常，则重新启动宕机节点，启动成功后，查看该节点能否正常的把不一致的数据同步过来。</p>
+<p><strong>PS:Galera在加入数据不一致的节点时，外部不能访问该节点，直到数据同步后才能访问该节点。</strong></p>
+<p><strong>2.Keepalived实现MariaDB Galera Cluster集群的高可用配置</strong></p>
+<p>请参考这篇文章<a href="http://www.forwardlee.com/2018/05/23/Keepalived-HA-LVS-Galera-Cluster%E7%8E%AF%E5%A2%83/">《Keepalived HA +LVS+ Galera Cluster环境》</a></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">MySQL</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/05/24/CentOS-6-8-MariaDB-10-0-with-Galera-Cluster-Keepalived高可用解决方案/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-Galera-Cluster-3-Mysql-wresp-5-6安装配置" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/05/24/Galera-Cluster-3-Mysql-wresp-5-6安装配置/">Galera Cluster 3 + Mysql wresp 5.6安装配置</a>
+    </h1>
+  
+
+        
+        <a href="/2018/05/24/Galera-Cluster-3-Mysql-wresp-5-6安装配置/" class="archive-article-date">
+  	<time datetime="2018-05-24T05:02:55.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-05-24</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>安装yum-builddep工具<br>yum install yum-utils –enablerepo=extras</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">MySql</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/05/24/Galera-Cluster-3-Mysql-wresp-5-6安装配置/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
   
     <article id="post-Keepalived-HA-LVS-Galera-Cluster环境" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
@@ -967,154 +1196,6 @@
 
 
   
-    <article id="post-使用wait-notify-配合synchronized实现自定义阻塞队列MyBlockingQueue" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/05/09/使用wait-notify-配合synchronized实现自定义阻塞队列MyBlockingQueue/">使用wait(),notify()配合synchronized实现自定义阻塞队列MyBlockingQueue</a>
-    </h1>
-  
-
-        
-        <a href="/2018/05/09/使用wait-notify-配合synchronized实现自定义阻塞队列MyBlockingQueue/" class="archive-article-date">
-  	<time datetime="2018-05-09T09:04:30.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-05-09</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div></pre></td><td class="code"><pre><div class="line">package cn.klxx.multithread;</div><div class="line"></div><div class="line">import java.util.LinkedList;</div><div class="line">import java.util.concurrent.TimeUnit;</div><div class="line">import java.util.concurrent.atomic.AtomicInteger;</div><div class="line"></div><div class="line">/**</div><div class="line"> * @author ForwardLee</div><div class="line"> * @description 使用synchronized关键字，wait()和notify()方法实现阻塞队列</div><div class="line"> */</div><div class="line"></div><div class="line">public class MyBlockingQueue &#123;</div><div class="line"></div><div class="line">    //队列容器</div><div class="line">    private final LinkedList&lt;Object&gt; list = new LinkedList&lt;Object&gt;();</div><div class="line"></div><div class="line">    //队列大小,使用AtomicInteger可以保证在多线程获取队列大小时线程安全</div><div class="line">    private AtomicInteger count = new AtomicInteger(0);</div><div class="line"></div><div class="line">    //队列最大长度</div><div class="line">    private int maxSize;</div><div class="line"></div><div class="line">    //队列最小长度</div><div class="line">    private int minSize = 0;</div><div class="line"></div><div class="line">    //实现业务模型的锁</div><div class="line">    private Object lock = new Object();</div><div class="line"></div><div class="line">    public MyBlockingQueue(int length)&#123;</div><div class="line">        this.maxSize = length;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    /**</div><div class="line">     * @description 队列存数据</div><div class="line">     * @param obj</div><div class="line">     */</div><div class="line">    public void putObj(Object obj)&#123;</div><div class="line">        synchronized (lock)&#123;</div><div class="line">            if (count.get()==maxSize) &#123;</div><div class="line">                try &#123;</div><div class="line">                    lock.wait();//队列长度已经达到最大值，不能再继续存储数据，则线程处于等待状态，直至队列收到有可用位置的通知。</div><div class="line">                &#125; catch (InterruptedException e) &#123;</div><div class="line">                    e.printStackTrace();</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">            list.push(obj);</div><div class="line">            count.incrementAndGet();</div><div class="line">            lock.notify();//如果已经有线程等待获取队列数据，此时就通知取数据线程有数据了。</div><div class="line">            System.out.println(&quot;存入对象：&quot;+obj);</div><div class="line"></div><div class="line"></div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    /**</div><div class="line">     * @description 获取队列中的数据</div><div class="line">     * @return 返回队列的第一个元素</div><div class="line">     */</div><div class="line">    public Object getObject()&#123;</div><div class="line">        Object retVal = null;</div><div class="line">        synchronized (lock)&#123;</div><div class="line">            if (count.get()==0) &#123;</div><div class="line">                try &#123;</div><div class="line">                    lock.wait();</div><div class="line">                &#125; catch (InterruptedException e) &#123;</div><div class="line">                    e.printStackTrace();</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">            retVal = list.getFirst();</div><div class="line">            count.decrementAndGet();</div><div class="line">            lock.notify();//队列长度小于maxSize了，有存储空间了，就通知存储线程可以放入数据了。</div><div class="line">            System.out.println(&quot;取出对象：&quot;+retVal);</div><div class="line"></div><div class="line">        &#125;</div><div class="line"></div><div class="line">        return retVal;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public static void main(String[] args) &#123;</div><div class="line">        final MyBlockingQueue myBlockingQuene = new MyBlockingQueue(5);</div><div class="line">        new Thread(new Runnable() &#123;</div><div class="line">            @Override</div><div class="line">            public void run() &#123;</div><div class="line">                Object var1 = myBlockingQuene.getObject();</div><div class="line">            &#125;</div><div class="line">        &#125;,&quot;t1&quot;).start();</div><div class="line"></div><div class="line">        new Thread(new Runnable() &#123;</div><div class="line">            @Override</div><div class="line">            public void run() &#123;</div><div class="line">                myBlockingQuene.putObj(&quot;abc1&quot;);</div><div class="line">                myBlockingQuene.putObj(&quot;abc2&quot;);</div><div class="line">                myBlockingQuene.putObj(&quot;abc3&quot;);</div><div class="line">                myBlockingQuene.putObj(&quot;abc4&quot;);</div><div class="line">                myBlockingQuene.putObj(&quot;abc5&quot;);</div><div class="line">                myBlockingQuene.putObj(&quot;abc6&quot;);</div><div class="line">                System.out.println(&quot;此时队列长度L1=&quot;+myBlockingQuene.count.get());</div><div class="line">                myBlockingQuene.putObj(&quot;abc7&quot;);//这个对象放不了，线程就处于等待状态了。</div><div class="line">            &#125;</div><div class="line">        &#125;,&quot;t2&quot;).start();</div><div class="line"></div><div class="line">        try &#123;</div><div class="line">            TimeUnit.SECONDS.sleep(5);</div><div class="line">        &#125; catch (InterruptedException e) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        new Thread(new Runnable() &#123;</div><div class="line">            @Override</div><div class="line">            public void run() &#123;</div><div class="line">                Object var2 = myBlockingQuene.getObject();//t2线程中的abc7对象此时才能放入队列。</div><div class="line">                System.out.println(&quot;此时队列长度L2=&quot;+myBlockingQuene.count.get());</div><div class="line">            &#125;</div><div class="line">        &#125;,&quot;t3&quot;).start();</div><div class="line"></div><div class="line"></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">JAVA</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/05/09/使用wait-notify-配合synchronized实现自定义阻塞队列MyBlockingQueue/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-java/CountDownLatch多线程性能" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/05/08/java/CountDownLatch多线程性能/">CountDownLatch多线程性能</a>
-    </h1>
-  
-
-        
-        <a href="/2018/05/08/java/CountDownLatch多线程性能/" class="archive-article-date">
-  	<time datetime="2018-05-08T11:26:19.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-05-08</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <figure class="highlight plain"><figcaption><span>cn.klxx.multithread;</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div><div class="line">import java.util.ArrayList;</div><div class="line">import java.util.List;</div><div class="line">import java.util.concurrent.CountDownLatch;</div><div class="line"></div><div class="line">/**</div><div class="line"> * Object方法wait()、notify()两个方法需要配合sychronized关键字使用，</div><div class="line"> * wait()方法释放锁，notify()方法占有锁，所以要先调用wait()方法，再调用notify()方法</div><div class="line"> */</div><div class="line">public class MyCountDownLatch &#123;</div><div class="line"></div><div class="line">static List list = new ArrayList();</div><div class="line"></div><div class="line">public void addString(String a)&#123;</div><div class="line">    list.add(a);</div><div class="line">    System.out.println(&quot;list add string!&quot;);</div><div class="line">&#125;</div><div class="line"></div><div class="line">public int getSize()&#123;</div><div class="line">    return list.size();</div><div class="line">&#125;</div><div class="line"></div><div class="line">static final Object lock = new Object();</div><div class="line"></div><div class="line">    public static void main(String[] args) &#123;</div><div class="line"></div><div class="line">        final MyCountDownLatch myCountDownLatch = new MyCountDownLatch();</div><div class="line"></div><div class="line">        Thread t1 = new Thread(new Runnable() &#123;</div><div class="line">            @Override</div><div class="line">            public void run() &#123;</div><div class="line">                try &#123;</div><div class="line">                    synchronized (lock)&#123;</div><div class="line">                        for (int i = 0; i &lt; 10; i++) &#123;</div><div class="line">                            myCountDownLatch.addString(&quot;abc&quot;);</div><div class="line">                            Thread.sleep(500);</div><div class="line">                            if(list.size()==5)&#123;</div><div class="line">                                lock.notify();</div><div class="line">                                System.out.println(&quot;发出通知...&quot;);</div><div class="line">                            &#125;</div><div class="line">                        &#125;</div><div class="line">                        System.out.println(&quot;执行完这句话释放锁...&quot;);</div><div class="line">                    &#125;</div><div class="line">                &#125; catch (InterruptedException e) &#123;</div><div class="line">                    e.printStackTrace();</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;,&quot;t1&quot;) ;</div><div class="line"></div><div class="line">        Thread t2 = new Thread(new Runnable() &#123;</div><div class="line">            @Override</div><div class="line">            public void run() &#123;</div><div class="line">                try &#123;</div><div class="line">                    synchronized (lock) &#123;</div><div class="line">                        if (list.size()!=5) &#123;</div><div class="line">                            lock.wait();//此时t2处于等待中，不再继续往下执行代码，直到收到通知才继续执行</div><div class="line">                        &#125;</div><div class="line">                        System.out.println(&quot;t2 收到停止通知&quot;);</div><div class="line">                        throw new RuntimeException();</div><div class="line">                    &#125;</div><div class="line">                &#125; catch (Exception e) &#123;</div><div class="line">                    e.printStackTrace();</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;,&quot;t2&quot;) ;</div><div class="line">        /**</div><div class="line">         * t2必须先启动，因为wait方法不会占有锁，不影响t1执行；如果t1先启动会占有锁，而t2则不能使用锁无法执行。</div><div class="line">         * 用wait和notify配合关键字sychronized关键字，使用等notify所在的sychronized关键字代码块执行完，</div><div class="line">         * wait所在的sychronized代码块才会继续执行，这样的最大问题就是收到通知的时间严重滞后于发送通知的时间。</div><div class="line">         * 所以要借助CountDownLatch来解决这个问题，CountDownLatch使用countDown方法发送完通知后也会继续执行，</div><div class="line">         * 但是await方法会马上收到通知继续执行代码，避免了收到通知的严重滞后问题。</div><div class="line">         */</div><div class="line">        t2.start();</div><div class="line">        t1.start();</div><div class="line"></div><div class="line">        try &#123;</div><div class="line">            Thread.sleep(10000);</div><div class="line">            list.clear();</div><div class="line">            System.out.println(&quot;-----------------------------&quot;);</div><div class="line">            System.out.println(&quot;list.size:&quot;+list.size());</div><div class="line">            System.out.println(&quot;-----------------------------&quot;);</div><div class="line">        &#125; catch (InterruptedException e) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        final CountDownLatch countDownLatch = new CountDownLatch(1);</div><div class="line">        Thread t3 = new Thread(new Runnable() &#123;</div><div class="line">            @Override</div><div class="line">            public void run() &#123;</div><div class="line">                try &#123;</div><div class="line">                    for (int i = 0; i &lt; 10; i++) &#123;</div><div class="line">                        list.add(&quot;abc&quot;);</div><div class="line">                        System.out.println(&quot;list add string!&quot;);</div><div class="line">                        Thread.sleep(500);</div><div class="line">                        if (list.size()==5) &#123;</div><div class="line">                            System.out.println(&quot;发送通知&quot;);</div><div class="line">                            countDownLatch.countDown();</div><div class="line">                        &#125;</div><div class="line">                    &#125;</div><div class="line">                &#125; catch (InterruptedException e) &#123;</div><div class="line">                    e.printStackTrace();</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;, &quot;t3&quot;);</div><div class="line"></div><div class="line">        Thread t4 = new Thread(new Runnable() &#123;</div><div class="line">            @Override</div><div class="line">            public void run() &#123;</div><div class="line">                try &#123;</div><div class="line">                    if (list.size()!=5) &#123;</div><div class="line">                        System.out.println(&quot;t4 等待...&quot;);</div><div class="line">                        countDownLatch.await();</div><div class="line">                    &#125;</div><div class="line">                    System.out.println(&quot;list.size:&quot;+list.size()+&quot; ,t4 停止&quot;);</div><div class="line">                    throw new RuntimeException();</div><div class="line">                &#125; catch (InterruptedException e) &#123;</div><div class="line">                    e.printStackTrace();</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;, &quot;t4&quot;);</div><div class="line"></div><div class="line">        t3.start();</div><div class="line">        t4.start();</div><div class="line"></div><div class="line"></div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">JAVA</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/05/08/java/CountDownLatch多线程性能/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
@@ -1150,7 +1231,7 @@
 		toc_hide_index: true,
 		root: "/",
 		innerArchive: true,
-		showTags: false
+		showTags: true
 	}
 </script>
 
