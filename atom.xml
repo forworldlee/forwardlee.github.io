@@ -50,7 +50,7 @@
     <link href="http://www.forwardlee.com/2018/05/24/CentOS-6-8-MariaDB-10-0-with-Galera-Cluster-Keepalived%E9%AB%98%E5%8F%AF%E7%94%A8%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/"/>
     <id>http://www.forwardlee.com/2018/05/24/CentOS-6-8-MariaDB-10-0-with-Galera-Cluster-Keepalived高可用解决方案/</id>
     <published>2018-05-24T11:40:46.000Z</published>
-    <updated>2018-05-24T12:56:28.941Z</updated>
+    <updated>2018-05-25T13:09:03.151Z</updated>
     
     <content type="html"><![CDATA[<p><strong>1.部署MariaDB Galera Cluster</strong></p>
 <p>使用三台最小化安装的CentOS 6.8 x86_64新环境。</p>
@@ -156,7 +156,13 @@
     </summary>
     
     
-      <category term="MySQL" scheme="http://www.forwardlee.com/tags/MySQL/"/>
+      <category term="MariaDB" scheme="http://www.forwardlee.com/tags/MariaDB/"/>
+    
+      <category term="Keepalived" scheme="http://www.forwardlee.com/tags/Keepalived/"/>
+    
+      <category term="Galera" scheme="http://www.forwardlee.com/tags/Galera/"/>
+    
+      <category term="CentOS" scheme="http://www.forwardlee.com/tags/CentOS/"/>
     
   </entry>
   
@@ -165,7 +171,7 @@
     <link href="http://www.forwardlee.com/2018/05/24/Galera-Cluster-3-Mysql-wresp-5-6%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/"/>
     <id>http://www.forwardlee.com/2018/05/24/Galera-Cluster-3-Mysql-wresp-5-6安装配置/</id>
     <published>2018-05-24T05:02:55.000Z</published>
-    <updated>2018-05-24T05:20:40.385Z</updated>
+    <updated>2018-05-25T13:10:11.936Z</updated>
     
     <content type="html"><![CDATA[<p>安装yum-builddep工具<br>yum install yum-utils –enablerepo=extras</p>
 ]]></content>
@@ -178,7 +184,9 @@
     </summary>
     
     
-      <category term="MySql" scheme="http://www.forwardlee.com/tags/MySql/"/>
+      <category term="Galera" scheme="http://www.forwardlee.com/tags/Galera/"/>
+    
+      <category term="MySQL" scheme="http://www.forwardlee.com/tags/MySQL/"/>
     
   </entry>
   
@@ -187,7 +195,7 @@
     <link href="http://www.forwardlee.com/2018/05/23/Keepalived-HA-LVS-Galera-Cluster%E7%8E%AF%E5%A2%83/"/>
     <id>http://www.forwardlee.com/2018/05/23/Keepalived-HA-LVS-Galera-Cluster环境/</id>
     <published>2018-05-23T08:14:48.000Z</published>
-    <updated>2018-05-23T11:20:55.842Z</updated>
+    <updated>2018-05-25T13:10:56.111Z</updated>
     
     <content type="html"><![CDATA[<p><a href="http://www.forwardlee.com/2018/05/23/CentOS-6-8-MySQL-5-5-with-Galera-Cluster%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/">Galera Cluster实现Mysql集群</a>，再配合Keepalived的VRRP和LVS实现Mysql集群的高可用和负载均衡。</p>
 <p>开发环境CentOS 6.8 + Mysql Galera 5.5 + Keepalived 1.4.4</p>
@@ -225,6 +233,10 @@
     </summary>
     
     
+      <category term="Keepalived" scheme="http://www.forwardlee.com/tags/Keepalived/"/>
+    
+      <category term="Galera" scheme="http://www.forwardlee.com/tags/Galera/"/>
+    
       <category term="MySQL" scheme="http://www.forwardlee.com/tags/MySQL/"/>
     
   </entry>
@@ -234,7 +246,7 @@
     <link href="http://www.forwardlee.com/2018/05/23/CentOS-6-8-MySQL-5-5-with-Galera-Cluster%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/"/>
     <id>http://www.forwardlee.com/2018/05/23/CentOS-6-8-MySQL-5-5-with-Galera-Cluster环境搭建/</id>
     <published>2018-05-22T16:13:16.000Z</published>
-    <updated>2018-05-23T08:10:34.388Z</updated>
+    <updated>2018-05-25T13:11:43.862Z</updated>
     
     <content type="html"><![CDATA[<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">##先安装依赖库</div><div class="line">yum install libaio gcc gcc-c++ boost-devel scons check-devel openssl-devel</div><div class="line">ln -sf /usr/lib64/libssl.so.10 /usr/lib64/libssl.so.6</div><div class="line">ln -sf /usr/lib64/libcrypto.so.10 /usr/lib64/libcrypto.so.6</div><div class="line">##下载MySQL with wsrep源码包，目前最新版本是5.5.34-25.9</div><div class="line">wget https://launchpad.net/codership-mysql/5.5/5.5.34-25.9/+download/mysql-5.5.34_wsrep_25.9-linux-x86_64.tar.gz</div><div class="line">tar zxvf mysql-5.5*</div><div class="line">mv mysql-5.5.34_wsrep_25.9-linux-x86_64 /usr/local/mysql</div><div class="line">cd /usr/local/mysql/</div><div class="line">groupadd mysql</div><div class="line">useradd -r -g mysql mysql</div><div class="line">chown -R mysql:mysql .</div><div class="line">./scripts/mysql_install_db --no-defaults --datadir=/opt/mysqldb/ --user=mysql</div><div class="line">chown -R root .</div><div class="line">chown -R mysql /opt/mysqldb/</div><div class="line">echo &quot;export PATH=$PATH:/usr/local/mysql/bin&quot; &gt;&gt; /etc/profile</div><div class="line">source /etc/profile</div><div class="line">[root@localhost mysql]# vi /etc/my.cnf</div></pre></td></tr></table></figure>
 <p>[mysqld]<br>datadir=/opt/mysqldb<br>socket = /tmp/mysql.sock<br>user=mysql</p>
@@ -271,6 +283,10 @@
     </summary>
     
     
+      <category term="Galera" scheme="http://www.forwardlee.com/tags/Galera/"/>
+    
+      <category term="CentOS" scheme="http://www.forwardlee.com/tags/CentOS/"/>
+    
       <category term="MySQL" scheme="http://www.forwardlee.com/tags/MySQL/"/>
     
   </entry>
@@ -280,7 +296,7 @@
     <link href="http://www.forwardlee.com/2018/05/22/Docker-Galera-Cluster%E7%8E%AF%E5%A2%83%E5%BF%AB%E9%80%9F%E6%90%AD%E5%BB%BA/"/>
     <id>http://www.forwardlee.com/2018/05/22/Docker-Galera-Cluster环境快速搭建/</id>
     <published>2018-05-22T03:12:14.000Z</published>
-    <updated>2018-05-22T10:55:17.169Z</updated>
+    <updated>2018-05-25T13:09:51.602Z</updated>
     
     <content type="html"><![CDATA[<p>使用Docker快速创建MariaDB（与MySql同源） Galera集群环境</p>
 <p>Docker开发环境：MacOS High Sieera 10.13.2 (17C88)<br>MariaDB Galera Cluster容器环境：CentOS 7.3 + MariaDB 10.1.23</p>
@@ -313,7 +329,11 @@
     </summary>
     
     
-      <category term="MySql" scheme="http://www.forwardlee.com/tags/MySql/"/>
+      <category term="MariaDB" scheme="http://www.forwardlee.com/tags/MariaDB/"/>
+    
+      <category term="Galera" scheme="http://www.forwardlee.com/tags/Galera/"/>
+    
+      <category term="Docker" scheme="http://www.forwardlee.com/tags/Docker/"/>
     
   </entry>
   
@@ -322,7 +342,7 @@
     <link href="http://www.forwardlee.com/2018/05/17/MySql%E5%88%86%E5%8C%BA%E6%93%8D%E4%BD%9C%EF%BC%88%E4%B8%89%EF%BC%89/"/>
     <id>http://www.forwardlee.com/2018/05/17/MySql分区操作（三）/</id>
     <published>2018-05-17T02:51:51.000Z</published>
-    <updated>2018-05-17T04:26:18.770Z</updated>
+    <updated>2018-05-25T13:05:33.344Z</updated>
     
     <content type="html"><![CDATA[<p><strong>子分区操作</strong><br>常用RANGE和HASH复合分区实现子分区</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">CREATE TABLE myblog.tbl_users_2 (</div><div class="line">  `pkid` INT NOT NULL ,</div><div class="line">  `username` VARCHAR(255) NOT NULL,</div><div class="line">  `password` VARCHAR(255) NOT NULL,</div><div class="line">  `email` VARCHAR(255) NULL,</div><div class="line">  `sex` CHAR(1) NULL,</div><div class="line">  `create_time` DATE NULL)</div><div class="line">ENGINE = InnoDB</div><div class="line">DEFAULT CHARACTER SET = utf8 </div><div class="line">PARTITION BY RANGE(YEAR(create_time))</div><div class="line">SUBPARTITION BY HASH(TO_DAYS(create_time))</div><div class="line">SUBPARTITIONS 2</div><div class="line">(</div><div class="line">PARTITION p0 VALUES LESS THAN (2010),</div><div class="line">PARTITION p1 VALUES LESS THAN (2017),</div><div class="line">PARTITION p2 VALUES LESS THAN (MAXVALUE)</div><div class="line">);</div></pre></td></tr></table></figure>
@@ -379,7 +399,7 @@
     </summary>
     
     
-      <category term="MySql" scheme="http://www.forwardlee.com/tags/MySql/"/>
+      <category term="MySQL" scheme="http://www.forwardlee.com/tags/MySQL/"/>
     
   </entry>
   
@@ -388,7 +408,7 @@
     <link href="http://www.forwardlee.com/2018/05/17/MySql%E5%88%86%E5%8C%BA%E6%93%8D%E4%BD%9C%EF%BC%88%E4%BA%8C%EF%BC%89/"/>
     <id>http://www.forwardlee.com/2018/05/17/MySql分区操作（二）/</id>
     <published>2018-05-17T02:07:57.000Z</published>
-    <updated>2018-05-17T02:42:15.039Z</updated>
+    <updated>2018-05-25T13:05:21.643Z</updated>
     
     <content type="html"><![CDATA[<p><strong>【转自】<a href="https://blog.csdn.net/tjcyjd/article/details/11194489" target="_blank" rel="external">https://blog.csdn.net/tjcyjd/article/details/11194489</a></strong><br><strong>HASH分区和线性LINEAR HASH分区</strong></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">CREATE TABLE `myblog`.`tbl_user_friends_linear_hash` (</div><div class="line">  `pkid` INT NOT NULL AUTO_INCREMENT,</div><div class="line">  `user_id` INT NOT NULL,</div><div class="line">  `friend_id` INT NOT NULL,</div><div class="line">  `create_time` DATETIME NOT NULL,</div><div class="line">  PRIMARY KEY (`pkid`))</div><div class="line">ENGINE = InnoDB</div><div class="line">DEFAULT CHARACTER SET = utf8</div><div class="line">COMMENT = &apos;用户好友&apos; PARTITION BY LINEAR HASH(pkid) PARTITIONS 3 ;</div></pre></td></tr></table></figure>
@@ -433,7 +453,7 @@
     </summary>
     
     
-      <category term="MySql" scheme="http://www.forwardlee.com/tags/MySql/"/>
+      <category term="MySQL" scheme="http://www.forwardlee.com/tags/MySQL/"/>
     
   </entry>
   
@@ -485,7 +505,7 @@
     <link href="http://www.forwardlee.com/2018/05/16/MySql%E5%88%86%E5%8C%BA%E6%93%8D%E4%BD%9C%EF%BC%88%E4%B8%80%EF%BC%89/"/>
     <id>http://www.forwardlee.com/2018/05/16/MySql分区操作（一）/</id>
     <published>2018-05-16T10:24:35.000Z</published>
-    <updated>2018-05-16T11:01:31.080Z</updated>
+    <updated>2018-05-25T13:05:09.030Z</updated>
     
     <content type="html"><![CDATA[<p>##分区类型<br>RANGE 连续的列值区间分区，有主键和唯一键必须使用，如果没有则可以指定任何一列；<br>LIST 类似RANGE分区，区别在于指定一系列的列值作为分区条件；<br>HASH 由函数表达式返回值决定所在分区，函数返回值必须为非负整数；<br>KEY 由mysql提供的HASH函数进行服务，==使用较少==。</p>
 <p>##创建表分区</p>
@@ -515,7 +535,7 @@
     </summary>
     
     
-      <category term="MySql" scheme="http://www.forwardlee.com/tags/MySql/"/>
+      <category term="MySQL" scheme="http://www.forwardlee.com/tags/MySQL/"/>
     
   </entry>
   
@@ -524,7 +544,7 @@
     <link href="http://www.forwardlee.com/2018/05/10/JDKBlockingQueue%E4%BD%BF%E7%94%A8/"/>
     <id>http://www.forwardlee.com/2018/05/10/JDKBlockingQueue使用/</id>
     <published>2018-05-10T10:48:35.000Z</published>
-    <updated>2018-05-10T10:49:22.428Z</updated>
+    <updated>2018-05-25T13:10:36.987Z</updated>
     
     <content type="html"><![CDATA[<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div></pre></td><td class="code"><pre><div class="line">package cn.klxx.multithread;</div><div class="line"></div><div class="line">import org.junit.Test;</div><div class="line"></div><div class="line">import java.util.concurrent.ArrayBlockingQueue;</div><div class="line">import java.util.concurrent.LinkedBlockingDeque;</div><div class="line">import java.util.concurrent.PriorityBlockingQueue;</div><div class="line">import java.util.concurrent.SynchronousQueue;</div><div class="line"></div><div class="line"></div><div class="line">/**</div><div class="line"> * @description JDK实现的阻塞和无阻塞队列测试</div><div class="line"> * @author ForwardLee</div><div class="line"> */</div><div class="line">public class JDKBlockingQueueTest &#123;</div><div class="line">    /**</div><div class="line">     * 有界阻塞队列</div><div class="line">     */</div><div class="line">    @Test</div><div class="line">    public void testArrayBlockingQueue() throws Exception &#123;</div><div class="line">        ArrayBlockingQueue&lt;String&gt; arrayBlockingQueue = new ArrayBlockingQueue&lt;String&gt;(5);</div><div class="line">        arrayBlockingQueue.add(&quot;a&quot;);</div><div class="line">        arrayBlockingQueue.add(&quot;b&quot;);</div><div class="line">        arrayBlockingQueue.add(&quot;c&quot;);</div><div class="line">        arrayBlockingQueue.add(&quot;d&quot;);</div><div class="line">        arrayBlockingQueue.add(&quot;e&quot;);</div><div class="line">        arrayBlockingQueue.add(&quot;f&quot;);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    /**</div><div class="line">     * @descripiton 可以是有界阻塞队列，也可以是无解阻塞队列，关键看实例化队列对象用的构造方法是否初始化队列大小</div><div class="line">     */</div><div class="line">    @Test</div><div class="line">    public void testLinkedBlockingDeque() throws Exception &#123;</div><div class="line"></div><div class="line">        LinkedBlockingDeque&lt;String&gt; linkedBlockingDeque = new LinkedBlockingDeque&lt;String&gt;();//new LinkedBlockingDeque&lt;String&gt;(2)</div><div class="line">        linkedBlockingDeque.add(&quot;a&quot;);</div><div class="line">        linkedBlockingDeque.offer(&quot;b&quot;);</div><div class="line">        linkedBlockingDeque.add(&quot;c&quot; );</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    /**</div><div class="line">     * @description 同步阻塞队列，主要应用场景在于多线程之间的线程切换，例如线程池的实现。</div><div class="line">     * 不能直接往队列中存数据。要往队列中存数据，前提是必须要有一个线程等待取数据</div><div class="line">     * Executors.newCachedThreadPool()</div><div class="line">     *</div><div class="line">     * Creates a thread pool that creates new threads as needed, but</div><div class="line">     * will reuse previously constructed threads when they are</div><div class="line">     * available, and uses the provided</div><div class="line">     * ThreadFactory to create new threads when needed.</div><div class="line">     * &#123;@param threadFactory the factory to use when creating new threads</div><div class="line">     * @return the newly created thread pool</div><div class="line">     * @throws NullPointerException if threadFactory is null&#125;</div><div class="line">     *</div><div class="line">     * public static ExecutorService newCachedThreadPool(ThreadFactory threadFactory) &#123;</div><div class="line">     * return new ThreadPoolExecutor(0, Integer.MAX_VALUE,</div><div class="line">     *             60L, TimeUnit.SECONDS,</div><div class="line">     *               new SynchronousQueue&lt;Runnable&gt;(),</div><div class="line">     *               threadFactory);</div><div class="line">     * &#125;</div><div class="line">     */</div><div class="line">    @Test</div><div class="line">    public void testSynchronousQueue() throws Exception &#123;</div><div class="line"></div><div class="line">        final SynchronousQueue&lt;String&gt; synchronousQueue = new SynchronousQueue&lt;String&gt;();</div><div class="line">        new Thread(new Runnable() &#123;</div><div class="line">            @Override</div><div class="line">            public void run() &#123;</div><div class="line">                try &#123;</div><div class="line">                    String peek = synchronousQueue.take();</div><div class="line">                    System.out.println(peek);</div><div class="line">                    try &#123;</div><div class="line">                        Thread.sleep(1000);</div><div class="line">                    &#125; catch (InterruptedException e) &#123;</div><div class="line">                        e.printStackTrace();</div><div class="line">                    &#125;</div><div class="line">                &#125; catch (InterruptedException e) &#123;</div><div class="line">                    e.printStackTrace();</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;).start();</div><div class="line"></div><div class="line">        new Thread(new Runnable() &#123;</div><div class="line">            public void run() &#123;</div><div class="line">                synchronousQueue.add(&quot;a&quot;);</div><div class="line">            &#125;</div><div class="line">        &#125;).start();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    /**</div><div class="line">     * PriorityBlockingQueue是带优先级的无界阻塞队列，每次出队都返回优先级最高的元素，</div><div class="line">     * 是二叉树最小堆的实现，研究过数组方式存放最小堆节点的都知道，直接遍历队列元素是无序的。</div><div class="line">     * 队列存储的对象必须实现Comparable接口</div><div class="line">     * @throws Exception</div><div class="line">     */</div><div class="line">    @Test</div><div class="line">    public void testPriorityBlockingQueue() throws Exception &#123;</div><div class="line">        PriorityBlockingQueue&lt;ObjectWithComparable&gt;  priorityBlockingQueue= new PriorityBlockingQueue&lt;ObjectWithComparable&gt;();</div><div class="line">        ObjectWithComparable o1 = new ObjectWithComparable();</div><div class="line">        o1.setId(3);</div><div class="line">        priorityBlockingQueue.add(o1);</div><div class="line"></div><div class="line">        ObjectWithComparable o2 = new ObjectWithComparable();</div><div class="line">        o2.setId(4);</div><div class="line">        priorityBlockingQueue.add(o2);</div><div class="line"></div><div class="line">        ObjectWithComparable o3 = new ObjectWithComparable();</div><div class="line">        o3.setId(2);</div><div class="line">        priorityBlockingQueue.add(o3);</div><div class="line"></div><div class="line">        for (ObjectWithComparable objectWithComparable : priorityBlockingQueue) &#123;</div><div class="line">            System.out.println(priorityBlockingQueue.take());</div><div class="line">        &#125;</div><div class="line"></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    private class ObjectWithComparable implements Comparable&lt;ObjectWithComparable&gt;&#123;</div><div class="line">        private int id;</div><div class="line"></div><div class="line">        public int getId() &#123;</div><div class="line">            return id;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        public void setId(int id) &#123;</div><div class="line">            this.id = id;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        @Override</div><div class="line">        public int compareTo(ObjectWithComparable o) &#123;</div><div class="line">            return this.id&gt;o.id? 1:(this.id&lt;o.id? -1:0);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        @Override</div><div class="line">        public String toString() &#123;</div><div class="line">            return &quot;ObjectWithComparable&#123;&quot; +</div><div class="line">                    &quot;id=&quot; + id +</div><div class="line">                    &apos;&#125;&apos;;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 ]]></content>
@@ -537,6 +557,8 @@
     
     
       <category term="JAVA" scheme="http://www.forwardlee.com/tags/JAVA/"/>
+    
+      <category term="MultiThread" scheme="http://www.forwardlee.com/tags/MultiThread/"/>
     
   </entry>
   
@@ -612,24 +634,6 @@
   </entry>
   
   <entry>
-    <title>Laravel 5.x进阶笔记（二）</title>
-    <link href="http://www.forwardlee.com/2017/08/01/p/Laravel5.x%E8%BF%9B%E9%98%B6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89/"/>
-    <id>http://www.forwardlee.com/2017/08/01/p/Laravel5.x进阶笔记（三）/</id>
-    <published>2017-08-01T06:42:53.000Z</published>
-    <updated>2017-08-01T08:21:34.000Z</updated>
-    
-    <summary type="html">
-    
-    </summary>
-    
-    
-      <category term="PHP" scheme="http://www.forwardlee.com/tags/PHP/"/>
-    
-      <category term="Laravel5" scheme="http://www.forwardlee.com/tags/Laravel5/"/>
-    
-  </entry>
-  
-  <entry>
     <title>Laravel 5.x进阶笔记（一）</title>
     <link href="http://www.forwardlee.com/2017/08/01/p/Laravel5.x%E8%BF%9B%E9%98%B6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/"/>
     <id>http://www.forwardlee.com/2017/08/01/p/Laravel5.x进阶笔记（一）/</id>
@@ -694,6 +698,24 @@
   </entry>
   
   <entry>
+    <title>Laravel 5.x进阶笔记（二）</title>
+    <link href="http://www.forwardlee.com/2017/08/01/p/Laravel5.x%E8%BF%9B%E9%98%B6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89/"/>
+    <id>http://www.forwardlee.com/2017/08/01/p/Laravel5.x进阶笔记（三）/</id>
+    <published>2017-08-01T06:42:53.000Z</published>
+    <updated>2017-08-01T08:21:34.000Z</updated>
+    
+    <summary type="html">
+    
+    </summary>
+    
+    
+      <category term="PHP" scheme="http://www.forwardlee.com/tags/PHP/"/>
+    
+      <category term="Laravel5" scheme="http://www.forwardlee.com/tags/Laravel5/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Docker清理命令</title>
     <link href="http://www.forwardlee.com/2017/05/21/Docker%E6%B8%85%E7%90%86%E5%91%BD%E4%BB%A4/"/>
     <id>http://www.forwardlee.com/2017/05/21/Docker清理命令/</id>
@@ -732,26 +754,6 @@
     
     
       <category term="Docker" scheme="http://www.forwardlee.com/tags/Docker/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>All tags</title>
-    <link href="http://www.forwardlee.com/2014/12/22/tags/"/>
-    <id>http://www.forwardlee.com/2014/12/22/tags/</id>
-    <published>2014-12-22T04:39:04.000Z</published>
-    <updated>2018-05-25T12:44:13.023Z</updated>
-    
-    <content type="html"><![CDATA[<p>JAVA 高并发 高可用 MYSQL PHP DOCKER 多线程 Redis Memcached Storm Kafka ActiveMQ</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;JAVA 高并发 高可用 MYSQL PHP DOCKER 多线程 Redis Memcached Storm Kafka ActiveMQ&lt;/p&gt;
-
-    
-    </summary>
-    
     
   </entry>
   
