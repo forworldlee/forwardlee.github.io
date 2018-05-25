@@ -4,6 +4,25 @@
 
     
   <url>
+    <loc>http://www.forwardlee.com/2018/05/08/java/CountDownLatch%E5%A4%9A%E7%BA%BF%E7%A8%8B%E6%80%A7%E8%83%BD/</loc>
+    <lastmod>2018-05-25T13:13:34.276Z</lastmod>
+    <data>
+        <display>
+        <title>CountDownLatch多线程性能</title>
+        <pubTime>2018-05-08T11:26:19.000Z</pubTime>
+        
+        <tag>JAVA</tag>
+         
+        <tag>MultiThread</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://www.forwardlee.com/2018/05/23/CentOS-6-8-MySQL-5-5-with-Galera-Cluster%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/</loc>
     <lastmod>2018-05-25T13:11:43.862Z</lastmod>
     <data>
@@ -237,23 +256,6 @@
         <display>
         <title>使用wait(),notify()配合synchronized实现自定义阻塞队列MyBlockingQueue</title>
         <pubTime>2018-05-09T09:04:30.000Z</pubTime>
-        
-        <tag>JAVA</tag>
-         
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://www.forwardlee.com/2018/05/08/java/CountDownLatch%E5%A4%9A%E7%BA%BF%E7%A8%8B%E6%80%A7%E8%83%BD/</loc>
-    <lastmod>2018-05-08T11:29:44.557Z</lastmod>
-    <data>
-        <display>
-        <title>CountDownLatch多线程性能</title>
-        <pubTime>2018-05-08T11:26:19.000Z</pubTime>
         
         <tag>JAVA</tag>
          
