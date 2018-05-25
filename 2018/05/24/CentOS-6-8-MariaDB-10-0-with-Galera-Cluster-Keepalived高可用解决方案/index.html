@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="MariaDB,Keepalived,Galera,CentOS," />
+  <meta name="keywords" content="Galera,CentOS,MariaDB,Keepalived," />
 
 
 
@@ -82,14 +82,14 @@
 
 
 <meta name="description" content="1.部署MariaDB Galera Cluster 使用三台最小化安装的CentOS 6.8 x86_64新环境。    节点 节点名称 节点IP     donor db1 192.168.1.150   node1 db2 192.168.1.151   node2 db3 192.168.1.152    Step 1- 设置MariaDB的yum安装源 创建/etc/yum.repos.">
-<meta name="keywords" content="MariaDB,Keepalived,Galera,CentOS">
+<meta name="keywords" content="Galera,CentOS,MariaDB,Keepalived">
 <meta property="og:type" content="article">
 <meta property="og:title" content="CentOS 6.8 + MariaDB 10.0 with Galera Cluster+Keepalived高可用解决方案">
 <meta property="og:url" content="http://www.forwardlee.com/2018/05/24/CentOS-6-8-MariaDB-10-0-with-Galera-Cluster-Keepalived高可用解决方案/index.html">
 <meta property="og:site_name" content="不忘初心">
 <meta property="og:description" content="1.部署MariaDB Galera Cluster 使用三台最小化安装的CentOS 6.8 x86_64新环境。    节点 节点名称 节点IP     donor db1 192.168.1.150   node1 db2 192.168.1.151   node2 db3 192.168.1.152    Step 1- 设置MariaDB的yum安装源 创建/etc/yum.repos.">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-05-25T13:09:03.151Z">
+<meta property="og:updated_time" content="2018-05-25T14:28:09.176Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="CentOS 6.8 + MariaDB 10.0 with Galera Cluster+Keepalived高可用解决方案">
 <meta name="twitter:description" content="1.部署MariaDB Galera Cluster 使用三台最小化安装的CentOS 6.8 x86_64新环境。    节点 节点名称 节点IP     donor db1 192.168.1.150   node1 db2 192.168.1.151   node2 db3 192.168.1.152    Step 1- 设置MariaDB的yum安装源 创建/etc/yum.repos.">
@@ -386,6 +386,7 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">[mariadb]</div><div class="line">name = MariaDB</div><div class="line">baseurl = http://yum.mariadb.org/10.0/centos6-amd64</div><div class="line">gpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB</div><div class="line">gpgcheck=1</div></pre></td></tr></table></figure>
 <p>For CentOS 6 – 32bit系统mariadb.repo内容如下:</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">[mariadb]</div><div class="line">name = MariaDB</div><div class="line">baseurl = http://yum.mariadb.org/10.0/centos6-x86</div><div class="line">gpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB</div><div class="line">gpgcheck=1</div></pre></td></tr></table></figure>
+<a id="more"></a>
 <p><strong>Step 2 – 设置SELinux状态</strong></p>
 <p>在开始安装之前，先把三台机器的SELinux状态设置为permissive，临时设置如下，重启失效。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo setenforce 0</div></pre></td></tr></table></figure>
@@ -481,13 +482,13 @@
       
         <div class="post-tags">
           
-            <a href="/tags/MariaDB/" rel="tag"># MariaDB</a>
-          
-            <a href="/tags/Keepalived/" rel="tag"># Keepalived</a>
-          
             <a href="/tags/Galera/" rel="tag"># Galera</a>
           
             <a href="/tags/CentOS/" rel="tag"># CentOS</a>
+          
+            <a href="/tags/MariaDB/" rel="tag"># MariaDB</a>
+          
+            <a href="/tags/Keepalived/" rel="tag"># Keepalived</a>
           
         </div>
       
@@ -701,7 +702,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2018</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>

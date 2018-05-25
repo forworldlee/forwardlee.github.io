@@ -53,7 +53,7 @@
     <link href="http://www.forwardlee.com/2018/05/24/CentOS-6-8-MariaDB-10-0-with-Galera-Cluster-Keepalived%E9%AB%98%E5%8F%AF%E7%94%A8%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/"/>
     <id>http://www.forwardlee.com/2018/05/24/CentOS-6-8-MariaDB-10-0-with-Galera-Cluster-Keepalived高可用解决方案/</id>
     <published>2018-05-24T11:40:46.000Z</published>
-    <updated>2018-05-25T13:09:03.151Z</updated>
+    <updated>2018-05-25T14:28:09.176Z</updated>
     
     <content type="html"><![CDATA[<p><strong>1.部署MariaDB Galera Cluster</strong></p>
 <p>使用三台最小化安装的CentOS 6.8 x86_64新环境。</p>
@@ -89,6 +89,7 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">[mariadb]</div><div class="line">name = MariaDB</div><div class="line">baseurl = http://yum.mariadb.org/10.0/centos6-amd64</div><div class="line">gpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB</div><div class="line">gpgcheck=1</div></pre></td></tr></table></figure>
 <p>For CentOS 6 – 32bit系统mariadb.repo内容如下:</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">[mariadb]</div><div class="line">name = MariaDB</div><div class="line">baseurl = http://yum.mariadb.org/10.0/centos6-x86</div><div class="line">gpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB</div><div class="line">gpgcheck=1</div></pre></td></tr></table></figure>
+<a id="more"></a>
 <p><strong>Step 2 – 设置SELinux状态</strong></p>
 <p>在开始安装之前，先把三台机器的SELinux状态设置为permissive，临时设置如下，重启失效。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo setenforce 0</div></pre></td></tr></table></figure>
@@ -154,18 +155,44 @@
 &lt;tr&gt;
 &lt;th&gt;节点&lt;/th&gt;
 &lt;th&gt;节点名称&lt;/th&gt;
-&lt;th
+&lt;th&gt;节点IP&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;donor&lt;/td&gt;
+&lt;td&gt;db1&lt;/td&gt;
+&lt;td&gt;192.168.1.150&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;node1&lt;/td&gt;
+&lt;td&gt;db2&lt;/td&gt;
+&lt;td&gt;192.168.1.151&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;node2&lt;/td&gt;
+&lt;td&gt;db3&lt;/td&gt;
+&lt;td&gt;192.168.1.152&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;strong&gt;Step 1- 设置MariaDB的yum安装源&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;创建/etc/yum.repos.d/mariadb.repo&lt;/p&gt;
+&lt;p&gt;CentOS 6 – 64bit系统mariadb.repo内容如下:&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;3&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;4&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;5&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;[mariadb]&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;name = MariaDB&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;baseurl = http://yum.mariadb.org/10.0/centos6-amd64&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;gpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;gpgcheck=1&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;For CentOS 6 – 32bit系统mariadb.repo内容如下:&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;3&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;4&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;5&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;[mariadb]&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;name = MariaDB&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;baseurl = http://yum.mariadb.org/10.0/centos6-x86&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;gpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;gpgcheck=1&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
     
     </summary>
     
     
-      <category term="MariaDB" scheme="http://www.forwardlee.com/tags/MariaDB/"/>
-    
-      <category term="Keepalived" scheme="http://www.forwardlee.com/tags/Keepalived/"/>
-    
       <category term="Galera" scheme="http://www.forwardlee.com/tags/Galera/"/>
     
       <category term="CentOS" scheme="http://www.forwardlee.com/tags/CentOS/"/>
+    
+      <category term="MariaDB" scheme="http://www.forwardlee.com/tags/MariaDB/"/>
+    
+      <category term="Keepalived" scheme="http://www.forwardlee.com/tags/Keepalived/"/>
     
   </entry>
   
@@ -187,9 +214,9 @@
     </summary>
     
     
-      <category term="Galera" scheme="http://www.forwardlee.com/tags/Galera/"/>
-    
       <category term="MySQL" scheme="http://www.forwardlee.com/tags/MySQL/"/>
+    
+      <category term="Galera" scheme="http://www.forwardlee.com/tags/Galera/"/>
     
   </entry>
   
@@ -236,11 +263,11 @@
     </summary>
     
     
-      <category term="Keepalived" scheme="http://www.forwardlee.com/tags/Keepalived/"/>
+      <category term="MySQL" scheme="http://www.forwardlee.com/tags/MySQL/"/>
     
       <category term="Galera" scheme="http://www.forwardlee.com/tags/Galera/"/>
     
-      <category term="MySQL" scheme="http://www.forwardlee.com/tags/MySQL/"/>
+      <category term="Keepalived" scheme="http://www.forwardlee.com/tags/Keepalived/"/>
     
   </entry>
   
@@ -286,11 +313,11 @@
     </summary>
     
     
+      <category term="MySQL" scheme="http://www.forwardlee.com/tags/MySQL/"/>
+    
       <category term="Galera" scheme="http://www.forwardlee.com/tags/Galera/"/>
     
       <category term="CentOS" scheme="http://www.forwardlee.com/tags/CentOS/"/>
-    
-      <category term="MySQL" scheme="http://www.forwardlee.com/tags/MySQL/"/>
     
   </entry>
   
@@ -332,9 +359,9 @@
     </summary>
     
     
-      <category term="MariaDB" scheme="http://www.forwardlee.com/tags/MariaDB/"/>
-    
       <category term="Galera" scheme="http://www.forwardlee.com/tags/Galera/"/>
+    
+      <category term="MariaDB" scheme="http://www.forwardlee.com/tags/MariaDB/"/>
     
       <category term="Docker" scheme="http://www.forwardlee.com/tags/Docker/"/>
     
