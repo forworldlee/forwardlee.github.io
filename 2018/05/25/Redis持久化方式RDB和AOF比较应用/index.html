@@ -6,20 +6,22 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://www.forwardlee.com">
-  <title>CentOS 6.8 + MariaDB 10.0 with Galera Cluster+Keepalived高可用解决方案 | 不忘初心</title>
+  <title>Redis持久化方式RDB和AOF比较应用 | 不忘初心</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="1.部署MariaDB Galera Cluster 使用三台最小化安装的CentOS 6.8 x86_64新环境。    节点 节点名称 节点IP     donor db1 192.168.1.150   node1 db2 192.168.1.151   node2 db3 192.168.1.152    Step 1- 设置MariaDB的yum安装源 创建/etc/yum.repos.">
-<meta name="keywords" content="MySQL">
+  <meta name="description" content="RDB持久化方式的工作原理设定时间间隔t内有n次key的操作检查，就进行持久化。例如save 60 1000，每个60秒有1000个key发生变化，则进行持久化。RDB在做持久化时，保存完整的一份数据快照，旧的快照文件被覆盖。 RDB持久化方案的优点（1）持久化的时间间隔可以由redis控制，所以可以按照一定的时间间隔把数据快照文件拷贝出来，更好的支撑数据冷备份。（2）RDB持久化文件是Redi">
+<meta name="keywords" content="缓存架构, Redis">
 <meta property="og:type" content="article">
-<meta property="og:title" content="CentOS 6.8 + MariaDB 10.0 with Galera Cluster+Keepalived高可用解决方案">
-<meta property="og:url" content="http://www.forwardlee.com/2018/05/24/CentOS-6-8-MariaDB-10-0-with-Galera-Cluster-Keepalived高可用解决方案/index.html">
+<meta property="og:title" content="Redis持久化方式RDB和AOF比较应用">
+<meta property="og:url" content="http://www.forwardlee.com/2018/05/25/Redis持久化方式RDB和AOF比较应用/index.html">
 <meta property="og:site_name" content="不忘初心">
-<meta property="og:description" content="1.部署MariaDB Galera Cluster 使用三台最小化安装的CentOS 6.8 x86_64新环境。    节点 节点名称 节点IP     donor db1 192.168.1.150   node1 db2 192.168.1.151   node2 db3 192.168.1.152    Step 1- 设置MariaDB的yum安装源 创建/etc/yum.repos.">
+<meta property="og:description" content="RDB持久化方式的工作原理设定时间间隔t内有n次key的操作检查，就进行持久化。例如save 60 1000，每个60秒有1000个key发生变化，则进行持久化。RDB在做持久化时，保存完整的一份数据快照，旧的快照文件被覆盖。 RDB持久化方案的优点（1）持久化的时间间隔可以由redis控制，所以可以按照一定的时间间隔把数据快照文件拷贝出来，更好的支撑数据冷备份。（2）RDB持久化文件是Redi">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-05-24T12:56:28.941Z">
+<meta property="og:image" content="http://www.forwardlee.com/2018/05/25/Redis持久化方式RDB和AOF比较应用/RDB和AOF的介绍.png">
+<meta property="og:updated_time" content="2018-05-25T11:02:58.701Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="CentOS 6.8 + MariaDB 10.0 with Galera Cluster+Keepalived高可用解决方案">
-<meta name="twitter:description" content="1.部署MariaDB Galera Cluster 使用三台最小化安装的CentOS 6.8 x86_64新环境。    节点 节点名称 节点IP     donor db1 192.168.1.150   node1 db2 192.168.1.151   node2 db3 192.168.1.152    Step 1- 设置MariaDB的yum安装源 创建/etc/yum.repos.">
+<meta name="twitter:title" content="Redis持久化方式RDB和AOF比较应用">
+<meta name="twitter:description" content="RDB持久化方式的工作原理设定时间间隔t内有n次key的操作检查，就进行持久化。例如save 60 1000，每个60秒有1000个key发生变化，则进行持久化。RDB在做持久化时，保存完整的一份数据快照，旧的快照文件被覆盖。 RDB持久化方案的优点（1）持久化的时间间隔可以由redis控制，所以可以按照一定的时间间隔把数据快照文件拷贝出来，更好的支撑数据冷备份。（2）RDB持久化文件是Redi">
+<meta name="twitter:image" content="http://www.forwardlee.com/2018/05/25/Redis持久化方式RDB和AOF比较应用/RDB和AOF的介绍.png">
   
     <link rel="alternative" href="/atom.xml" title="不忘初心" type="application/atom+xml">
   
@@ -181,114 +183,35 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-CentOS-6-8-MariaDB-10-0-with-Galera-Cluster-Keepalived高可用解决方案" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-Redis持久化方式RDB和AOF比较应用" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      CentOS 6.8 + MariaDB 10.0 with Galera Cluster+Keepalived高可用解决方案
+      Redis持久化方式RDB和AOF比较应用
     </h1>
   
 
         
-        <a href="/2018/05/24/CentOS-6-8-MariaDB-10-0-with-Galera-Cluster-Keepalived高可用解决方案/" class="archive-article-date">
-  	<time datetime="2018-05-24T11:40:46.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-05-24</time>
+        <a href="/2018/05/25/Redis持久化方式RDB和AOF比较应用/" class="archive-article-date">
+  	<time datetime="2018-05-25T10:00:11.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-05-25</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p><strong>1.部署MariaDB Galera Cluster</strong></p>
-<p>使用三台最小化安装的CentOS 6.8 x86_64新环境。</p>
-<table>
-<thead>
-<tr>
-<th>节点</th>
-<th>节点名称</th>
-<th>节点IP</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>donor</td>
-<td>db1</td>
-<td>192.168.1.150</td>
-</tr>
-<tr>
-<td>node1</td>
-<td>db2</td>
-<td>192.168.1.151</td>
-</tr>
-<tr>
-<td>node2</td>
-<td>db3</td>
-<td>192.168.1.152</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Step 1- 设置MariaDB的yum安装源</strong></p>
-<p>创建/etc/yum.repos.d/mariadb.repo</p>
-<p>CentOS 6 – 64bit系统mariadb.repo内容如下:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">[mariadb]</div><div class="line">name = MariaDB</div><div class="line">baseurl = http://yum.mariadb.org/10.0/centos6-amd64</div><div class="line">gpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB</div><div class="line">gpgcheck=1</div></pre></td></tr></table></figure>
-<p>For CentOS 6 – 32bit系统mariadb.repo内容如下:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">[mariadb]</div><div class="line">name = MariaDB</div><div class="line">baseurl = http://yum.mariadb.org/10.0/centos6-x86</div><div class="line">gpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB</div><div class="line">gpgcheck=1</div></pre></td></tr></table></figure>
-<p><strong>Step 2 – 设置SELinux状态</strong></p>
-<p>在开始安装之前，先把三台机器的SELinux状态设置为permissive，临时设置如下，重启失效。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo setenforce 0</div></pre></td></tr></table></figure>
-<p>永久设置:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">vi /etc/selinux/config</div></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"># This file controls the state of SELinux on the system.</div><div class="line"># SELINUX= can take one of these three values:</div><div class="line">#     enforcing - SELinux security policy is enforced. default</div><div class="line">#     permissive - SELinux prints warnings instead of enforcing.</div><div class="line">#     disabled - No SELinux policy is loaded.</div><div class="line">SELINUX=permissive</div><div class="line"># SELINUXTYPE= can take one of these two values:</div><div class="line">#     targeted - Targeted processes are protected,</div><div class="line">#     mls - Multi Level Security protection.</div><div class="line">SELINUXTYPE=targeted</div></pre></td></tr></table></figure>
-<p><strong>Step 3 – 安装 MariaDB Galera Cluster 10.0</strong> </p>
-<p>使用yum安装MariaDB Galera Cluster，需要先安装socat工具包，用来确保yum可以找到安装源。<br>CentOS 6用以下方式安装：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo yum install -y http://dl.fedoraproject.org/pub/epel/6/x86_64/Packages/s/socat-1.7.2.3-1.el6.x86_64.rpm</div></pre></td></tr></table></figure>
-<p>CentOS 7用以下方式安装：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo yum install socat</div></pre></td></tr></table></figure>
-<p>开始安装数据库集群环境</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo yum install MariaDB-Galera-server MariaDB-client rsync galera</div></pre></td></tr></table></figure>
-<p><strong>Step 4:  MariaDB安全性设置</strong></p>
-<p>MariaDB是Mysql的一个分支，所以使用Mysql的命令启动数据库。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo service mysql start</div></pre></td></tr></table></figure>
-<p>执行以下脚本，并按提示进行相应操作，提升数据库安全。设置root初始密码为。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo /usr/bin/mysql_secure_installation</div></pre></td></tr></table></figure>
-<p>我把root用户密码设置为root。</p>
-<p><strong>Step 5 – 创建MariaDB Galera Cluster集群数据通信用户</strong></p>
-<p>创建一个集群节点之间进行数据状态快照转移（State Transfer Snapshot – SST）所使用的用户账号。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">mysql -u root -p</div><div class="line">mysql&gt; DELETE FROM mysql.user WHERE user=&apos;&apos;;</div><div class="line">mysql&gt; GRANT ALL ON *.* TO &apos;root&apos;@&apos;%&apos; IDENTIFIED BY &apos;dbpass&apos;;</div><div class="line">mysql&gt; GRANT USAGE ON *.* to galera@&apos;%&apos; IDENTIFIED BY &apos;galera&apos;;</div><div class="line">mysql&gt; GRANT ALL PRIVILEGES on *.* to galera@&apos;%&apos;;</div><div class="line">mysql&gt; FLUSH PRIVILEGES;</div><div class="line">mysql&gt; quit</div></pre></td></tr></table></figure>
-<p>在开发或测试环境中，使用%表示任意主机，也就是说允许root用户和<br>galera用户可以从任意主机登访问数据库。出于安全考虑，你可以把%替换成你所允许的主机名称或者主机IP地址。</p>
-<p><strong>Step 6 – MariaDB Galera Cluster 集群配置</strong></p>
-<p>停止Mysql服务</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo service mysql stop</div></pre></td></tr></table></figure>
-<p>先创建Donor节点的配置信息。<br>Donor节点只用来同步数据，不能有外部链接操作Donor节点数据，保证Donor节点的健康状态，维护正常的集群运行状态。其他节点只需要修改wsrep_node_address=’192.168.1.150’和wsrep_node_name=’db1’两个配置即可，其他配置相同。</p>
-<p>向/etc/my.cnf.d/server.cnf文件中添加以下配置信息:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo cat &gt;&gt; /etc/my.cnf.d/servebinlog_format=ROW</div></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">default-storage-engine=innodb</div><div class="line">innodb_autoinc_lock_mode=2</div><div class="line">innodb_locks_unsafe_for_binlog=1</div><div class="line">query_cache_size=0</div><div class="line">query_cache_type=0</div><div class="line">bind-address=0.0.0.0</div><div class="line">datadir=/var/lib/mysql</div><div class="line">innodb_log_file_size=100M</div><div class="line">innodb_file_per_table</div><div class="line">innodb_flush_log_at_trx_commit=2</div><div class="line">wsrep_provider=/usr/lib64/galera/libgalera_smm.so</div><div class="line">wsrep_cluster_address=&quot;gcomm://192.168.1.150,192.168.1.151,192.168.1.152&quot;</div><div class="line">wsrep_cluster_name=&apos;galera_cluster&apos;</div><div class="line">wsrep_node_address=&apos;192.168.1.150&apos;</div><div class="line">wsrep_node_name=&apos;db1&apos;</div><div class="line">wsrep_sst_method=rsync</div><div class="line">wsrep_sst_auth=sst_user:dbpass</div><div class="line">EOF</div></pre></td></tr></table></figure>
-<p>wsrep_cluster_address配置省略了默认端口4567。</p>
-<p>其他两个节点所需要修改的配置：</p>
-<p>node1节点 :</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">wsrep_node_address=&apos;192.168.1.151&apos;</div><div class="line">wsrep_node_name=&apos;db2&apos;</div></pre></td></tr></table></figure>
-<p>node2节点 :</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">wsrep_node_address=&apos;192.168.1.152&apos;</div><div class="line">wsrep_node_name=&apos;db3&apos;</div></pre></td></tr></table></figure>
-<p><strong>Step 7– 初始化Donor节点</strong><br>Donor节点是整个集群的优先初始化节点，只有Donor节点先启动，其他子节点才能正常加入到集群当中。启动Donor节点，需要配置‐‐wsrep-new-cluster参数。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo /etc/init.d/mysql start --wsrep-new-cluster</div></pre></td></tr></table></figure>
-<p>运行以下命令，查看集群的运行状态。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mysql -uroot -p -e&quot;show status like &apos;wsrep%&apos;&quot;</div></pre></td></tr></table></figure>
-<p>输出以下信息：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div></pre></td><td class="code"><pre><div class="line">+------------------------------+-----------------------------------------------+</div><div class="line">| Variable_name                | Value                                         |</div><div class="line">+------------------------------+-----------------------------------------------+</div><div class="line">| wsrep_local_state_uuid       | 47b3fdaa-5f43-11e8-8cbd-62ce6e10f564          |</div><div class="line">| wsrep_protocol_version       | 8                                             |</div><div class="line">| wsrep_last_committed         | 2                                             |</div><div class="line">| wsrep_replicated             | 0                                             |</div><div class="line">| wsrep_replicated_bytes       | 0                                             |</div><div class="line">| wsrep_repl_keys              | 0                                             |</div><div class="line">| wsrep_repl_keys_bytes        | 0                                             |</div><div class="line">| wsrep_repl_data_bytes        | 0                                             |</div><div class="line">| wsrep_repl_other_bytes       | 0                                             |</div><div class="line">| wsrep_received               | 10                                            |</div><div class="line">| wsrep_received_bytes         | 2304                                          |</div><div class="line">| wsrep_local_commits          | 0                                             |</div><div class="line">| wsrep_local_cert_failures    | 0                                             |</div><div class="line">| wsrep_local_replays          | 0                                             |</div><div class="line">| wsrep_local_send_queue       | 0                                             |</div><div class="line">| wsrep_local_send_queue_max   | 1                                             |</div><div class="line">| wsrep_local_send_queue_min   | 0                                             |</div><div class="line">| wsrep_local_send_queue_avg   | 0.000000                                      |</div><div class="line">| wsrep_local_recv_queue       | 0                                             |</div><div class="line">| wsrep_local_recv_queue_max   | 2                                             |</div><div class="line">| wsrep_local_recv_queue_min   | 0                                             |</div><div class="line">| wsrep_local_recv_queue_avg   | 0.100000                                      |</div><div class="line">| wsrep_local_cached_downto    | 1                                             |</div><div class="line">| wsrep_flow_control_paused_ns | 0                                             |</div><div class="line">| wsrep_flow_control_paused    | 0.000000                                      |</div><div class="line">| wsrep_flow_control_sent      | 0                                             |</div><div class="line">| wsrep_flow_control_recv      | 0                                             |</div><div class="line">| wsrep_cert_deps_distance     | 1.000000                                      |</div><div class="line">| wsrep_apply_oooe             | 0.000000                                      |</div><div class="line">| wsrep_apply_oool             | 0.000000                                      |</div><div class="line">| wsrep_apply_window           | 1.000000                                      |</div><div class="line">| wsrep_commit_oooe            | 0.000000                                      |</div><div class="line">| wsrep_commit_oool            | 0.000000                                      |</div><div class="line">| wsrep_commit_window          | 1.000000                                      |</div><div class="line">| wsrep_local_state            | 4                                             |</div><div class="line">| wsrep_local_state_comment    | Synced                                        |</div><div class="line">| wsrep_cert_index_size        | 1                                             |</div><div class="line">| wsrep_causal_reads           | 0                                             |</div><div class="line">| wsrep_cert_interval          | 0.000000                                      |</div><div class="line">| wsrep_incoming_addresses     | 192.168.1.150:3306                            |</div><div class="line">| wsrep_desync_count           | 0                                             |</div><div class="line">| wsrep_evs_delayed            |                                               |</div><div class="line">| wsrep_evs_evict_list         |                                               |</div><div class="line">| wsrep_evs_repl_latency       | 4.67e-06/9.14775e-06/1.1497e-05/2.63955e-06/4 |</div><div class="line">| wsrep_evs_state              | OPERATIONAL                                   |</div><div class="line">| wsrep_gcomm_uuid             | 559ef6a3-5f45-11e8-92a5-52514b1a7147          |</div><div class="line">| wsrep_cluster_conf_id        | 7                                             |</div><div class="line">| wsrep_cluster_size           | 1                                             |</div><div class="line">| wsrep_cluster_state_uuid     | 47b3fdaa-5f43-11e8-8cbd-62ce6e10f564          |</div><div class="line">| wsrep_cluster_status         | Primary                                       |</div><div class="line">| wsrep_connected              | ON                                            |</div><div class="line">| wsrep_local_bf_aborts        | 0                                             |</div><div class="line">| wsrep_local_index            | 0                                             |</div><div class="line">| wsrep_provider_name          | Galera                                        |</div><div class="line">| wsrep_provider_vendor        | Codership Oy &lt;info@codership.com&gt;             |</div><div class="line">| wsrep_provider_version       | 25.3.23(r3789)                                |</div><div class="line">| wsrep_ready                  | ON                                            |</div><div class="line">| wsrep_thread_count           | 2                                             |</div><div class="line">+------------------------------+-----------------------------------------------+</div><div class="line">58 rows in set (0.00 sec)</div></pre></td></tr></table></figure>
-<p>重点查看这些信息是否正确：<br>wsrep_cluster_size 当前集群中节点个数<br>wsrep_local_state_comment 集群数据同步状态<br>wsrep_incoming_addresses 数据提供方节点地址和端口<br>wsrep_ready ON集群状态正常<br>wsrep_connected ON集群连接状态正常</p>
-<p><strong>Step 8– 动态添加集群节点</strong><br>按照Step6的操作，配置node1和node2两个节点的配置文件，用以下命令启动集群子节点。注意与Donor节点的启动方式不同。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo service mysql start</div></pre></td></tr></table></figure>
-<p>检查node1和node2两个节点的状态，是否正常。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mysql -u root -p -e &quot;show status like &apos;wsrep%&apos;&quot;</div></pre></td></tr></table></figure>
-<p>node1和node2两个子节点启动后，状态查询结果如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div></pre></td><td class="code"><pre><div class="line">+------------------------------+----------------------------------------------------------+</div><div class="line">| Variable_name                | Value                                                    |</div><div class="line">+------------------------------+----------------------------------------------------------+</div><div class="line">| wsrep_local_state_uuid       | 47b3fdaa-5f43-11e8-8cbd-62ce6e10f564                     |</div><div class="line">| wsrep_protocol_version       | 8                                                        |</div><div class="line">| wsrep_last_committed         | 2                                                        |</div><div class="line">| wsrep_replicated             | 0                                                        |</div><div class="line">| wsrep_replicated_bytes       | 0                                                        |</div><div class="line">| wsrep_repl_keys              | 0                                                        |</div><div class="line">| wsrep_repl_keys_bytes        | 0                                                        |</div><div class="line">| wsrep_repl_data_bytes        | 0                                                        |</div><div class="line">| wsrep_repl_other_bytes       | 0                                                        |</div><div class="line">| wsrep_received               | 3                                                        |</div><div class="line">| wsrep_received_bytes         | 476                                                      |</div><div class="line">| wsrep_local_commits          | 0                                                        |</div><div class="line">| wsrep_local_cert_failures    | 0                                                        |</div><div class="line">| wsrep_local_replays          | 0                                                        |</div><div class="line">| wsrep_local_send_queue       | 0                                                        |</div><div class="line">| wsrep_local_send_queue_max   | 1                                                        |</div><div class="line">| wsrep_local_send_queue_min   | 0                                                        |</div><div class="line">| wsrep_local_send_queue_avg   | 0.000000                                                 |</div><div class="line">| wsrep_local_recv_queue       | 0                                                        |</div><div class="line">| wsrep_local_recv_queue_max   | 1                                                        |</div><div class="line">| wsrep_local_recv_queue_min   | 0                                                        |</div><div class="line">| wsrep_local_recv_queue_avg   | 0.000000                                                 |</div><div class="line">| wsrep_local_cached_downto    | 18446744073709551615                                     |</div><div class="line">| wsrep_flow_control_paused_ns | 0                                                        |</div><div class="line">| wsrep_flow_control_paused    | 0.000000                                                 |</div><div class="line">| wsrep_flow_control_sent      | 0                                                        |</div><div class="line">| wsrep_flow_control_recv      | 0                                                        |</div><div class="line">| wsrep_cert_deps_distance     | 0.000000                                                 |</div><div class="line">| wsrep_apply_oooe             | 0.000000                                                 |</div><div class="line">| wsrep_apply_oool             | 0.000000                                                 |</div><div class="line">| wsrep_apply_window           | 0.000000                                                 |</div><div class="line">| wsrep_commit_oooe            | 0.000000                                                 |</div><div class="line">| wsrep_commit_oool            | 0.000000                                                 |</div><div class="line">| wsrep_commit_window          | 0.000000                                                 |</div><div class="line">| wsrep_local_state            | 4                                                        |</div><div class="line">| wsrep_local_state_comment    | Synced                                                   |</div><div class="line">| wsrep_cert_index_size        | 0                                                        |</div><div class="line">| wsrep_causal_reads           | 0                                                        |</div><div class="line">| wsrep_cert_interval          | 0.000000                                                 |</div><div class="line">| wsrep_incoming_addresses     | 192.168.1.151:3306,192.168.1.152:3306,192.168.1.150:3306 |</div><div class="line">| wsrep_desync_count           | 0                                                        |</div><div class="line">| wsrep_evs_delayed            |                                                          |</div><div class="line">| wsrep_evs_evict_list         |                                                          |</div><div class="line">| wsrep_evs_repl_latency       | 0.00115351/0.00145445/0.0018473/0.000297523/4            |</div><div class="line">| wsrep_evs_state              | OPERATIONAL                                              |</div><div class="line">| wsrep_gcomm_uuid             | 273a3916-5f4f-11e8-88db-8ab9682bb4ca                     |</div><div class="line">| wsrep_cluster_conf_id        | 9                                                        |</div><div class="line">| wsrep_cluster_size           | 3                                                        |</div><div class="line">| wsrep_cluster_state_uuid     | 47b3fdaa-5f43-11e8-8cbd-62ce6e10f564                     |</div><div class="line">| wsrep_cluster_status         | Primary                                                  |</div><div class="line">| wsrep_connected              | ON                                                       |</div><div class="line">| wsrep_local_bf_aborts        | 0                                                        |</div><div class="line">| wsrep_local_index            | 0                                                        |</div><div class="line">| wsrep_provider_name          | Galera                                                   |</div><div class="line">| wsrep_provider_vendor        | Codership Oy &lt;info@codership.com&gt;                        |</div><div class="line">| wsrep_provider_version       | 25.3.23(r3789)                                           |</div><div class="line">| wsrep_ready                  | ON                                                       |</div><div class="line">| wsrep_thread_count           | 2                                                        |</div><div class="line">+------------------------------+----------------------------------------------------------+</div><div class="line">58 rows in set (0.00 sec)</div></pre></td></tr></table></figure>
-<p><strong>Step 9 – 验证数据同步复制</strong><br>模拟场景1：集群中三个节点全部正常启动。<br>在node1和node2两个节点分别创建库和表，查看donor节点是否正常的同步更新数据。</p>
-<p>模拟场景2：node1和node2中的一个节点宕机。<br>在没有宕机的节点（除donor节点）中进行数据CUD操作，先查看donor节点是否正常的同步更新数据，如果正常，则重新启动宕机节点，启动成功后，查看该节点能否正常的把不一致的数据同步过来。</p>
-<p><strong>PS:Galera在加入数据不一致的节点时，外部不能访问该节点，直到数据同步后才能访问该节点。</strong></p>
-<p><strong>2.Keepalived实现MariaDB Galera Cluster集群的高可用配置</strong></p>
-<p>请参考这篇文章<a href="http://www.forwardlee.com/2018/05/23/Keepalived-HA-LVS-Galera-Cluster%E7%8E%AF%E5%A2%83/">《Keepalived HA +LVS+ Galera Cluster环境》</a></p>
+        <p><img src="RDB和AOF的介绍.png" alt="RDB和AOF工作原理"></p>
+<p><strong>RDB持久化方式的工作原理</strong><br>设定时间间隔t内有n次key的操作检查，就进行持久化。例如save 60 1000，每个60秒有1000个key发生变化，则进行持久化。<br>RDB在做持久化时，保存完整的一份数据快照，旧的快照文件被覆盖。</p>
+<p><strong>RDB持久化方案的优点</strong><br>（1）持久化的时间间隔可以由redis控制，所以可以按照一定的时间间隔把数据快照文件拷贝出来，更好的支撑数据冷备份。<br>（2）RDB持久化文件是Redis数据文件，在做redis故障恢复时，数据加载效率更高。<br>（3）Redis数据操作都在内存中进行，效率高。<br>（4）Redis会创建一个副本进程（fork）进行数据持久化，持久化过程中，对redis本身的数据操作影响较小。</p>
+<p><strong>RDB持久化方式的缺点</strong><br>（1）两次持久化操作的间隔时间内，Redis发生故障，那么将丢失这个时间内的所有数据。–重点<br>（2）当两次持久化操作间隔时间较长，Redis内可能产生大量新的数据，生成数据快照文件时，可能导致Redis数据服务暂停数秒。</p>
+<p><strong>AOF持久化方式的工作原理</strong><br>设定一个AOF持久化文件大小，Redis每隔1秒进行一次append only的完整数据指令日志的写文件持久化操作，当AOF文件大小达到指定大小后，Redis会使用LRU算法淘汰无效数据，缩小数据大小，重新创建一个AOF文件，旧的AOF文件就会删除。<br>AOF在做持久化时，保存的是完整数据的写指令日志数据。</p>
+<p>PS:现代操作系统的写文件操作过程是，先将文件数据写入到系统os cache缓存层，当os cache内的数据达到一定量后，再写入磁盘。</p>
+<p><strong>AOF持久化方式的优点</strong><br>（1）数据持久化每秒钟进行一次，即使Redis发生故障，丢失的数据只是1秒钟的数据。–重点<br>（2）数据持久化时，数据从os cache中写入磁盘时，文件不易破损，即使破损，redis有可用的工具进行修复。</p>
+<p><strong>AOF持久化方式的缺点</strong><br>（1）Redis数据操作每次都些人os cache中，要比直接写入内存效率有所降低，导致Redis的吞吐量QPS略有下降。<br>（2）AOF文件的rewrite时机不可控，所以不容易实现数据备份。<br>（3）持久化保存的是全量数据的写指令日志，并非Redis数据文件，在Redis启动加载数据时，效率低下。–重点</p>
+<p><strong>RDB和AOF持久化方式选择</strong><br>两种方式，各有优缺点。RDB效率更高，但是丢失数据量会比较大；AOF的数据要进行写文件操作，效率略低，但是保存的持久化数据更完整。在实际应用中，通常会同时选择两种方案。<br>可用方案：<br>实现Redis主从集群，主节点用AOF，保证数据更好的完整性，即使出现故障，也能从故障中恢复数据，虽然AOF方式的Redis数据QPS会下降，但影响不大；从节点用短时间间隔（秒级）的RDB，从节点对外不提供服务，这样从节点出现故障的几率就会大大降低，RDB方式能够很好的实现数据文件的备份。</p>
 
       
 
@@ -328,7 +251,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">MySQL</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">缓存架构, Redis</a>
         		</li>
       		
 		</ul>
@@ -384,7 +307,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="http://s.jiathis.com/qrcode.php?url=http://www.forwardlee.com/2018/05/24/CentOS-6-8-MariaDB-10-0-with-Galera-Cluster-Keepalived高可用解决方案/" alt="微信分享二维码">
+      <img src="http://s.jiathis.com/qrcode.php?url=http://www.forwardlee.com/2018/05/25/Redis持久化方式RDB和AOF比较应用/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -398,18 +321,9 @@
   
 <nav id="article-nav">
   
-    <a href="/2018/05/25/Redis持久化方式RDB和AOF比较应用/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          Redis持久化方式RDB和AOF比较应用
-        
-      </div>
-    </a>
   
-  
-    <a href="/2018/05/24/Galera-Cluster-3-Mysql-wresp-5-6安装配置/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">Galera Cluster 3 + Mysql wresp 5.6安装配置</div>
+    <a href="/2018/05/24/CentOS-6-8-MariaDB-10-0-with-Galera-Cluster-Keepalived高可用解决方案/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">CentOS 6.8 + MariaDB 10.0 with Galera Cluster+Keepalived高可用解决方案</div>
       <i class="icon-circle-right"></i>
     </a>
   
