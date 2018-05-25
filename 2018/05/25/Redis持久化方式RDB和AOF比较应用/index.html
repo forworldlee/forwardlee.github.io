@@ -16,12 +16,12 @@
 <meta property="og:site_name" content="不忘初心">
 <meta property="og:description" content="RDB持久化方式的工作原理设定时间间隔t内有n次key的操作检查，就进行持久化。例如save 60 1000，每个60秒有1000个key发生变化，则进行持久化。RDB在做持久化时，保存完整的一份数据快照，旧的快照文件被覆盖。 RDB持久化方案的优点（1）持久化的时间间隔可以由redis控制，所以可以按照一定的时间间隔把数据快照文件拷贝出来，更好的支撑数据冷备份。（2）RDB持久化文件是Redi">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://www.forwardlee.com/2018/05/25/Redis持久化方式RDB和AOF比较应用/RDB和AOF的介绍.png">
-<meta property="og:updated_time" content="2018-05-25T11:07:18.645Z">
+<meta property="og:image" content="http://www.forwardlee.com/2018/05/25/Redis持久化方式RDB和AOF比较应用/2018/05/25/Redis持久化方式RDB和AOF比较应用/RDB和AOF的介绍.png">
+<meta property="og:updated_time" content="2018-05-25T11:09:08.072Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Redis持久化方式RDB和AOF比较应用">
 <meta name="twitter:description" content="RDB持久化方式的工作原理设定时间间隔t内有n次key的操作检查，就进行持久化。例如save 60 1000，每个60秒有1000个key发生变化，则进行持久化。RDB在做持久化时，保存完整的一份数据快照，旧的快照文件被覆盖。 RDB持久化方案的优点（1）持久化的时间间隔可以由redis控制，所以可以按照一定的时间间隔把数据快照文件拷贝出来，更好的支撑数据冷备份。（2）RDB持久化文件是Redi">
-<meta name="twitter:image" content="http://www.forwardlee.com/2018/05/25/Redis持久化方式RDB和AOF比较应用/RDB和AOF的介绍.png">
+<meta name="twitter:image" content="http://www.forwardlee.com/2018/05/25/Redis持久化方式RDB和AOF比较应用/2018/05/25/Redis持久化方式RDB和AOF比较应用/RDB和AOF的介绍.png">
   
     <link rel="alternative" href="/atom.xml" title="不忘初心" type="application/atom+xml">
   
@@ -209,7 +209,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p><img src="./RDB和AOF的介绍.png" alt="RDB和AOF工作原理"></p>
+        <p><img src="2018/05/25/Redis持久化方式RDB和AOF比较应用/RDB和AOF的介绍.png" alt="RDB和AOF工作原理"></p>
 <p><strong>RDB持久化方式的工作原理</strong><br>设定时间间隔t内有n次key的操作检查，就进行持久化。例如save 60 1000，每个60秒有1000个key发生变化，则进行持久化。<br>RDB在做持久化时，保存完整的一份数据快照，旧的快照文件被覆盖。</p>
 <p><strong>RDB持久化方案的优点</strong><br>（1）持久化的时间间隔可以由redis控制，所以可以按照一定的时间间隔把数据快照文件拷贝出来，更好的支撑数据冷备份。<br>（2）RDB持久化文件是Redis数据文件，在做redis故障恢复时，数据加载效率更高。<br>（3）Redis数据操作都在内存中进行，效率高。<br>（4）Redis会创建一个副本进程（fork）进行数据持久化，持久化过程中，对redis本身的数据操作影响较小。</p>
 <p><strong>RDB持久化方式的缺点</strong><br>（1）两次持久化操作的间隔时间内，Redis发生故障，那么将丢失这个时间内的所有数据。–重点<br>（2）当两次持久化操作间隔时间较长，Redis内可能产生大量新的数据，生成数据快照文件时，可能导致Redis数据服务暂停数秒。</p>
@@ -454,11 +454,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">MySql</a>
+                <a href="javascript:void(0)" class="js-tag color1">MySQL</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">MySQL</a>
+                <a href="javascript:void(0)" class="js-tag color1">MySql</a>
               </li>
              
               <li class="article-tag-list-item">
