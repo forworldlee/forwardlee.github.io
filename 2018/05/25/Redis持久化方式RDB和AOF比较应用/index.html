@@ -81,19 +81,19 @@
 
 
 
-<meta name="description" content="RDB持久化方式的工作原理设定时间间隔t内有n次key的操作检查，就进行持久化。例如save 60 1000，每个60秒有1000个key发生变化，则进行持久化。RDB在做持久化时，保存完整的一份数据快照，旧的快照文件被覆盖。 RDB持久化方案的优点（1）持久化的时间间隔可以由redis控制，所以可以按照一定的时间间隔把数据快照文件拷贝出来，更好的支撑数据冷备份。（2）RDB持久化文件是Redi">
+<meta name="description" content="RDB持久化方式的工作原理设定时间间隔t内有n次key的操作检查，就进行持久化。例如save 60 1000，每个60秒有1000个key发生变化，则进行持久化。RDB在做持久化时，保存完整的一份数据快照，旧的快照文件被覆盖。 RDB持久化方案的优点**（1）持久化的时间间隔可以由redis控制，所以可以按照一定的时间间隔把数据快照文件拷贝出来，更好的支撑数据冷备份。（2）RDB持久化文件是Re">
 <meta name="keywords" content="Redis">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Redis持久化方式RDB和AOF比较应用">
 <meta property="og:url" content="http://www.forwardlee.com/2018/05/25/Redis持久化方式RDB和AOF比较应用/index.html">
 <meta property="og:site_name" content="不忘初心">
-<meta property="og:description" content="RDB持久化方式的工作原理设定时间间隔t内有n次key的操作检查，就进行持久化。例如save 60 1000，每个60秒有1000个key发生变化，则进行持久化。RDB在做持久化时，保存完整的一份数据快照，旧的快照文件被覆盖。 RDB持久化方案的优点（1）持久化的时间间隔可以由redis控制，所以可以按照一定的时间间隔把数据快照文件拷贝出来，更好的支撑数据冷备份。（2）RDB持久化文件是Redi">
+<meta property="og:description" content="RDB持久化方式的工作原理设定时间间隔t内有n次key的操作检查，就进行持久化。例如save 60 1000，每个60秒有1000个key发生变化，则进行持久化。RDB在做持久化时，保存完整的一份数据快照，旧的快照文件被覆盖。 RDB持久化方案的优点**（1）持久化的时间间隔可以由redis控制，所以可以按照一定的时间间隔把数据快照文件拷贝出来，更好的支撑数据冷备份。（2）RDB持久化文件是Re">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://www.forwardlee.com/2018/05/25/Redis持久化方式RDB和AOF比较应用/2018/05/25/Redis持久化方式RDB和AOF比较应用/RDB和AOF的介绍.png">
-<meta property="og:updated_time" content="2018-05-25T14:26:24.629Z">
+<meta property="og:updated_time" content="2018-05-25T14:52:37.218Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Redis持久化方式RDB和AOF比较应用">
-<meta name="twitter:description" content="RDB持久化方式的工作原理设定时间间隔t内有n次key的操作检查，就进行持久化。例如save 60 1000，每个60秒有1000个key发生变化，则进行持久化。RDB在做持久化时，保存完整的一份数据快照，旧的快照文件被覆盖。 RDB持久化方案的优点（1）持久化的时间间隔可以由redis控制，所以可以按照一定的时间间隔把数据快照文件拷贝出来，更好的支撑数据冷备份。（2）RDB持久化文件是Redi">
+<meta name="twitter:description" content="RDB持久化方式的工作原理设定时间间隔t内有n次key的操作检查，就进行持久化。例如save 60 1000，每个60秒有1000个key发生变化，则进行持久化。RDB在做持久化时，保存完整的一份数据快照，旧的快照文件被覆盖。 RDB持久化方案的优点**（1）持久化的时间间隔可以由redis控制，所以可以按照一定的时间间隔把数据快照文件拷贝出来，更好的支撑数据冷备份。（2）RDB持久化文件是Re">
 <meta name="twitter:image" content="http://www.forwardlee.com/2018/05/25/Redis持久化方式RDB和AOF比较应用/2018/05/25/Redis持久化方式RDB和AOF比较应用/RDB和AOF的介绍.png">
 
 
@@ -399,15 +399,15 @@
 
       
         <p><img src="2018/05/25/Redis持久化方式RDB和AOF比较应用/RDB和AOF的介绍.png" alt="RDB和AOF工作原理"></p>
-<p><strong>RDB持久化方式的工作原理</strong><br>设定时间间隔t内有n次key的操作检查，就进行持久化。例如save 60 1000，每个60秒有1000个key发生变化，则进行持久化。<br>RDB在做持久化时，保存完整的一份数据快照，旧的快照文件被覆盖。</p>
-<p><strong>RDB持久化方案的优点</strong><br>（1）持久化的时间间隔可以由redis控制，所以可以按照一定的时间间隔把数据快照文件拷贝出来，更好的支撑数据冷备份。<br>（2）RDB持久化文件是Redis数据文件，在做redis故障恢复时，数据加载效率更高。<br>（3）Redis数据操作都在内存中进行，效率高。<br>（4）Redis会创建一个副本进程（fork）进行数据持久化，持久化过程中，对redis本身的数据操作影响较小。</p>
-<p><strong>RDB持久化方式的缺点</strong><br>（1）两次持久化操作的间隔时间内，Redis发生故障，那么将丢失这个时间内的所有数据。–重点<br>（2）当两次持久化操作间隔时间较长，Redis内可能产生大量新的数据，生成数据快照文件时，可能导致Redis数据服务暂停数秒。</p>
+<h1><span id="rdb持久化方式的工作原理">RDB持久化方式的工作原理</span></h1><p>设定时间间隔t内有n次key的操作检查，就进行持久化。例如save 60 1000，每个60秒有1000个key发生变化，则进行持久化。<br>RDB在做持久化时，保存完整的一份数据快照，旧的快照文件被覆盖。</p>
+<h2><span id="rdb持久化方案的优点">RDB持久化方案的优点**</span></h2><p>（1）持久化的时间间隔可以由redis控制，所以可以按照一定的时间间隔把数据快照文件拷贝出来，更好的支撑数据冷备份。<br>（2）RDB持久化文件是Redis数据文件，在做redis故障恢复时，数据加载效率更高。<br>（3）Redis数据操作都在内存中进行，效率高。<br>（4）Redis会创建一个副本进程（fork）进行数据持久化，持久化过程中，对redis本身的数据操作影响较小。</p>
+<h2><span id="rdb持久化方式的缺点">RDB持久化方式的缺点**</span></h2><p>（1）两次持久化操作的间隔时间内，Redis发生故障，那么将丢失这个时间内的所有数据。–重点<br>（2）当两次持久化操作间隔时间较长，Redis内可能产生大量新的数据，生成数据快照文件时，可能导致Redis数据服务暂停数秒。</p>
 <a id="more"></a>
-<p><strong>AOF持久化方式的工作原理</strong><br>设定一个AOF持久化文件大小，Redis每隔1秒进行一次append only的完整数据指令日志的写文件持久化操作，当AOF文件大小达到指定大小后，Redis会使用LRU算法淘汰无效数据，缩小数据大小，重新创建一个AOF文件，旧的AOF文件就会删除。<br>AOF在做持久化时，保存的是完整数据的写指令日志数据。</p>
+<h1><span id="aof持久化方式的工作原理">AOF持久化方式的工作原理</span></h1><p>设定一个AOF持久化文件大小，Redis每隔1秒进行一次append only的完整数据指令日志的写文件持久化操作，当AOF文件大小达到指定大小后，Redis会使用LRU算法淘汰无效数据，缩小数据大小，重新创建一个AOF文件，旧的AOF文件就会删除。<br>AOF在做持久化时，保存的是完整数据的写指令日志数据。</p>
 <p>PS:现代操作系统的写文件操作过程是，先将文件数据写入到系统os cache缓存层，当os cache内的数据达到一定量后，再写入磁盘。</p>
-<p><strong>AOF持久化方式的优点</strong><br>（1）数据持久化每秒钟进行一次，即使Redis发生故障，丢失的数据只是1秒钟的数据。–重点<br>（2）数据持久化时，数据从os cache中写入磁盘时，文件不易破损，即使破损，redis有可用的工具进行修复。</p>
-<p><strong>AOF持久化方式的缺点</strong><br>（1）Redis数据操作每次都些人os cache中，要比直接写入内存效率有所降低，导致Redis的吞吐量QPS略有下降。<br>（2）AOF文件的rewrite时机不可控，所以不容易实现数据备份。<br>（3）持久化保存的是全量数据的写指令日志，并非Redis数据文件，在Redis启动加载数据时，效率低下。–重点</p>
-<p><strong>RDB和AOF持久化方式选择</strong><br>两种方式，各有优缺点。RDB效率更高，但是丢失数据量会比较大；AOF的数据要进行写文件操作，效率略低，但是保存的持久化数据更完整。在实际应用中，通常会同时选择两种方案。<br>可用方案：<br>实现Redis主从集群，主节点用AOF，保证数据更好的完整性，即使出现故障，也能从故障中恢复数据，虽然AOF方式的Redis数据QPS会下降，但影响不大；从节点用短时间间隔（秒级）的RDB，从节点对外不提供服务，这样从节点出现故障的几率就会大大降低，RDB方式能够很好的实现数据文件的备份。</p>
+<h2><span id="aof持久化方式的优点">AOF持久化方式的优点</span></h2><p>（1）数据持久化每秒钟进行一次，即使Redis发生故障，丢失的数据只是1秒钟的数据。–重点<br>（2）数据持久化时，数据从os cache中写入磁盘时，文件不易破损，即使破损，redis有可用的工具进行修复。</p>
+<h2><span id="aof持久化方式的缺点">AOF持久化方式的缺点</span></h2><p>（1）Redis数据操作每次都些人os cache中，要比直接写入内存效率有所降低，导致Redis的吞吐量QPS略有下降。<br>（2）AOF文件的rewrite时机不可控，所以不容易实现数据备份。<br>（3）持久化保存的是全量数据的写指令日志，并非Redis数据文件，在Redis启动加载数据时，效率低下。–重点</p>
+<h2><span id="rdb和aof持久化方式选择">RDB和AOF持久化方式选择</span></h2><p>两种方式，各有优缺点。RDB效率更高，但是丢失数据量会比较大；AOF的数据要进行写文件操作，效率略低，但是保存的持久化数据更完整。在实际应用中，通常会同时选择两种方案。<br>可用方案：<br>实现Redis主从集群，主节点用AOF，保证数据更好的完整性，即使出现故障，也能从故障中恢复数据，虽然AOF方式的Redis数据QPS会下降，但影响不大；从节点用短时间间隔（秒级）的RDB，从节点对外不提供服务，这样从节点出现故障的几率就会大大降低，RDB方式能够很好的实现数据文件的备份。</p>
 
       
     </div>
@@ -537,8 +537,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -638,6 +647,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-text">RDB持久化方式的工作原理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-text">RDB持久化方案的优点**</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-text">RDB持久化方式的缺点**</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-text">AOF持久化方式的工作原理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-text">AOF持久化方式的优点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-text">AOF持久化方式的缺点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-text">RDB和AOF持久化方式选择</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       

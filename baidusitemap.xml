@@ -4,6 +4,23 @@
 
     
   <url>
+    <loc>http://www.forwardlee.com/2018/05/25/Redis%E6%8C%81%E4%B9%85%E5%8C%96%E6%96%B9%E5%BC%8FRDB%E5%92%8CAOF%E6%AF%94%E8%BE%83%E5%BA%94%E7%94%A8/</loc>
+    <lastmod>2018-05-25T14:52:37.218Z</lastmod>
+    <data>
+        <display>
+        <title>Redis持久化方式RDB和AOF比较应用</title>
+        <pubTime>2018-05-25T10:00:11.000Z</pubTime>
+        
+        <tag>Redis</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://www.forwardlee.com/2018/05/24/CentOS-6-8-MariaDB-10-0-with-Galera-Cluster-Keepalived%E9%AB%98%E5%8F%AF%E7%94%A8%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/</loc>
     <lastmod>2018-05-25T14:28:09.176Z</lastmod>
     <data>
@@ -18,23 +35,6 @@
         <tag>Galera</tag>
          
         <tag>CentOS</tag>
-         
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://www.forwardlee.com/2018/05/25/Redis%E6%8C%81%E4%B9%85%E5%8C%96%E6%96%B9%E5%BC%8FRDB%E5%92%8CAOF%E6%AF%94%E8%BE%83%E5%BA%94%E7%94%A8/</loc>
-    <lastmod>2018-05-25T14:26:24.629Z</lastmod>
-    <data>
-        <display>
-        <title>Redis持久化方式RDB和AOF比较应用</title>
-        <pubTime>2018-05-25T10:00:11.000Z</pubTime>
-        
-        <tag>Redis</tag>
          
          
            
