@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.forwardlee.com/"/>
-  <updated>2018-05-25T11:09:08.072Z</updated>
+  <updated>2018-05-25T11:10:36.348Z</updated>
   <id>http://www.forwardlee.com/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://www.forwardlee.com/2018/05/25/Redis%E6%8C%81%E4%B9%85%E5%8C%96%E6%96%B9%E5%BC%8FRDB%E5%92%8CAOF%E6%AF%94%E8%BE%83%E5%BA%94%E7%94%A8/"/>
     <id>http://www.forwardlee.com/2018/05/25/Redis持久化方式RDB和AOF比较应用/</id>
     <published>2018-05-25T10:00:11.000Z</published>
-    <updated>2018-05-25T11:09:08.072Z</updated>
+    <updated>2018-05-25T11:10:36.348Z</updated>
     
     <content type="html"><![CDATA[<p><img src="2018/05/25/Redis持久化方式RDB和AOF比较应用/RDB和AOF的介绍.png" alt="RDB和AOF工作原理"></p>
 <p><strong>RDB持久化方式的工作原理</strong><br>设定时间间隔t内有n次key的操作检查，就进行持久化。例如save 60 1000，每个60秒有1000个key发生变化，则进行持久化。<br>RDB在做持久化时，保存完整的一份数据快照，旧的快照文件被覆盖。</p>
@@ -41,7 +41,7 @@
     </summary>
     
     
-      <category term="缓存架构, Redis" scheme="http://www.forwardlee.com/tags/%E7%BC%93%E5%AD%98%E6%9E%B6%E6%9E%84-Redis/"/>
+      <category term="缓存架构 Redis" scheme="http://www.forwardlee.com/tags/%E7%BC%93%E5%AD%98%E6%9E%B6%E6%9E%84-Redis/"/>
     
   </entry>
   
