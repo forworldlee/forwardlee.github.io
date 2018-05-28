@@ -4,6 +4,25 @@
 
     
   <url>
+    <loc>http://www.forwardlee.com/2018/05/28/Redis%E6%95%B0%E6%8D%AE%E7%81%BE%E5%A4%87%E5%92%8C%E6%81%A2%E5%A4%8D%E8%BF%87%E7%A8%8B%E4%B8%AD%E8%B8%A9%E5%88%B0%E7%9A%84%E9%9B%B7/</loc>
+    <lastmod>2018-05-28T10:30:36.924Z</lastmod>
+    <data>
+        <display>
+        <title>Redis数据灾备和恢复过程中踩到的雷</title>
+        <pubTime>2018-05-28T08:35:45.000Z</pubTime>
+        
+        <tag>缓存</tag>
+         
+        <tag>Redis</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://www.forwardlee.com/2018/05/24/CentOS-6-8-MariaDB-10-0-with-Galera-Cluster-Keepalived%E9%AB%98%E5%8F%AF%E7%94%A8%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/</loc>
     <lastmod>2018-05-25T15:03:40.090Z</lastmod>
     <data>

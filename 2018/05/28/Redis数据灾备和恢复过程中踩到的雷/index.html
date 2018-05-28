@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="JAVA, 架构师, MySql, Redis, Memcached, HA, Docker, Storm, Kafka, Cluster" />
+  <meta name="keywords" content="缓存,Redis," />
 
 
 
@@ -81,16 +81,18 @@
 
 
 
-<meta name="description" content="总结学习方法，实践技术技能。">
-<meta property="og:type" content="website">
-<meta property="og:title" content="不忘初心">
-<meta property="og:url" content="http://www.forwardlee.com/tags/MySQL/index.html">
+<meta name="description" content="生产环境配置策略RDB 生成快照的频率策略要在每分钟生成一次，但是有多少key发生变化可根据自身业务量配置。save 60 1000 AOF 在生产环境一定要打开，与RDB同时运行，fsync策略为everysec。 生产环境备份策略RDB主要做冷备，用craontab执行定时脚本，做数据备份。备份数据保留48小时，脚本清理48小时以前的数据。每天备份当日的数据，每天的数据保存一个月。把所有数据再">
+<meta name="keywords" content="缓存,Redis">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Redis数据灾备和恢复过程中踩到的雷">
+<meta property="og:url" content="http://www.forwardlee.com/2018/05/28/Redis数据灾备和恢复过程中踩到的雷/index.html">
 <meta property="og:site_name" content="不忘初心">
-<meta property="og:description" content="总结学习方法，实践技术技能。">
+<meta property="og:description" content="生产环境配置策略RDB 生成快照的频率策略要在每分钟生成一次，但是有多少key发生变化可根据自身业务量配置。save 60 1000 AOF 在生产环境一定要打开，与RDB同时运行，fsync策略为everysec。 生产环境备份策略RDB主要做冷备，用craontab执行定时脚本，做数据备份。备份数据保留48小时，脚本清理48小时以前的数据。每天备份当日的数据，每天的数据保存一个月。把所有数据再">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-05-28T10:30:36.924Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="不忘初心">
-<meta name="twitter:description" content="总结学习方法，实践技术技能。">
+<meta name="twitter:title" content="Redis数据灾备和恢复过程中踩到的雷">
+<meta name="twitter:description" content="生产环境配置策略RDB 生成快照的频率策略要在每分钟生成一次，但是有多少key发生变化可根据自身业务量配置。save 60 1000 AOF 在生产环境一定要打开，与RDB同时运行，fsync策略为everysec。 生产环境备份策略RDB主要做冷备，用craontab执行定时脚本，做数据备份。备份数据保留48小时，脚本清理48小时以前的数据。每天备份当日的数据，每天的数据保存一个月。把所有数据再">
 
 
 
@@ -120,13 +122,13 @@
 
 
 
-  <link rel="canonical" href="http://www.forwardlee.com/tags/MySQL/"/>
+  <link rel="canonical" href="http://www.forwardlee.com/2018/05/28/Redis数据灾备和恢复过程中踩到的雷/"/>
 
 
 
 
 
-  <title>标签: MySQL | 不忘初心</title>
+  <title>Redis数据灾备和恢复过程中踩到的雷 | 不忘初心</title>
   
 
 
@@ -155,7 +157,7 @@
     
   
 
-  <div class="container sidebar-position-left ">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -313,194 +315,220 @@
           <div id="content" class="content">
             
 
+  <div id="posts" class="posts-expand">
+    
+
+  
+
   
   
   
-  <div class="post-block tag">
-
-    <div id="posts" class="posts-collapse">
-      <div class="collection-title">
-        <h2>MySQL<small>标签</small>
-        </h2>
-      </div>
-
-      
-        
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2018/05/28/Redis数据灾备和恢复过程中踩到的雷/">
 
-      <h3 class="post-title">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ForwardLee">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/head.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="不忘初心">
+    </span>
+
+    
+      <header class="post-header">
+
         
-            <a class="post-title-link" href="/2018/05/24/Galera-Cluster-3-Mysql-wresp-5-6安装配置/" itemprop="url">
-              
-                <span itemprop="name">Galera Cluster 3 + Mysql wresp 5.6安装配置</span>
-              
-            </a>
         
-      </h3>
+          <h2 class="post-title" itemprop="name headline">Redis数据灾备和恢复过程中踩到的雷</h2>
+        
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-05-24T13:02:55+08:00"
-              content="2018-05-24" >
-          05-24
-        </time>
-      </div>
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-28T16:35:45+08:00">
+                2018-05-28
+              </time>
+            
 
-    </header>
-  </article>
+            
 
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h3 class="post-title">
-        
-            <a class="post-title-link" href="/2018/05/23/Keepalived-HA-LVS-Galera-Cluster环境/" itemprop="url">
-              
-                <span itemprop="name">Keepalived HA +LVS+ Galera Cluster环境</span>
-              
-            </a>
-        
-      </h3>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-05-23T16:14:48+08:00"
-              content="2018-05-23" >
-          05-23
-        </time>
-      </div>
-
-    </header>
-  </article>
-
+      
 
       
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h3 class="post-title">
-        
-            <a class="post-title-link" href="/2018/05/23/CentOS-6-8-MySQL-5-5-with-Galera-Cluster环境搭建/" itemprop="url">
-              
-                <span itemprop="name">CentOS 6.8+MySQL 5.5 with Galera Cluster环境搭建</span>
-              
-            </a>
-        
-      </h3>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-05-23T00:13:16+08:00"
-              content="2018-05-23" >
-          05-23
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-      
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h3 class="post-title">
-        
-            <a class="post-title-link" href="/2018/05/17/MySql分区操作（三）/" itemprop="url">
-              
-                <span itemprop="name">MySql分区操作（三）</span>
-              
-            </a>
-        
-      </h3>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-05-17T10:51:51+08:00"
-              content="2018-05-17" >
-          05-17
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-      
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h3 class="post-title">
-        
-            <a class="post-title-link" href="/2018/05/17/MySql分区操作（二）/" itemprop="url">
-              
-                <span itemprop="name">MySql分区操作（二）</span>
-              
-            </a>
-        
-      </h3>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-05-17T10:07:57+08:00"
-              content="2018-05-17" >
-          05-17
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-      
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h3 class="post-title">
-        
-            <a class="post-title-link" href="/2018/05/16/MySql分区操作（一）/" itemprop="url">
-              
-                <span itemprop="name">MySql分区操作（一）</span>
-              
-            </a>
-        
-      </h3>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-05-16T18:24:35+08:00"
-              content="2018-05-16" >
-          05-16
-        </time>
-      </div>
-
-    </header>
-  </article>
-
+        <h1><span id="生产环境配置策略">生产环境配置策略</span></h1><p>RDB 生成快照的频率策略要在每分钟生成一次，但是有多少key发生变化可根据自身业务量配置。<br>save 60 1000</p>
+<p>AOF 在生产环境一定要打开，与RDB同时运行，fsync策略为everysec。</p>
+<h1><span id="生产环境备份策略">生产环境备份策略</span></h1><p>RDB主要做冷备，用craontab执行定时脚本，做数据备份。<br>备份数据保留48小时，脚本清理48小时以前的数据。<br>每天备份当日的数据，每天的数据保存一个月。<br>把所有数据再备份到远程云服务器上。</p>
+<p>每小时备份脚本</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash</span><br><span class="line"></span><br><span class="line">cur_date=`date +%Y%m%d%H`</span><br><span class="line">rm -rf /var/redis/6379/bak/hour/$cur_date</span><br><span class="line">cp /var/redis/6379/dump.rdb /var/redis/6379/bak/hour/$cur_date</span><br><span class="line"></span><br><span class="line">pre_date=`date -d -48hour +%Y%m%d%H`</span><br><span class="line">rm -rf /var/redis/6379/bak/hour/$pre_date</span><br></pre></td></tr></table></figure>
+<p>每天备份</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash</span><br><span class="line"></span><br><span class="line">cur_date=`date +%Y%m%d`</span><br><span class="line">rm -rf /var/redis/6379/bak/hour/$cur_date</span><br><span class="line">cp /var/redis/6379/dump.rdb /var/redis/6379/bak/dayli/$cur_date</span><br><span class="line"></span><br><span class="line">pre_date=`date -d -1month +%Y%m%d`</span><br><span class="line">rm -rf /var/redis/6379/bak/dayli/$pre_date</span><br></pre></td></tr></table></figure>
+<p>创建定时脚本crontab -e</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@eshop-cache01 dayli]# crontab -e</span><br><span class="line">0 * * * * sh /usr/local/redis/redis_rdb_data_bak_hour.sh</span><br><span class="line">0 0 * * * sh /usr/local/redis/redis_rdb_data_bak_dayli.sh</span><br></pre></td></tr></table></figure>
+<h1><span id="踩过雷后的数据恢复流程">踩过雷后的数据恢复流程</span></h1><p><strong>NO.1雷：</strong>我们理解的redis优先使用aof文件恢复数据，如果aof文件没有数据，应该从rdb恢复数据。【错】</p>
+<p><strong>原因：</strong>在redis配置文件中appendonly为yes，把备份数据拷贝到redis数据目录下，启动redis服务，并没有加载备份数据，而是优先加载了aof空数据，恢复失败。</p>
+<p><strong>NO.2雷：</strong>既然优先使用aof恢复数据，那么我们把aof文件删除掉，再启动redis服务，恢复rdb数据。【错】</p>
+<p><strong>原因：</strong>即使删除了aof文件，redis在启动时也会优先检查是否存在aof文件，如果没有则创建一个空的aof文件并加载空数据。恢复失败。</p>
+<p><strong>NO.3雷：</strong>把redis配置的appendonly设置为no，再恢复rdb数据，启动redis加载rdb数据后，再停掉redis，修改配置appendonly为yes，再启动redis，恢复数据。【错】</p>
+<p><strong>原因：</strong>配置appendonly为no，那么redis的appendonly.aof文件将失效，其中的数据也将不是正确的数据，恢复rdb数据后，再把appendonly修改为yes，此时再重启redis服务，redis将加载appendonly.aof的错误数据。恢复失败。</p>
+<h2><span id="正确的数据恢复流程">正确的数据恢复流程</span></h2><p>停止redis服务</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">redis-cli SHUDOWN</span><br></pre></td></tr></table></figure>
+<p>修改redis配置vi /etc/redis/6379.conf</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">appendonly no</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p>删除aof文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rm -rf /var/redis/6379/appendonly.aof</span><br></pre></td></tr></table></figure>
+<p>拷贝最新一个小时的数据到redis目录下命名为dump.rdb</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp /var/redis/6379/bak/2019052600 /var/redis/6379/dump.rdb</span><br></pre></td></tr></table></figure>
+<p>启动redis服务</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd /etc/init.d/</span><br><span class="line">./redis_6379 start</span><br></pre></td></tr></table></figure>
+<p><strong>热配置redis的appendonly为yes，这是最重要的一步。</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@eshop-cache01 src]# redis-cli </span><br><span class="line">127.0.0.1:6379&gt; config get appendonly</span><br><span class="line">1) &quot;appendonly&quot;</span><br><span class="line">2) &quot;no&quot;</span><br><span class="line">127.0.0.1:6379&gt; config set appendonly yes</span><br><span class="line">OK</span><br></pre></td></tr></table></figure>
+<p>停止redis服务</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">redis-cli SHUDOWN</span><br></pre></td></tr></table></figure>
+<p>修改redis配置vi /etc/redis/6379.conf</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">appendonly yes</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p>启动redis服务</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd /etc/init.d/</span><br><span class="line">./redis_6379 start</span><br></pre></td></tr></table></figure>
 
       
     </div>
+    
+    
+    
 
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>谢谢你请我吃糖果</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wxcode.jpeg" alt="ForwardLee 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/缓存/" rel="tag"># 缓存</a>
+          
+            <a href="/tags/Redis/" rel="tag"># Redis</a>
+          
+        </div>
+      
+
+      
+      
+        <div class="post-widgets">
+        
+
+        
+
+        
+          
+          <div id="needsharebutton-postbottom">
+            <span class="btn">
+              <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </span>
+          </div>
+        
+        </div>
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/05/25/Redis持久化方式RDB和AOF比较应用/" rel="next" title="Redis持久化方式RDB和AOF比较应用">
+                <i class="fa fa-chevron-left"></i> Redis持久化方式RDB和AOF比较应用
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -508,6 +536,10 @@
 
 
           
+
+  
+
+
 
         </div>
         
@@ -528,8 +560,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -629,6 +670,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">1.</span> <span class="nav-text">生产环境配置策略</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">2.</span> <span class="nav-text">生产环境备份策略</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">3.</span> <span class="nav-text">踩过雷后的数据恢复流程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">3.1.</span> <span class="nav-text">正确的数据恢复流程</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -774,6 +831,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
