@@ -5,15 +5,15 @@
     
   <url>
     <loc>http://www.forwardlee.com/2018/05/28/Redis%E6%95%B0%E6%8D%AE%E7%81%BE%E5%A4%87%E5%92%8C%E6%81%A2%E5%A4%8D%E8%BF%87%E7%A8%8B%E4%B8%AD%E8%B8%A9%E5%88%B0%E7%9A%84%E9%9B%B7/</loc>
-    <lastmod>2018-05-28T10:30:36.924Z</lastmod>
+    <lastmod>2018-05-28T10:32:03.574Z</lastmod>
     <data>
         <display>
         <title>Redis数据灾备和恢复过程中踩到的雷</title>
         <pubTime>2018-05-28T08:35:45.000Z</pubTime>
         
-        <tag>缓存</tag>
-         
         <tag>Redis</tag>
+         
+        <tag>缓存</tag>
          
          
            
@@ -32,9 +32,9 @@
         
         <tag>MariaDB</tag>
          
-        <tag>Keepalived</tag>
-         
         <tag>Galera</tag>
+         
+        <tag>Keepalived</tag>
          
         <tag>CentOS</tag>
          
@@ -111,9 +111,9 @@
         <title>Keepalived HA +LVS+ Galera Cluster环境</title>
         <pubTime>2018-05-23T08:14:48.000Z</pubTime>
         
-        <tag>Keepalived</tag>
-         
         <tag>Galera</tag>
+         
+        <tag>Keepalived</tag>
          
         <tag>MySQL</tag>
          
@@ -172,9 +172,9 @@
         
         <tag>MariaDB</tag>
          
-        <tag>Galera</tag>
-         
         <tag>Docker</tag>
+         
+        <tag>Galera</tag>
          
          
            

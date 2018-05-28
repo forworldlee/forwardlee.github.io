@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.forwardlee.com/"/>
-  <updated>2018-05-28T10:30:36.924Z</updated>
+  <updated>2018-05-28T10:32:03.574Z</updated>
   <id>http://www.forwardlee.com/</id>
   
   <author>
@@ -20,13 +20,14 @@
     <link href="http://www.forwardlee.com/2018/05/28/Redis%E6%95%B0%E6%8D%AE%E7%81%BE%E5%A4%87%E5%92%8C%E6%81%A2%E5%A4%8D%E8%BF%87%E7%A8%8B%E4%B8%AD%E8%B8%A9%E5%88%B0%E7%9A%84%E9%9B%B7/"/>
     <id>http://www.forwardlee.com/2018/05/28/Redis数据灾备和恢复过程中踩到的雷/</id>
     <published>2018-05-28T08:35:45.000Z</published>
-    <updated>2018-05-28T10:30:36.924Z</updated>
+    <updated>2018-05-28T10:32:03.574Z</updated>
     
     <content type="html"><![CDATA[<h1><span id="生产环境配置策略">生产环境配置策略</span></h1><p>RDB 生成快照的频率策略要在每分钟生成一次，但是有多少key发生变化可根据自身业务量配置。<br>save 60 1000</p>
 <p>AOF 在生产环境一定要打开，与RDB同时运行，fsync策略为everysec。</p>
 <h1><span id="生产环境备份策略">生产环境备份策略</span></h1><p>RDB主要做冷备，用craontab执行定时脚本，做数据备份。<br>备份数据保留48小时，脚本清理48小时以前的数据。<br>每天备份当日的数据，每天的数据保存一个月。<br>把所有数据再备份到远程云服务器上。</p>
 <p>每小时备份脚本</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash</span><br><span class="line"></span><br><span class="line">cur_date=`date +%Y%m%d%H`</span><br><span class="line">rm -rf /var/redis/6379/bak/hour/$cur_date</span><br><span class="line">cp /var/redis/6379/dump.rdb /var/redis/6379/bak/hour/$cur_date</span><br><span class="line"></span><br><span class="line">pre_date=`date -d -48hour +%Y%m%d%H`</span><br><span class="line">rm -rf /var/redis/6379/bak/hour/$pre_date</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
 <p>每天备份</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash</span><br><span class="line"></span><br><span class="line">cur_date=`date +%Y%m%d`</span><br><span class="line">rm -rf /var/redis/6379/bak/hour/$cur_date</span><br><span class="line">cp /var/redis/6379/dump.rdb /var/redis/6379/bak/dayli/$cur_date</span><br><span class="line"></span><br><span class="line">pre_date=`date -d -1month +%Y%m%d`</span><br><span class="line">rm -rf /var/redis/6379/bak/dayli/$pre_date</span><br></pre></td></tr></table></figure>
 <p>创建定时脚本crontab -e</p>
@@ -59,15 +60,18 @@
     
     <summary type="html">
     
-      &lt;h1&gt;&lt;span id=&quot;生产环境配置策略&quot;&gt;生产环境配置策略&lt;/span&gt;&lt;/h1&gt;&lt;p&gt;RDB 生成快照的频率策略要在每分钟生成一次，但是有多少key发生变化可根据自身业务量配置。&lt;br&gt;save 60 1000&lt;/p&gt;
-&lt;p&gt;AOF 在生产环境一定要打开，与RDB同时运行
+      &lt;h1 id=&quot;生产环境配置策略&quot;&gt;&lt;a href=&quot;#生产环境配置策略&quot; class=&quot;headerlink&quot; title=&quot;生产环境配置策略&quot;&gt;&lt;/a&gt;生产环境配置策略&lt;/h1&gt;&lt;p&gt;RDB 生成快照的频率策略要在每分钟生成一次，但是有多少key发生变化可根据自身业务量配置。&lt;br&gt;save 60 1000&lt;/p&gt;
+&lt;p&gt;AOF 在生产环境一定要打开，与RDB同时运行，fsync策略为everysec。&lt;/p&gt;
+&lt;h1 id=&quot;生产环境备份策略&quot;&gt;&lt;a href=&quot;#生产环境备份策略&quot; class=&quot;headerlink&quot; title=&quot;生产环境备份策略&quot;&gt;&lt;/a&gt;生产环境备份策略&lt;/h1&gt;&lt;p&gt;RDB主要做冷备，用craontab执行定时脚本，做数据备份。&lt;br&gt;备份数据保留48小时，脚本清理48小时以前的数据。&lt;br&gt;每天备份当日的数据，每天的数据保存一个月。&lt;br&gt;把所有数据再备份到远程云服务器上。&lt;/p&gt;
+&lt;p&gt;每小时备份脚本&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;#!/bin/bash&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;cur_date=`date +%Y%m%d%H`&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;rm -rf /var/redis/6379/bak/hour/$cur_date&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;cp /var/redis/6379/dump.rdb /var/redis/6379/bak/hour/$cur_date&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;pre_date=`date -d -48hour +%Y%m%d%H`&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;rm -rf /var/redis/6379/bak/hour/$pre_date&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
     
     </summary>
     
     
-      <category term="缓存" scheme="http://www.forwardlee.com/tags/%E7%BC%93%E5%AD%98/"/>
-    
       <category term="Redis" scheme="http://www.forwardlee.com/tags/Redis/"/>
+    
+      <category term="缓存" scheme="http://www.forwardlee.com/tags/%E7%BC%93%E5%AD%98/"/>
     
   </entry>
   
@@ -234,9 +238,9 @@
     
       <category term="MariaDB" scheme="http://www.forwardlee.com/tags/MariaDB/"/>
     
-      <category term="Keepalived" scheme="http://www.forwardlee.com/tags/Keepalived/"/>
-    
       <category term="Galera" scheme="http://www.forwardlee.com/tags/Galera/"/>
+    
+      <category term="Keepalived" scheme="http://www.forwardlee.com/tags/Keepalived/"/>
     
       <category term="CentOS" scheme="http://www.forwardlee.com/tags/CentOS/"/>
     
@@ -309,9 +313,9 @@
     </summary>
     
     
-      <category term="Keepalived" scheme="http://www.forwardlee.com/tags/Keepalived/"/>
-    
       <category term="Galera" scheme="http://www.forwardlee.com/tags/Galera/"/>
+    
+      <category term="Keepalived" scheme="http://www.forwardlee.com/tags/Keepalived/"/>
     
       <category term="MySQL" scheme="http://www.forwardlee.com/tags/MySQL/"/>
     
@@ -407,9 +411,9 @@
     
       <category term="MariaDB" scheme="http://www.forwardlee.com/tags/MariaDB/"/>
     
-      <category term="Galera" scheme="http://www.forwardlee.com/tags/Galera/"/>
-    
       <category term="Docker" scheme="http://www.forwardlee.com/tags/Docker/"/>
+    
+      <category term="Galera" scheme="http://www.forwardlee.com/tags/Galera/"/>
     
   </entry>
   
@@ -712,6 +716,24 @@
   </entry>
   
   <entry>
+    <title>Laravel 5.x进阶笔记（二）</title>
+    <link href="http://www.forwardlee.com/2017/08/01/p/Laravel5.x%E8%BF%9B%E9%98%B6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89/"/>
+    <id>http://www.forwardlee.com/2017/08/01/p/Laravel5.x进阶笔记（三）/</id>
+    <published>2017-08-01T06:42:53.000Z</published>
+    <updated>2017-08-01T08:21:34.000Z</updated>
+    
+    <summary type="html">
+    
+    </summary>
+    
+    
+      <category term="PHP" scheme="http://www.forwardlee.com/tags/PHP/"/>
+    
+      <category term="Laravel5" scheme="http://www.forwardlee.com/tags/Laravel5/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Laravel 5.x进阶笔记（一）</title>
     <link href="http://www.forwardlee.com/2017/08/01/p/Laravel5.x%E8%BF%9B%E9%98%B6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/"/>
     <id>http://www.forwardlee.com/2017/08/01/p/Laravel5.x进阶笔记（一）/</id>
@@ -766,24 +788,6 @@
     
       &lt;h2&gt;&lt;span id=&quot;默认条件&quot;&gt;默认条件&lt;/span&gt;&lt;/h2&gt;&lt;p&gt;MacOS，&amp;gt;=PHP5.4，翻墙环境（默认创建的项目会请求*.google.com）&lt;br&gt;懂得PHP基础知识和MVC的基本架构，开发环境已经安装Laravel所需的命令环境。&lt;/p&gt;
 &lt;h2&gt;
-    
-    </summary>
-    
-    
-      <category term="PHP" scheme="http://www.forwardlee.com/tags/PHP/"/>
-    
-      <category term="Laravel5" scheme="http://www.forwardlee.com/tags/Laravel5/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Laravel 5.x进阶笔记（二）</title>
-    <link href="http://www.forwardlee.com/2017/08/01/p/Laravel5.x%E8%BF%9B%E9%98%B6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89/"/>
-    <id>http://www.forwardlee.com/2017/08/01/p/Laravel5.x进阶笔记（三）/</id>
-    <published>2017-08-01T06:42:53.000Z</published>
-    <updated>2017-08-01T08:21:34.000Z</updated>
-    
-    <summary type="html">
     
     </summary>
     
