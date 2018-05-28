@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="缓存,Redis," />
+  <meta name="keywords" content="Redis,缓存," />
 
 
 
@@ -82,7 +82,7 @@
 
 
 <meta name="description" content="生产环境配置策略RDB 生成快照的频率策略要在每分钟生成一次，但是有多少key发生变化可根据自身业务量配置。save 60 1000 AOF 在生产环境一定要打开，与RDB同时运行，fsync策略为everysec。 生产环境备份策略RDB主要做冷备，用craontab执行定时脚本，做数据备份。备份数据保留48小时，脚本清理48小时以前的数据。每天备份当日的数据，每天的数据保存一个月。把所有数据再">
-<meta name="keywords" content="缓存,Redis">
+<meta name="keywords" content="Redis,缓存">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Redis数据灾备和恢复过程中踩到的雷">
 <meta property="og:url" content="http://www.forwardlee.com/2018/05/28/Redis数据灾备和恢复过程中踩到的雷/index.html">
@@ -249,16 +249,6 @@
               <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
             
             公益404
-          </a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-search">
-          <a href="/search/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-search"></i> <br />
-            
-            搜索
           </a>
         </li>
       
@@ -471,9 +461,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/缓存/" rel="tag"># 缓存</a>
-          
             <a href="/tags/Redis/" rel="tag"># Redis</a>
+          
+            <a href="/tags/缓存/" rel="tag"># 缓存</a>
           
         </div>
       

@@ -11,9 +11,9 @@
         <title>Redis数据灾备和恢复过程中踩到的雷</title>
         <pubTime>2018-05-28T08:35:45.000Z</pubTime>
         
-        <tag>缓存</tag>
-         
         <tag>Redis</tag>
+         
+        <tag>缓存</tag>
          
          
            
@@ -32,9 +32,9 @@
         
         <tag>MariaDB</tag>
          
-        <tag>Galera</tag>
-         
         <tag>Keepalived</tag>
+         
+        <tag>Galera</tag>
          
         <tag>CentOS</tag>
          
@@ -111,9 +111,9 @@
         <title>Keepalived HA +LVS+ Galera Cluster环境</title>
         <pubTime>2018-05-23T08:14:48.000Z</pubTime>
         
-        <tag>Galera</tag>
-         
         <tag>Keepalived</tag>
+         
+        <tag>Galera</tag>
          
         <tag>MySQL</tag>
          
@@ -172,9 +172,9 @@
         
         <tag>MariaDB</tag>
          
-        <tag>Docker</tag>
-         
         <tag>Galera</tag>
+         
+        <tag>Docker</tag>
          
          
            
