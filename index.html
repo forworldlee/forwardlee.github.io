@@ -388,18 +388,18 @@
 
       
         
-          
-            <h1><span id="主从复制原理">主从复制原理</span></h1><p> <img src="/2018/05/29/Redis主从复制原理/Redis主从复制原理.jpg" alt="Redis主从复制原理"><br> PS:新的slave节点连接master同步复制数据，是一个完整的数据同步过程，叫做full resynchronization操作。</p>
-<h1><span id="断点续传">断点续传</span></h1><p> Redis在主从数据同步过程中，master会在内存中创建backlog日志，把同步的数据位置标识offset记录在backlog中，master和slave都会记录masterid和offset，如果slave在同步数据过程中断开了与master之间的连接，等到再次连接时，slave会从上次记录的offset开始同步数据，而不是全部重新同步。</p>
-<h1><span id="无磁盘操作设置">无磁盘操作设置</span></h1><p>Redis在默认配置下进行主从同步复制数据，只在内存中就能完成操作，不需要数据在磁盘落地。master在内存中拷贝一份完整的数据快照，通过slave socket发送给slave，slave在内存中加载数据。<br>当然Redis也支持数据在磁盘落地的方式进行主从复制。需要修改以下配置：</p>
-<pre><code># 无磁盘操作 根据英语语境肯定回答要使用无磁盘操作，就配置为no；如果使用磁盘操作，就配置为yes。
-repl-diskless-sync no 
-# 延迟多少秒后开始数据同步，目的是等待更多的slave节点连接上master一起同步数据。如果master已经完成完整数据快照的拷贝，那么新的slave节点就无法再连接master，直到这次同步完成为止。
-repl-diskless-sync-delay 5
-
-</code></pre><h1><span id="过期key数据同步">过期key数据同步</span></h1><p>master中的key在一定时间有效后会做过期处理，对于这样的过期key，master会向slave发送一条del操作指令，在slave节点删除过期key的数据。</p>
-
-          
+          <h1 id="主从复制原理"><a href="#主从复制原理" class="headerlink" title="主从复制原理"></a>主从复制原理</h1><p> <img src="/2018/05/29/Redis主从复制原理/Redis主从复制原理.jpg" alt="Redis主从复制原理"><br><strong> PS:</strong></p>
+<p> full resynchronization:新的slave节点连接master同步复制数据，是一个完整的数据同步过程，叫做full resynchronization操作。</p>
+<p> backlog：master在进行主从复制时，先在本机内存生成backlog，并且把要每次复制给slave的数据保存到backlog一份，目的是要记录数据同步的位置标识offset，以便于全量复制失败后，能够再次进行断点续传的增量复制。backlog的大小为1M。</p>
+<p> master run id：salve用来区分master节点是新数据同步还是已有数据同步，如果slave发现mater的run id发生了变化，那么slava就会进行全量数据复制。<br>在slave执行命令，查看master的run id：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; info server</span><br><span class="line"># Server</span><br><span class="line">redis_version:3.2.8</span><br><span class="line">redis_git_sha1:00000000</span><br><span class="line">redis_git_dirty:0</span><br><span class="line">redis_build_id:5da7c5438a3ad5de</span><br><span class="line">redis_mode:standalone</span><br><span class="line">os:Linux 2.6.32-431.el6.i686 i686</span><br><span class="line">arch_bits:32</span><br><span class="line">multiplexing_api:epoll</span><br><span class="line">gcc_version:4.4.7</span><br><span class="line">process_id:2119</span><br><span class="line">run_id:5b80bdc81f1624e2ee403c5ccfa0a542e99fbb3e</span><br><span class="line">tcp_port:6379</span><br><span class="line">uptime_in_seconds:62</span><br><span class="line">uptime_in_days:0</span><br><span class="line">hz:10</span><br><span class="line">lru_clock:562478</span><br><span class="line">executable:/usr/local/bin/redis-server</span><br><span class="line">config_file:/etc/redis/6379.conf</span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/05/29/Redis主从复制原理/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>

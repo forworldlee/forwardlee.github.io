@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.forwardlee.com/"/>
-  <updated>2018-05-29T07:17:34.012Z</updated>
+  <updated>2018-05-29T09:57:31.096Z</updated>
   <id>http://www.forwardlee.com/</id>
   
   <author>
@@ -20,22 +20,33 @@
     <link href="http://www.forwardlee.com/2018/05/29/Redis%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E5%8E%9F%E7%90%86/"/>
     <id>http://www.forwardlee.com/2018/05/29/Redis主从复制原理/</id>
     <published>2018-05-29T06:37:15.000Z</published>
-    <updated>2018-05-29T07:17:34.012Z</updated>
+    <updated>2018-05-29T09:57:31.096Z</updated>
     
-    <content type="html"><![CDATA[<h1><span id="主从复制原理">主从复制原理</span></h1><p> <img src="/2018/05/29/Redis主从复制原理/Redis主从复制原理.jpg" alt="Redis主从复制原理"><br> PS:新的slave节点连接master同步复制数据，是一个完整的数据同步过程，叫做full resynchronization操作。</p>
-<h1><span id="断点续传">断点续传</span></h1><p> Redis在主从数据同步过程中，master会在内存中创建backlog日志，把同步的数据位置标识offset记录在backlog中，master和slave都会记录masterid和offset，如果slave在同步数据过程中断开了与master之间的连接，等到再次连接时，slave会从上次记录的offset开始同步数据，而不是全部重新同步。</p>
-<h1><span id="无磁盘操作设置">无磁盘操作设置</span></h1><p>Redis在默认配置下进行主从同步复制数据，只在内存中就能完成操作，不需要数据在磁盘落地。master在内存中拷贝一份完整的数据快照，通过slave socket发送给slave，slave在内存中加载数据。<br>当然Redis也支持数据在磁盘落地的方式进行主从复制。需要修改以下配置：</p>
-<pre><code># 无磁盘操作 根据英语语境肯定回答要使用无磁盘操作，就配置为no；如果使用磁盘操作，就配置为yes。
-repl-diskless-sync no 
-# 延迟多少秒后开始数据同步，目的是等待更多的slave节点连接上master一起同步数据。如果master已经完成完整数据快照的拷贝，那么新的slave节点就无法再连接master，直到这次同步完成为止。
-repl-diskless-sync-delay 5
-
-</code></pre><h1><span id="过期key数据同步">过期key数据同步</span></h1><p>master中的key在一定时间有效后会做过期处理，对于这样的过期key，master会向slave发送一条del操作指令，在slave节点删除过期key的数据。</p>
+    <content type="html"><![CDATA[<h1><span id="主从复制原理">主从复制原理</span></h1><p> <img src="/2018/05/29/Redis主从复制原理/Redis主从复制原理.jpg" alt="Redis主从复制原理"><br><strong> PS:</strong></p>
+<p> full resynchronization:新的slave节点连接master同步复制数据，是一个完整的数据同步过程，叫做full resynchronization操作。</p>
+<p> backlog：master在进行主从复制时，先在本机内存生成backlog，并且把要每次复制给slave的数据保存到backlog一份，目的是要记录数据同步的位置标识offset，以便于全量复制失败后，能够再次进行断点续传的增量复制。backlog的大小为1M。</p>
+<p> master run id：salve用来区分master节点是新数据同步还是已有数据同步，如果slave发现mater的run id发生了变化，那么slava就会进行全量数据复制。<br>在slave执行命令，查看master的run id：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; info server</span><br><span class="line"># Server</span><br><span class="line">redis_version:3.2.8</span><br><span class="line">redis_git_sha1:00000000</span><br><span class="line">redis_git_dirty:0</span><br><span class="line">redis_build_id:5da7c5438a3ad5de</span><br><span class="line">redis_mode:standalone</span><br><span class="line">os:Linux 2.6.32-431.el6.i686 i686</span><br><span class="line">arch_bits:32</span><br><span class="line">multiplexing_api:epoll</span><br><span class="line">gcc_version:4.4.7</span><br><span class="line">process_id:2119</span><br><span class="line">run_id:5b80bdc81f1624e2ee403c5ccfa0a542e99fbb3e</span><br><span class="line">tcp_port:6379</span><br><span class="line">uptime_in_seconds:62</span><br><span class="line">uptime_in_days:0</span><br><span class="line">hz:10</span><br><span class="line">lru_clock:562478</span><br><span class="line">executable:/usr/local/bin/redis-server</span><br><span class="line">config_file:/etc/redis/6379.conf</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<h1><span id="全量复制">全量复制</span></h1><p>（1）master执行bgsave命令，在本地生成一份rdb数据快照。<br>（2）master把rdb快照文件发送给slave，发送过程有超时配置。<br> master节点主从复制的超时设置：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">repl-timeout 60</span><br></pre></td></tr></table></figure>
+<p>默认配置，如果主从复制时间超过60s，那么slave就会复制失败，所以根据rdb文件大小、网卡I/O能力、带宽大小调节该参数。例如rdb文件6G，千兆网卡的I/O在每秒中100M，那么就需要传输60s才能复制完毕，因此就可能导致复制失败。</p>
+<p>（3）master在拷贝并同步原有rdb数据时，会将新增数据写入内存缓冲区，等到原有数据同步完成后，再从内存缓冲区把新增数据同步给slave。</p>
+<p>master节点主从复制的内存缓冲区设置：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">client-output-buffer-limit slave 256M 64m 60</span><br><span class="line">``` </span><br><span class="line">在配置的复制持续事件60s内，master内存缓冲区消耗64M，或者一次性超过256M，那么就会停止复制，复制失败。所以可以根据master节点的硬件条件，优化该配置。内存大的机器，就配置的大一点，内存小的机器就配置的小一点。</span><br><span class="line"></span><br><span class="line">（4）slave接收rdb数据快照文件后，清空自己的旧数据，然后重新加载rdb到内存中，在数据没有完全加载完之前，slave仍然使用旧数据提供读写服务。</span><br><span class="line"></span><br><span class="line">（5）如果slave开启了AOF配置，那么就会立即执行BGREWRITEAOF，重新生成AOF文件。</span><br><span class="line"></span><br><span class="line"># 增量复制</span><br><span class="line">（1） 如果全量复制过程中，master和slave断开连接，那么slave重新连接master后，会触发增量复制。</span><br><span class="line"></span><br><span class="line">（2）master从backlog中可以得到数据已经同步到offset位置，那么直接发送未同步的数据给slave。</span><br><span class="line"></span><br><span class="line">（3）从节点执行psync命令获取master的runid和全局offset，如果master返回PSYNC_FULLRESYNC，则进行全量复制；如果返回PSYNC_CONTINUE，则进行增量复制。</span><br><span class="line"></span><br><span class="line">#  断点续传</span><br><span class="line"> Redis在主从数据同步过程中，master会在内存中创建backlog日志，把同步的数据位置标识offset记录在backlog中，master和slave都会记录masterid和offset，如果slave在同步数据过程中断开了与master之间的连接，等到再次连接时，slave会从上次记录的offset开始同步数据，而不是全部重新同步。</span><br><span class="line">  </span><br><span class="line">#  无磁盘操作设置</span><br><span class="line">Redis在默认配置下进行主从同步复制数据，只在内存中就能完成操作，不需要数据在磁盘落地。master在内存中拷贝一份完整的数据快照，通过slave socket发送给slave，slave在内存中加载数据。</span><br><span class="line">当然Redis也支持数据在磁盘落地的方式进行主从复制。需要修改以下配置：</span><br></pre></td></tr></table></figure>
+<h1><span id="无磁盘操作-根据英语语境肯定回答要使用无磁盘操作就配置为no如果使用磁盘操作就配置为yes">无磁盘操作 根据英语语境肯定回答要使用无磁盘操作，就配置为no；如果使用磁盘操作，就配置为yes。</span></h1><p>repl-diskless-sync no </p>
+<h1><span id="延迟多少秒后开始数据同步目的是等待更多的slave节点连接上master一起同步数据-如果master已经完成完整数据快照的拷贝那么新的slave节点就无法再连接master直到这次同步完成为止">延迟多少秒后开始数据同步，目的是等待更多的slave节点连接上master一起同步数据。如果master已经完成完整数据快照的拷贝，那么新的slave节点就无法再连接master，直到这次同步完成为止。</span></h1><p>repl-diskless-sync-delay 5</p>
+<p><code>`</code> </p>
+<h1><span id="过期key数据同步">过期key数据同步</span></h1><p>master中的key在一定时间有效后会做过期处理，对于这样的过期key，master会向slave发送一条del操作指令，在slave节点删除过期key的数据。</p>
 ]]></content>
     
     <summary type="html">
     
-      &lt;h1&gt;&lt;span id=&quot;主从复制原理&quot;&gt;主从复制原理&lt;/span&gt;&lt;/h1&gt;&lt;p&gt; &lt;img src=&quot;/2018/05/29/Redis主从复制原理/Redis主从复制原理.jpg&quot; alt=&quot;Redis主从复制原理&quot;&gt;&lt;br&gt; PS:新的slave节点连接master同步
+      &lt;h1 id=&quot;主从复制原理&quot;&gt;&lt;a href=&quot;#主从复制原理&quot; class=&quot;headerlink&quot; title=&quot;主从复制原理&quot;&gt;&lt;/a&gt;主从复制原理&lt;/h1&gt;&lt;p&gt; &lt;img src=&quot;/2018/05/29/Redis主从复制原理/Redis主从复制原理.jpg&quot; alt=&quot;Redis主从复制原理&quot;&gt;&lt;br&gt;&lt;strong&gt; PS:&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt; full resynchronization:新的slave节点连接master同步复制数据，是一个完整的数据同步过程，叫做full resynchronization操作。&lt;/p&gt;
+&lt;p&gt; backlog：master在进行主从复制时，先在本机内存生成backlog，并且把要每次复制给slave的数据保存到backlog一份，目的是要记录数据同步的位置标识offset，以便于全量复制失败后，能够再次进行断点续传的增量复制。backlog的大小为1M。&lt;/p&gt;
+&lt;p&gt; master run id：salve用来区分master节点是新数据同步还是已有数据同步，如果slave发现mater的run id发生了变化，那么slava就会进行全量数据复制。&lt;br&gt;在slave执行命令，查看master的run id：&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;16&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;17&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;18&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;19&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;20&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;127.0.0.1:6379&amp;gt; info server&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;# Server&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;redis_version:3.2.8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;redis_git_sha1:00000000&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;redis_git_dirty:0&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;redis_build_id:5da7c5438a3ad5de&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;redis_mode:standalone&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;os:Linux 2.6.32-431.el6.i686 i686&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;arch_bits:32&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;multiplexing_api:epoll&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;gcc_version:4.4.7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;process_id:2119&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;run_id:5b80bdc81f1624e2ee403c5ccfa0a542e99fbb3e&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;tcp_port:6379&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;uptime_in_seconds:62&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;uptime_in_days:0&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;hz:10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;lru_clock:562478&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;executable:/usr/local/bin/redis-server&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;config_file:/etc/redis/6379.conf&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
     
     </summary>
     
@@ -438,11 +449,11 @@ repl-diskless-sync-delay 5
     </summary>
     
     
-      <category term="Docker" scheme="http://www.forwardlee.com/tags/Docker/"/>
-    
       <category term="MariaDB" scheme="http://www.forwardlee.com/tags/MariaDB/"/>
     
       <category term="Galera" scheme="http://www.forwardlee.com/tags/Galera/"/>
+    
+      <category term="Docker" scheme="http://www.forwardlee.com/tags/Docker/"/>
     
   </entry>
   
