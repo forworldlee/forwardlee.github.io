@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.forwardlee.com/"/>
-  <updated>2018-05-28T10:32:03.574Z</updated>
+  <updated>2018-05-29T07:17:34.012Z</updated>
   <id>http://www.forwardlee.com/</id>
   
   <author>
@@ -14,6 +14,35 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Redis主从复制原理</title>
+    <link href="http://www.forwardlee.com/2018/05/29/Redis%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E5%8E%9F%E7%90%86/"/>
+    <id>http://www.forwardlee.com/2018/05/29/Redis主从复制原理/</id>
+    <published>2018-05-29T06:37:15.000Z</published>
+    <updated>2018-05-29T07:17:34.012Z</updated>
+    
+    <content type="html"><![CDATA[<h1><span id="主从复制原理">主从复制原理</span></h1><p> <img src="/2018/05/29/Redis主从复制原理/Redis主从复制原理.jpg" alt="Redis主从复制原理"><br> PS:新的slave节点连接master同步复制数据，是一个完整的数据同步过程，叫做full resynchronization操作。</p>
+<h1><span id="断点续传">断点续传</span></h1><p> Redis在主从数据同步过程中，master会在内存中创建backlog日志，把同步的数据位置标识offset记录在backlog中，master和slave都会记录masterid和offset，如果slave在同步数据过程中断开了与master之间的连接，等到再次连接时，slave会从上次记录的offset开始同步数据，而不是全部重新同步。</p>
+<h1><span id="无磁盘操作设置">无磁盘操作设置</span></h1><p>Redis在默认配置下进行主从同步复制数据，只在内存中就能完成操作，不需要数据在磁盘落地。master在内存中拷贝一份完整的数据快照，通过slave socket发送给slave，slave在内存中加载数据。<br>当然Redis也支持数据在磁盘落地的方式进行主从复制。需要修改以下配置：</p>
+<pre><code># 无磁盘操作 根据英语语境肯定回答要使用无磁盘操作，就配置为no；如果使用磁盘操作，就配置为yes。
+repl-diskless-sync no 
+# 延迟多少秒后开始数据同步，目的是等待更多的slave节点连接上master一起同步数据。如果master已经完成完整数据快照的拷贝，那么新的slave节点就无法再连接master，直到这次同步完成为止。
+repl-diskless-sync-delay 5
+
+</code></pre><h1><span id="过期key数据同步">过期key数据同步</span></h1><p>master中的key在一定时间有效后会做过期处理，对于这样的过期key，master会向slave发送一条del操作指令，在slave节点删除过期key的数据。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1&gt;&lt;span id=&quot;主从复制原理&quot;&gt;主从复制原理&lt;/span&gt;&lt;/h1&gt;&lt;p&gt; &lt;img src=&quot;/2018/05/29/Redis主从复制原理/Redis主从复制原理.jpg&quot; alt=&quot;Redis主从复制原理&quot;&gt;&lt;br&gt; PS:新的slave节点连接master同步
+    
+    </summary>
+    
+    
+      <category term="Redis" scheme="http://www.forwardlee.com/tags/Redis/"/>
+    
+  </entry>
   
   <entry>
     <title>Redis数据灾备和恢复过程中踩到的雷</title>
@@ -409,11 +438,11 @@
     </summary>
     
     
+      <category term="Docker" scheme="http://www.forwardlee.com/tags/Docker/"/>
+    
       <category term="MariaDB" scheme="http://www.forwardlee.com/tags/MariaDB/"/>
     
       <category term="Galera" scheme="http://www.forwardlee.com/tags/Galera/"/>
-    
-      <category term="Docker" scheme="http://www.forwardlee.com/tags/Docker/"/>
     
   </entry>
   
@@ -716,24 +745,6 @@
   </entry>
   
   <entry>
-    <title>Laravel 5.x进阶笔记（二）</title>
-    <link href="http://www.forwardlee.com/2017/08/01/p/Laravel5.x%E8%BF%9B%E9%98%B6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89/"/>
-    <id>http://www.forwardlee.com/2017/08/01/p/Laravel5.x进阶笔记（三）/</id>
-    <published>2017-08-01T06:42:53.000Z</published>
-    <updated>2017-08-01T08:21:34.000Z</updated>
-    
-    <summary type="html">
-    
-    </summary>
-    
-    
-      <category term="PHP" scheme="http://www.forwardlee.com/tags/PHP/"/>
-    
-      <category term="Laravel5" scheme="http://www.forwardlee.com/tags/Laravel5/"/>
-    
-  </entry>
-  
-  <entry>
     <title>Laravel 5.x进阶笔记（一）</title>
     <link href="http://www.forwardlee.com/2017/08/01/p/Laravel5.x%E8%BF%9B%E9%98%B6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/"/>
     <id>http://www.forwardlee.com/2017/08/01/p/Laravel5.x进阶笔记（一）/</id>
@@ -788,6 +799,24 @@
     
       &lt;h2&gt;&lt;span id=&quot;默认条件&quot;&gt;默认条件&lt;/span&gt;&lt;/h2&gt;&lt;p&gt;MacOS，&amp;gt;=PHP5.4，翻墙环境（默认创建的项目会请求*.google.com）&lt;br&gt;懂得PHP基础知识和MVC的基本架构，开发环境已经安装Laravel所需的命令环境。&lt;/p&gt;
 &lt;h2&gt;
+    
+    </summary>
+    
+    
+      <category term="PHP" scheme="http://www.forwardlee.com/tags/PHP/"/>
+    
+      <category term="Laravel5" scheme="http://www.forwardlee.com/tags/Laravel5/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Laravel 5.x进阶笔记（二）</title>
+    <link href="http://www.forwardlee.com/2017/08/01/p/Laravel5.x%E8%BF%9B%E9%98%B6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89/"/>
+    <id>http://www.forwardlee.com/2017/08/01/p/Laravel5.x进阶笔记（三）/</id>
+    <published>2017-08-01T06:42:53.000Z</published>
+    <updated>2017-08-01T08:21:34.000Z</updated>
+    
+    <summary type="html">
     
     </summary>
     

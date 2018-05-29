@@ -4,6 +4,23 @@
 
     
   <url>
+    <loc>http://www.forwardlee.com/2018/05/29/Redis%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E5%8E%9F%E7%90%86/</loc>
+    <lastmod>2018-05-29T07:17:34.012Z</lastmod>
+    <data>
+        <display>
+        <title>Redis主从复制原理</title>
+        <pubTime>2018-05-29T06:37:15.000Z</pubTime>
+        
+        <tag>Redis</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://www.forwardlee.com/2018/05/28/Redis%E6%95%B0%E6%8D%AE%E7%81%BE%E5%A4%87%E5%92%8C%E6%81%A2%E5%A4%8D%E8%BF%87%E7%A8%8B%E4%B8%AD%E8%B8%A9%E5%88%B0%E7%9A%84%E9%9B%B7/</loc>
     <lastmod>2018-05-28T10:32:03.574Z</lastmod>
     <data>
@@ -170,11 +187,11 @@
         <title>Docker Galera Cluster环境快速搭建</title>
         <pubTime>2018-05-22T03:12:14.000Z</pubTime>
         
+        <tag>Docker</tag>
+         
         <tag>MariaDB</tag>
          
         <tag>Galera</tag>
-         
-        <tag>Docker</tag>
          
          
            

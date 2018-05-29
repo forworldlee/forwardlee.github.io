@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="JAVA, 架构师, MySql, Redis, Memcached, HA, Docker, Storm, Kafka, Cluster" />
+  <meta name="keywords" content="Redis," />
 
 
 
@@ -81,16 +81,20 @@
 
 
 
-<meta name="description" content="总结学习方法，实践技术技能。">
-<meta property="og:type" content="website">
-<meta property="og:title" content="不忘初心">
-<meta property="og:url" content="http://www.forwardlee.com/archives/page/2/index.html">
+<meta name="description" content="主从复制原理  PS:新的slave节点连接master同步复制数据，是一个完整的数据同步过程，叫做full resynchronization操作。 断点续传 Redis在主从数据同步过程中，master会在内存中创建backlog日志，把同步的数据位置标识offset记录在backlog中，master和slave都会记录masterid和offset，如果slave在同步数据过程中断开了与m">
+<meta name="keywords" content="Redis">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Redis主从复制原理">
+<meta property="og:url" content="http://www.forwardlee.com/2018/05/29/Redis主从复制原理/index.html">
 <meta property="og:site_name" content="不忘初心">
-<meta property="og:description" content="总结学习方法，实践技术技能。">
+<meta property="og:description" content="主从复制原理  PS:新的slave节点连接master同步复制数据，是一个完整的数据同步过程，叫做full resynchronization操作。 断点续传 Redis在主从数据同步过程中，master会在内存中创建backlog日志，把同步的数据位置标识offset记录在backlog中，master和slave都会记录masterid和offset，如果slave在同步数据过程中断开了与m">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://www.forwardlee.com/2018/05/29/Redis主从复制原理/Redis主从复制原理.jpg">
+<meta property="og:updated_time" content="2018-05-29T07:17:34.012Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="不忘初心">
-<meta name="twitter:description" content="总结学习方法，实践技术技能。">
+<meta name="twitter:title" content="Redis主从复制原理">
+<meta name="twitter:description" content="主从复制原理  PS:新的slave节点连接master同步复制数据，是一个完整的数据同步过程，叫做full resynchronization操作。 断点续传 Redis在主从数据同步过程中，master会在内存中创建backlog日志，把同步的数据位置标识offset记录在backlog中，master和slave都会记录masterid和offset，如果slave在同步数据过程中断开了与m">
+<meta name="twitter:image" content="http://www.forwardlee.com/2018/05/29/Redis主从复制原理/Redis主从复制原理.jpg">
 
 
 
@@ -120,13 +124,13 @@
 
 
 
-  <link rel="canonical" href="http://www.forwardlee.com/archives/page/2/"/>
+  <link rel="canonical" href="http://www.forwardlee.com/2018/05/29/Redis主从复制原理/"/>
 
 
 
 
 
-  <title>归档 | 不忘初心</title>
+  <title>Redis主从复制原理 | 不忘初心</title>
   
 
 
@@ -155,7 +159,7 @@
     
   
 
-  <div class="container sidebar-position-left page-archive">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -303,379 +307,194 @@
           <div id="content" class="content">
             
 
+  <div id="posts" class="posts-expand">
+    
+
+  
+
   
   
   
-  <div class="post-block archive">
-    <div id="posts" class="posts-collapse">
-      <span class="archive-move-on"></span>
 
-      <span class="archive-page-counter">
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2018/05/29/Redis主从复制原理/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ForwardLee">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/head.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="不忘初心">
+    </span>
+
+    
+      <header class="post-header">
+
         
         
+          <h2 class="post-title" itemprop="name headline">Redis主从复制原理</h2>
         
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-29T14:37:15+08:00">
+                2018-05-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
           
-        
-        嗯..! 目前共计 19 篇日志。 继续努力。
-      </span>
 
-      
-
-        
-        
-        
-
-        
           
-          <div class="collection-title">
-            <h2 class="archive-year" id="archive-year-2018">2018</h2>
-          </div>
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h3 class="post-title">
-        
-            <a class="post-title-link" href="/2018/05/16/为未来而学/" itemprop="url">
-              
-                <span itemprop="name">为未来而学</span>
-              
-            </a>
-        
-      </h3>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-05-16T19:15:00+08:00"
-              content="2018-05-16" >
-          05-16
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h3 class="post-title">
-        
-            <a class="post-title-link" href="/2018/05/16/MySql分区操作（一）/" itemprop="url">
-              
-                <span itemprop="name">MySql分区操作（一）</span>
-              
-            </a>
-        
-      </h3>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-05-16T18:24:35+08:00"
-              content="2018-05-16" >
-          05-16
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h3 class="post-title">
-        
-            <a class="post-title-link" href="/2018/05/10/JDKBlockingQueue使用/" itemprop="url">
-              
-                <span itemprop="name">JDKBlockingQueue使用</span>
-              
-            </a>
-        
-      </h3>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-05-10T18:48:35+08:00"
-              content="2018-05-10" >
-          05-10
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h3 class="post-title">
-        
-            <a class="post-title-link" href="/2018/05/09/使用wait-notify-配合synchronized实现自定义阻塞队列MyBlockingQueue/" itemprop="url">
-              
-                <span itemprop="name">使用wait(),notify()配合synchronized实现自定义阻塞队列MyBlockingQueue</span>
-              
-            </a>
-        
-      </h3>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-05-09T17:04:30+08:00"
-              content="2018-05-09" >
-          05-09
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h3 class="post-title">
-        
-            <a class="post-title-link" href="/2018/05/08/java/CountDownLatch多线程性能/" itemprop="url">
-              
-                <span itemprop="name">CountDownLatch多线程性能</span>
-              
-            </a>
-        
-      </h3>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-05-08T19:26:19+08:00"
-              content="2018-05-08" >
-          05-08
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
+            
           
-          <div class="collection-title">
-            <h2 class="archive-year" id="archive-year-2017">2017</h2>
-          </div>
-        
-        
 
-        
+          
+          
 
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+          
 
-      <h3 class="post-title">
-        
-            <a class="post-title-link" href="/2017/08/01/p/Laravel5.x进阶笔记（二）/" itemprop="url">
-              
-                <span itemprop="name">Laravel 5.x进阶笔记（二）</span>
-              
-            </a>
-        
-      </h3>
+          
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-08-01T15:54:53+08:00"
-              content="2017-08-01" >
-          08-01
-        </time>
-      </div>
+          
 
-    </header>
-  </article>
+        </div>
+      </header>
+    
 
-
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h3 class="post-title">
-        
-            <a class="post-title-link" href="/2017/08/01/p/Laravel5.x进阶笔记（一）/" itemprop="url">
-              
-                <span itemprop="name">Laravel 5.x进阶笔记（一）</span>
-              
-            </a>
-        
-      </h3>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-08-01T14:42:53+08:00"
-              content="2017-08-01" >
-          08-01
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
       
 
-        
-        
-        
+      
+        <h1><span id="主从复制原理">主从复制原理</span></h1><p> <img src="/2018/05/29/Redis主从复制原理/Redis主从复制原理.jpg" alt="Redis主从复制原理"><br> PS:新的slave节点连接master同步复制数据，是一个完整的数据同步过程，叫做full resynchronization操作。</p>
+<h1><span id="断点续传">断点续传</span></h1><p> Redis在主从数据同步过程中，master会在内存中创建backlog日志，把同步的数据位置标识offset记录在backlog中，master和slave都会记录masterid和offset，如果slave在同步数据过程中断开了与master之间的连接，等到再次连接时，slave会从上次记录的offset开始同步数据，而不是全部重新同步。</p>
+<h1><span id="无磁盘操作设置">无磁盘操作设置</span></h1><p>Redis在默认配置下进行主从同步复制数据，只在内存中就能完成操作，不需要数据在磁盘落地。master在内存中拷贝一份完整的数据快照，通过slave socket发送给slave，slave在内存中加载数据。<br>当然Redis也支持数据在磁盘落地的方式进行主从复制。需要修改以下配置：</p>
+<pre><code># 无磁盘操作 根据英语语境肯定回答要使用无磁盘操作，就配置为no；如果使用磁盘操作，就配置为yes。
+repl-diskless-sync no 
+# 延迟多少秒后开始数据同步，目的是等待更多的slave节点连接上master一起同步数据。如果master已经完成完整数据快照的拷贝，那么新的slave节点就无法再连接master，直到这次同步完成为止。
+repl-diskless-sync-delay 5
 
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h3 class="post-title">
-        
-            <a class="post-title-link" href="/2017/08/01/p/Laravel5.x进阶笔记（三）/" itemprop="url">
-              
-                <span itemprop="name">Laravel 5.x进阶笔记（二）</span>
-              
-            </a>
-        
-      </h3>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-08-01T14:42:53+08:00"
-              content="2017-08-01" >
-          08-01
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
+</code></pre><h1><span id="过期key数据同步">过期key数据同步</span></h1><p>master中的key在一定时间有效后会做过期处理，对于这样的过期key，master会向slave发送一条del操作指令，在slave节点删除过期key的数据。</p>
 
       
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h3 class="post-title">
-        
-            <a class="post-title-link" href="/2017/05/21/Docker清理命令/" itemprop="url">
-              
-                <span itemprop="name">Docker清理命令</span>
-              
-            </a>
-        
-      </h3>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-05-21T20:41:01+08:00"
-              content="2017-05-21" >
-          05-21
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
     </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>谢谢你请我吃糖果</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wxcode.jpeg" alt="ForwardLee 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Redis/" rel="tag"># Redis</a>
+          
+        </div>
+      
+
+      
+      
+        <div class="post-widgets">
+        
+
+        
+
+        
+          
+          <div id="needsharebutton-postbottom">
+            <span class="btn">
+              <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </span>
+          </div>
+        
+        </div>
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/05/28/Redis数据灾备和恢复过程中踩到的雷/" rel="next" title="Redis数据灾备和恢复过程中踩到的雷">
+                <i class="fa fa-chevron-left"></i> Redis数据灾备和恢复过程中踩到的雷
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
-
-  
-  <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/archives/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/archives/">1</a><span class="page-number current">2</span>
-  </nav>
+  </article>
 
 
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -683,6 +502,10 @@
 
 
           
+
+  
+
+
 
         </div>
         
@@ -703,8 +526,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -804,6 +636,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">1.</span> <span class="nav-text">主从复制原理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">2.</span> <span class="nav-text">断点续传</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">3.</span> <span class="nav-text">无磁盘操作设置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">4.</span> <span class="nav-text">过期key数据同步</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -949,6 +797,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
