@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="MySQL," />
+  <meta name="keywords" content="Redis," />
 
 
 
@@ -81,18 +81,18 @@
 
 
 
-<meta name="description" content="##分区类型RANGE 连续的列值区间分区，有主键和唯一键必须使用，如果没有则可以指定任何一列；LIST 类似RANGE分区，区别在于指定一系列的列值作为分区条件；HASH 由函数表达式返回值决定所在分区，函数返回值必须为非负整数；KEY 由mysql提供的HASH函数进行服务，==使用较少==。 ##创建表分区 1234567891011121314CREATE TABLE tbl_users">
-<meta name="keywords" content="MySQL">
+<meta name="description" content="master重要配置min-slaves-to-write 1min-slaves-max-lag 10 两个配置一起解释，至少有一个slave节点的数据同步延迟不能超过10s，否则master将暂停接收新数据的写入操作。这样能保证在主从复制过程中出现问题，master节点丢失的数据量可控。 场景一：主从异步复制导致的数据丢失场景：master接收到新数据，还没有把新数据异步传输给slave，此时">
+<meta name="keywords" content="Redis">
 <meta property="og:type" content="article">
-<meta property="og:title" content="MySql分区操作（一）">
-<meta property="og:url" content="http://www.forwardlee.com/2018/05/16/MySql分区操作（一）/index.html">
+<meta property="og:title" content="Redis主从复制丢失数据问题">
+<meta property="og:url" content="http://www.forwardlee.com/2015/01/20/Redis主从复制丢失数据问题/index.html">
 <meta property="og:site_name" content="不忘初心">
-<meta property="og:description" content="##分区类型RANGE 连续的列值区间分区，有主键和唯一键必须使用，如果没有则可以指定任何一列；LIST 类似RANGE分区，区别在于指定一系列的列值作为分区条件；HASH 由函数表达式返回值决定所在分区，函数返回值必须为非负整数；KEY 由mysql提供的HASH函数进行服务，==使用较少==。 ##创建表分区 1234567891011121314CREATE TABLE tbl_users">
+<meta property="og:description" content="master重要配置min-slaves-to-write 1min-slaves-max-lag 10 两个配置一起解释，至少有一个slave节点的数据同步延迟不能超过10s，否则master将暂停接收新数据的写入操作。这样能保证在主从复制过程中出现问题，master节点丢失的数据量可控。 场景一：主从异步复制导致的数据丢失场景：master接收到新数据，还没有把新数据异步传输给slave，此时">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-05-25T13:05:09.030Z">
+<meta property="og:updated_time" content="2018-05-30T08:32:07.156Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="MySql分区操作（一）">
-<meta name="twitter:description" content="##分区类型RANGE 连续的列值区间分区，有主键和唯一键必须使用，如果没有则可以指定任何一列；LIST 类似RANGE分区，区别在于指定一系列的列值作为分区条件；HASH 由函数表达式返回值决定所在分区，函数返回值必须为非负整数；KEY 由mysql提供的HASH函数进行服务，==使用较少==。 ##创建表分区 1234567891011121314CREATE TABLE tbl_users">
+<meta name="twitter:title" content="Redis主从复制丢失数据问题">
+<meta name="twitter:description" content="master重要配置min-slaves-to-write 1min-slaves-max-lag 10 两个配置一起解释，至少有一个slave节点的数据同步延迟不能超过10s，否则master将暂停接收新数据的写入操作。这样能保证在主从复制过程中出现问题，master节点丢失的数据量可控。 场景一：主从异步复制导致的数据丢失场景：master接收到新数据，还没有把新数据异步传输给slave，此时">
 
 
 
@@ -122,13 +122,13 @@
 
 
 
-  <link rel="canonical" href="http://www.forwardlee.com/2018/05/16/MySql分区操作（一）/"/>
+  <link rel="canonical" href="http://www.forwardlee.com/2015/01/20/Redis主从复制丢失数据问题/"/>
 
 
 
 
 
-  <title>MySql分区操作（一） | 不忘初心</title>
+  <title>Redis主从复制丢失数据问题 | 不忘初心</title>
   
 
 
@@ -319,7 +319,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2018/05/16/MySql分区操作（一）/">
+    <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2015/01/20/Redis主从复制丢失数据问题/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="ForwardLee">
@@ -336,7 +336,7 @@
 
         
         
-          <h2 class="post-title" itemprop="name headline">MySql分区操作（一）</h2>
+          <h2 class="post-title" itemprop="name headline">Redis主从复制丢失数据问题</h2>
         
 
         <div class="post-meta">
@@ -348,8 +348,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-16T18:24:35+08:00">
-                2018-05-16
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2015-01-20T15:58:32+08:00">
+                2015-01-20
               </time>
             
 
@@ -386,25 +386,11 @@
       
 
       
-        <p>##分区类型<br>RANGE 连续的列值区间分区，有主键和唯一键必须使用，如果没有则可以指定任何一列；<br>LIST 类似RANGE分区，区别在于指定一系列的列值作为分区条件；<br>HASH 由函数表达式返回值决定所在分区，函数返回值必须为非负整数；<br>KEY 由mysql提供的HASH函数进行服务，==使用较少==。</p>
-<p>##创建表分区</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE tbl_users (</span><br><span class="line">  `pkid` INT NOT NULL AUTO_INCREMENT,</span><br><span class="line">  `username` VARCHAR(255) NOT NULL,</span><br><span class="line">  `password` VARCHAR(255) NOT NULL,</span><br><span class="line">  `email` VARCHAR(255) NULL,</span><br><span class="line">  `sex` CHAR(1) NULL,</span><br><span class="line">  PRIMARY KEY (`pkid`))</span><br><span class="line">ENGINE = InnoDB</span><br><span class="line">DEFAULT CHARACTER SET = utf8 </span><br><span class="line">PARTITION BY RANGE(pkid) PARTITIONS 3( </span><br><span class="line">PARTITION part0 VALUES LESS THAN (10000),  </span><br><span class="line">PARTITION part1 VALUES LESS THAN (20000),  </span><br><span class="line">PARTITION part2 VALUES LESS THAN (MAXVALUE)</span><br><span class="line">) ;</span><br></pre></td></tr></table></figure>
-<p>##查看分区</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select * from information_schema.partitions where table_schema=&apos;myblog&apos; and table_name=&apos;tbl_users&apos; \G;</span><br></pre></td></tr></table></figure>
-<p>得到如下结果</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br></pre></td><td class="code"><pre><span class="line">*************************** 1. row ***************************</span><br><span class="line">                TABLE_CATALOG: def</span><br><span class="line">                 TABLE_SCHEMA: myblog</span><br><span class="line">                   TABLE_NAME: tbl_users</span><br><span class="line">               PARTITION_NAME: part0</span><br><span class="line">            SUBPARTITION_NAME: NULL</span><br><span class="line">   PARTITION_ORDINAL_POSITION: 1</span><br><span class="line">SUBPARTITION_ORDINAL_POSITION: NULL</span><br><span class="line">             PARTITION_METHOD: RANGE</span><br><span class="line">          SUBPARTITION_METHOD: NULL</span><br><span class="line">         PARTITION_EXPRESSION: pkid</span><br><span class="line">      SUBPARTITION_EXPRESSION: NULL</span><br><span class="line">        PARTITION_DESCRIPTION: 10000</span><br><span class="line">                   TABLE_ROWS: 0</span><br><span class="line">               AVG_ROW_LENGTH: 0</span><br><span class="line">                  DATA_LENGTH: 16384</span><br><span class="line">              MAX_DATA_LENGTH: NULL</span><br><span class="line">                 INDEX_LENGTH: 0</span><br><span class="line">                    DATA_FREE: 0</span><br><span class="line">                  CREATE_TIME: 2018-05-16 18:21:08</span><br><span class="line">                  UPDATE_TIME: NULL</span><br><span class="line">                   CHECK_TIME: NULL</span><br><span class="line">                     CHECKSUM: NULL</span><br><span class="line">            PARTITION_COMMENT: </span><br><span class="line">                    NODEGROUP: default</span><br><span class="line">              TABLESPACE_NAME: NULL</span><br><span class="line">*************************** 2. row ***************************</span><br><span class="line">                TABLE_CATALOG: def</span><br><span class="line">                 TABLE_SCHEMA: myblog</span><br><span class="line">                   TABLE_NAME: tbl_users</span><br><span class="line">               PARTITION_NAME: part1</span><br><span class="line">            SUBPARTITION_NAME: NULL</span><br><span class="line">   PARTITION_ORDINAL_POSITION: 2</span><br><span class="line">SUBPARTITION_ORDINAL_POSITION: NULL</span><br><span class="line">             PARTITION_METHOD: RANGE</span><br><span class="line">          SUBPARTITION_METHOD: NULL</span><br><span class="line">         PARTITION_EXPRESSION: pkid</span><br><span class="line">      SUBPARTITION_EXPRESSION: NULL</span><br><span class="line">        PARTITION_DESCRIPTION: 20000</span><br><span class="line">                   TABLE_ROWS: 0</span><br><span class="line">               AVG_ROW_LENGTH: 0</span><br><span class="line">                  DATA_LENGTH: 16384</span><br><span class="line">              MAX_DATA_LENGTH: NULL</span><br><span class="line">                 INDEX_LENGTH: 0</span><br><span class="line">                    DATA_FREE: 0</span><br><span class="line">                  CREATE_TIME: 2018-05-16 18:21:08</span><br><span class="line">                  UPDATE_TIME: NULL</span><br><span class="line">                   CHECK_TIME: NULL</span><br><span class="line">                     CHECKSUM: NULL</span><br><span class="line">            PARTITION_COMMENT: </span><br><span class="line">                    NODEGROUP: default</span><br><span class="line">              TABLESPACE_NAME: NULL</span><br><span class="line">*************************** 3. row ***************************</span><br><span class="line">                TABLE_CATALOG: def</span><br><span class="line">                 TABLE_SCHEMA: myblog</span><br><span class="line">                   TABLE_NAME: tbl_users</span><br><span class="line">               PARTITION_NAME: part2</span><br><span class="line">            SUBPARTITION_NAME: NULL</span><br><span class="line">   PARTITION_ORDINAL_POSITION: 3</span><br><span class="line">SUBPARTITION_ORDINAL_POSITION: NULL</span><br><span class="line">             PARTITION_METHOD: RANGE</span><br><span class="line">          SUBPARTITION_METHOD: NULL</span><br><span class="line">         PARTITION_EXPRESSION: pkid</span><br><span class="line">      SUBPARTITION_EXPRESSION: NULL</span><br><span class="line">        PARTITION_DESCRIPTION: MAXVALUE</span><br><span class="line">                   TABLE_ROWS: 0</span><br><span class="line">               AVG_ROW_LENGTH: 0</span><br><span class="line">                  DATA_LENGTH: 16384</span><br><span class="line">              MAX_DATA_LENGTH: NULL</span><br><span class="line">                 INDEX_LENGTH: 0</span><br><span class="line">                    DATA_FREE: 0</span><br><span class="line">                  CREATE_TIME: 2018-05-16 18:21:08</span><br><span class="line">                  UPDATE_TIME: NULL</span><br><span class="line">                   CHECK_TIME: NULL</span><br><span class="line">                     CHECKSUM: NULL</span><br><span class="line">            PARTITION_COMMENT: </span><br><span class="line">                    NODEGROUP: default</span><br><span class="line">              TABLESPACE_NAME: NULL</span><br><span class="line">3 rows in set (0.01 sec)</span><br></pre></td></tr></table></figure>
-<p>##查看分区上的数据</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select * from tbl_users partition(p0)</span><br></pre></td></tr></table></figure>
-<p>##查看分区数据查询性能</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">explain partitions select * from tbl_users where pkid =2;</span><br></pre></td></tr></table></figure>
-<p>##其他分区类型<br>LIST类型</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE `myblog`.`tbl_blog` (</span><br><span class="line">  `pkid` INT NOT NULL AUTO_INCREMENT,</span><br><span class="line">  `title` VARCHAR(255) NOT NULL,</span><br><span class="line">  `content` VARCHAR(5000) NULL,</span><br><span class="line">  `create_time` DATETIME NULL,</span><br><span class="line">  PRIMARY KEY (`pkid`))</span><br><span class="line">ENGINE = InnoDB</span><br><span class="line">DEFAULT CHARACTER SET = utf8</span><br><span class="line">COMMENT = &apos;博客文章&apos; PARTITION BY LIST(pkid) PARTITIONS 3(</span><br><span class="line"> PARTITION part0 VALUES IN (1,2,3),  </span><br><span class="line">PARTITION part1 VALUES IN (4,5,6),  </span><br><span class="line">PARTITION part2 VALUES IN (7,8,9)</span><br><span class="line">) ;</span><br></pre></td></tr></table></figure>
-<p>HASH类型<br>利用分区字段除分区数量取余数，就把数据放到第余数个分区上。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE `myblog`.`tbl_user_friends` (</span><br><span class="line">  `pkid` INT NOT NULL AUTO_INCREMENT,</span><br><span class="line">  `user_id` INT NOT NULL,</span><br><span class="line">  `friend_id` INT NOT NULL,</span><br><span class="line">  `create_time` DATETIME NOT NULL,</span><br><span class="line">  PRIMARY KEY (`pki`))</span><br><span class="line">ENGINE = InnoDB</span><br><span class="line">DEFAULT CHARACTER SET = utf8</span><br><span class="line">COMMENT = &apos;用户好友&apos; PARTITION BY HASH(pkid) PARTITIONS 3 ;</span><br></pre></td></tr></table></figure>
-<p>插入数据</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">insert into tbl_user_friends values(1,2,3,NULL);</span><br><span class="line">insert into tbl_user_friends values(5,2,3,NULL);</span><br></pre></td></tr></table></figure>
-<p>得到结论</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">select * from tbl_user_friends partition(p1);</span><br><span class="line">+------+---------+-----------+-------------+</span><br><span class="line">| pkid | user_id | friend_id | create_time |</span><br><span class="line">+------+---------+-----------+-------------+</span><br><span class="line">|    1 |       2 |         3 | NULL        |</span><br><span class="line">+------+---------+-----------+-------------+</span><br><span class="line">1 row in set (0.00 sec)</span><br><span class="line">mysql&gt; select * from tbl_user_friends partition(p2);</span><br><span class="line">+------+---------+-----------+-------------+</span><br><span class="line">| pkid | user_id | friend_id | create_time |</span><br><span class="line">+------+---------+-----------+-------------+</span><br><span class="line">|    5 |       2 |         3 | NULL        |</span><br><span class="line">+------+---------+-----------+-------------+</span><br><span class="line">1 row in set (0.00 sec)</span><br></pre></td></tr></table></figure>
+        <h1><span id="master重要配置">master重要配置</span></h1><p>min-slaves-to-write 1<br>min-slaves-max-lag 10</p>
+<p>两个配置一起解释，至少有一个slave节点的数据同步延迟不能超过10s，否则master将暂停接收新数据的写入操作。这样能保证在主从复制过程中出现问题，master节点丢失的数据量可控。</p>
+<h1><span id="场景一主从异步复制导致的数据丢失">场景一：主从异步复制导致的数据丢失</span></h1><p>场景：master接收到新数据，还没有把新数据异步传输给slave，此时master宕机，那么master在内存中接收到的新数据将会丢失。</p>
+<h1><span id="场景二哨兵机制下sentinel集群主从节点发生脑裂">场景二：哨兵机制下（Sentinel）集群主从节点发生脑裂</span></h1><p>场景：master节点与slave节点断开网络连接，但是master的client端依然与master正常通信，此时数据还一直往master节点写入，哨兵（Sentinel）认为master已经挂掉，哨兵会进行主从转换，选举出一个slave节点转换为master节点接收数据，而原来的master在恢复网络连接后会变成slave从新的master中同步数据，那么这就导致原来master在断开与slave的连接后，接收到client端的新数据被丢弃，造成数据丢失。</p>
+<h1><span id="解决方案">解决方案</span></h1><p>依赖以上两个配置，控制数据丢失的数量。如果发生master暂停写入新数据，那么redis的client端可以进行如下操作，保证服务的可用性：<br>（1）client端做降级处理，把数据写入本地磁盘，等master能够写操作时写入master；然后对client对外提供服务的接口做降级处理，减少client接收到的请求数量，降低redis的并发写入量。<br>（2）client端将数据写入异步消息队列，每隔一段时间把数据从消息队列中取出，再写回到master当中。</p>
 
       
     </div>
@@ -446,7 +432,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/MySQL/" rel="tag"># MySQL</a>
+            <a href="/tags/Redis/" rel="tag"># Redis</a>
           
         </div>
       
@@ -474,8 +460,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/05/10/JDKBlockingQueue使用/" rel="next" title="JDKBlockingQueue使用">
-                <i class="fa fa-chevron-left"></i> JDKBlockingQueue使用
+              <a href="/2015/01/18/Redis单机QPS压力测试/" rel="next" title="Redis单机QPS压力测试">
+                <i class="fa fa-chevron-left"></i> Redis单机QPS压力测试
               </a>
             
           </div>
@@ -484,8 +470,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/05/16/为未来而学/" rel="prev" title="为未来而学">
-                为未来而学 <i class="fa fa-chevron-right"></i>
+              <a href="/2017/05/21/Docker清理命令/" rel="prev" title="Docker清理命令">
+                Docker清理命令 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -538,8 +524,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -639,6 +634,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">1.</span> <span class="nav-text">master重要配置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">2.</span> <span class="nav-text">场景一：主从异步复制导致的数据丢失</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">3.</span> <span class="nav-text">场景二：哨兵机制下（Sentinel）集群主从节点发生脑裂</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">4.</span> <span class="nav-text">解决方案</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
