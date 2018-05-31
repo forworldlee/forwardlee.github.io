@@ -4,6 +4,61 @@
 
     
   <url>
+    <loc>http://www.forwardlee.com/2016/04/19/java/CountDownLatch%E5%A4%9A%E7%BA%BF%E7%A8%8B%E6%80%A7%E8%83%BD/</loc>
+    <lastmod>2018-05-31T09:29:40.517Z</lastmod>
+    <data>
+        <display>
+        <title>CountDownLatch多线程性能</title>
+        <pubTime>2016-04-19T11:26:19.000Z</pubTime>
+        
+        <tag>JAVA</tag>
+         
+        <tag>MultiThread</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.forwardlee.com/2016/04/21/%E4%BD%BF%E7%94%A8wait-notify-%E9%85%8D%E5%90%88synchronized%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%AE%9A%E4%B9%89%E9%98%BB%E5%A1%9E%E9%98%9F%E5%88%97MyBlockingQueue/</loc>
+    <lastmod>2018-05-31T09:29:03.168Z</lastmod>
+    <data>
+        <display>
+        <title>使用wait(),notify()配合synchronized实现自定义阻塞队列MyBlockingQueue</title>
+        <pubTime>2016-04-21T09:04:30.000Z</pubTime>
+        
+        <tag>JAVA</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.forwardlee.com/2016/04/10/JDKBlockingQueue%E4%BD%BF%E7%94%A8/</loc>
+    <lastmod>2018-05-31T09:28:22.816Z</lastmod>
+    <data>
+        <display>
+        <title>JDKBlockingQueue使用</title>
+        <pubTime>2016-04-10T10:48:35.000Z</pubTime>
+        
+        <tag>JAVA</tag>
+         
+        <tag>MultiThread</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://www.forwardlee.com/2018/05/31/%E4%BD%BF%E7%94%A8Sentinel%EF%BC%88%E5%93%A8%E5%85%B5%EF%BC%89%E5%AE%9E%E7%8E%B0Redis%E4%B8%BB%E4%BB%8E%E5%88%87%E6%8D%A2%E7%9A%84%E6%9C%BA%E5%88%B6%E5%8E%9F%E7%90%86/</loc>
     <lastmod>2018-05-31T09:20:28.711Z</lastmod>
     <data>
@@ -119,11 +174,11 @@
         
         <tag>MariaDB</tag>
          
+        <tag>Keepalived</tag>
+         
         <tag>Galera</tag>
          
         <tag>CentOS</tag>
-         
-        <tag>Keepalived</tag>
          
          
            
@@ -151,25 +206,6 @@
     
     
   <url>
-    <loc>http://www.forwardlee.com/2018/05/08/java/CountDownLatch%E5%A4%9A%E7%BA%BF%E7%A8%8B%E6%80%A7%E8%83%BD/</loc>
-    <lastmod>2018-05-25T13:13:34.276Z</lastmod>
-    <data>
-        <display>
-        <title>CountDownLatch多线程性能</title>
-        <pubTime>2018-05-08T11:26:19.000Z</pubTime>
-        
-        <tag>JAVA</tag>
-         
-        <tag>MultiThread</tag>
-         
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
     <loc>http://www.forwardlee.com/2018/05/23/CentOS-6-8-MySQL-5-5-with-Galera-Cluster%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/</loc>
     <lastmod>2018-05-25T13:11:43.862Z</lastmod>
     <data>
@@ -179,9 +215,9 @@
         
         <tag>Galera</tag>
          
-        <tag>MySQL</tag>
-         
         <tag>CentOS</tag>
+         
+        <tag>MySQL</tag>
          
          
            
@@ -198,30 +234,11 @@
         <title>Keepalived HA +LVS+ Galera Cluster环境</title>
         <pubTime>2018-05-23T08:14:48.000Z</pubTime>
         
+        <tag>Keepalived</tag>
+         
         <tag>Galera</tag>
          
         <tag>MySQL</tag>
-         
-        <tag>Keepalived</tag>
-         
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://www.forwardlee.com/2018/05/10/JDKBlockingQueue%E4%BD%BF%E7%94%A8/</loc>
-    <lastmod>2018-05-25T13:10:36.987Z</lastmod>
-    <data>
-        <display>
-        <title>JDKBlockingQueue使用</title>
-        <pubTime>2018-05-10T10:48:35.000Z</pubTime>
-        
-        <tag>JAVA</tag>
-         
-        <tag>MultiThread</tag>
          
          
            
@@ -259,9 +276,9 @@
         
         <tag>MariaDB</tag>
          
-        <tag>Docker</tag>
-         
         <tag>Galera</tag>
+         
+        <tag>Docker</tag>
          
          
            
@@ -348,23 +365,6 @@
         <pubTime>2018-05-16T11:15:00.000Z</pubTime>
         
         <tag>学习力</tag>
-         
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://www.forwardlee.com/2018/05/09/%E4%BD%BF%E7%94%A8wait-notify-%E9%85%8D%E5%90%88synchronized%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%AE%9A%E4%B9%89%E9%98%BB%E5%A1%9E%E9%98%9F%E5%88%97MyBlockingQueue/</loc>
-    <lastmod>2018-05-09T09:05:22.786Z</lastmod>
-    <data>
-        <display>
-        <title>使用wait(),notify()配合synchronized实现自定义阻塞队列MyBlockingQueue</title>
-        <pubTime>2018-05-09T09:04:30.000Z</pubTime>
-        
-        <tag>JAVA</tag>
          
          
            
