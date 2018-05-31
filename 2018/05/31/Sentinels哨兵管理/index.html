@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="PHP,Laravel5," />
+  <meta name="keywords" content="Redis,Sentinel," />
 
 
 
@@ -81,20 +81,18 @@
 
 
 
-<meta name="description" content="在浏览器中展示创建的Article列表在浏览器中展示创建的Article数据，需要使用Http请求Web服务器，Web服务器接收请求并将Article数据在视图页面中展示，即MVC。完成上述操作，离不开Laravel的路由功能，所谓路由就是请求的控制转发。Laravel把所有的请求地址预先配置在路由列表文件中learnlaravel5/app/Http/routes.php。描述路由的基本格式是：">
-<meta name="keywords" content="PHP,Laravel5">
+<meta name="description" content="删除哨兵节点step1：停掉哨兵进程ps -ef  | grep redis-sentinelkill -9 PROCESSIDstep2：过一会，在其他哨兵节点执行哨兵重置，清理旧哨兵的状态。 123[root@eshop-cache01 ~]# redis-cli -h 192.168.1.210 -p 5000192.168.1.210:5000&amp;gt; sentinel reset * (">
+<meta name="keywords" content="Redis,Sentinel">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Laravel 5.x进阶笔记（二）">
-<meta property="og:url" content="http://www.forwardlee.com/2017/08/01/p/Laravel5.x进阶笔记（二）/index.html">
+<meta property="og:title" content="Sentinels哨兵管理">
+<meta property="og:url" content="http://www.forwardlee.com/2018/05/31/Sentinels哨兵管理/index.html">
 <meta property="og:site_name" content="不忘初心">
-<meta property="og:description" content="在浏览器中展示创建的Article列表在浏览器中展示创建的Article数据，需要使用Http请求Web服务器，Web服务器接收请求并将Article数据在视图页面中展示，即MVC。完成上述操作，离不开Laravel的路由功能，所谓路由就是请求的控制转发。Laravel把所有的请求地址预先配置在路由列表文件中learnlaravel5/app/Http/routes.php。描述路由的基本格式是：">
+<meta property="og:description" content="删除哨兵节点step1：停掉哨兵进程ps -ef  | grep redis-sentinelkill -9 PROCESSIDstep2：过一会，在其他哨兵节点执行哨兵重置，清理旧哨兵的状态。 123[root@eshop-cache01 ~]# redis-cli -h 192.168.1.210 -p 5000192.168.1.210:5000&amp;gt; sentinel reset * (">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://www.forwardlee.com/images/home_articles.png">
-<meta property="og:updated_time" content="2017-08-01T08:21:26.000Z">
+<meta property="og:updated_time" content="2018-05-31T11:07:17.233Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Laravel 5.x进阶笔记（二）">
-<meta name="twitter:description" content="在浏览器中展示创建的Article列表在浏览器中展示创建的Article数据，需要使用Http请求Web服务器，Web服务器接收请求并将Article数据在视图页面中展示，即MVC。完成上述操作，离不开Laravel的路由功能，所谓路由就是请求的控制转发。Laravel把所有的请求地址预先配置在路由列表文件中learnlaravel5/app/Http/routes.php。描述路由的基本格式是：">
-<meta name="twitter:image" content="http://www.forwardlee.com/images/home_articles.png">
+<meta name="twitter:title" content="Sentinels哨兵管理">
+<meta name="twitter:description" content="删除哨兵节点step1：停掉哨兵进程ps -ef  | grep redis-sentinelkill -9 PROCESSIDstep2：过一会，在其他哨兵节点执行哨兵重置，清理旧哨兵的状态。 123[root@eshop-cache01 ~]# redis-cli -h 192.168.1.210 -p 5000192.168.1.210:5000&amp;gt; sentinel reset * (">
 
 
 
@@ -124,13 +122,13 @@
 
 
 
-  <link rel="canonical" href="http://www.forwardlee.com/2017/08/01/p/Laravel5.x进阶笔记（二）/"/>
+  <link rel="canonical" href="http://www.forwardlee.com/2018/05/31/Sentinels哨兵管理/"/>
 
 
 
 
 
-  <title>Laravel 5.x进阶笔记（二） | 不忘初心</title>
+  <title>Sentinels哨兵管理 | 不忘初心</title>
   
 
 
@@ -321,7 +319,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2017/08/01/p/Laravel5.x进阶笔记（二）/">
+    <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2018/05/31/Sentinels哨兵管理/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="ForwardLee">
@@ -338,7 +336,7 @@
 
         
         
-          <h2 class="post-title" itemprop="name headline">Laravel 5.x进阶笔记（二）</h2>
+          <h2 class="post-title" itemprop="name headline">Sentinels哨兵管理</h2>
         
 
         <div class="post-meta">
@@ -350,8 +348,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-01T15:54:53+08:00">
-                2017-08-01
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-31T18:58:16+08:00">
+                2018-05-31
               </time>
             
 
@@ -388,13 +386,11 @@
       
 
       
-        <h2><span id="在浏览器中展示创建的article列表">在浏览器中展示创建的Article列表</span></h2><p>在浏览器中展示创建的Article数据，需要使用Http请求Web服务器，Web服务器接收请求并将Article数据在视图页面中展示，即MVC。完成上述操作，离不开Laravel的路由功能，所谓路由就是请求的控制转发。Laravel把所有的请求地址预先配置在路由列表文件中learnlaravel5/app/Http/routes.php。描述路由的基本格式是：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Route::get(&apos;/home&apos;, &apos;HomeController@index&apos;);</span><br></pre></td></tr></table></figure>
-<p>Route类（\Illuminate\Support\Facades\Route）是Laravel框架提供的路由配置工具类，get标识http请求的Method（get/post/put/patch…），get函数的第一个参数是url格式定义，第二个参数用@分割成两部分，第一部分是Http请求的Controller类，第二部分标识Controller的具体执行方法，具体看HomeController类的内容描述：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line"></span><br><span class="line">namespace App\Http\Controllers;</span><br><span class="line"></span><br><span class="line">use App\Article;</span><br><span class="line">use App\Http\Requests;</span><br><span class="line">use Illuminate\Http\Request;</span><br><span class="line"></span><br><span class="line">class HomeController extends \Illuminate\Routing\Controller</span><br><span class="line">&#123;</span><br><span class="line">    /**</span><br><span class="line">     * Create a new controller instance.</span><br><span class="line">     *</span><br><span class="line">     * @return void</span><br><span class="line">     */</span><br><span class="line">    public function __construct()</span><br><span class="line">    &#123;</span><br><span class="line">        $this-&gt;middleware(&apos;auth&apos;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * Show the application dashboard.</span><br><span class="line">     *</span><br><span class="line">     * @return \Illuminate\Http\Response</span><br><span class="line">     */</span><br><span class="line">    public function index()</span><br><span class="line">    &#123;</span><br><span class="line">        return view(&apos;home&apos;)-&gt;withArticles(Article::all());;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>_construct()是默认构造函数，函数体使用middleware(‘auth’)中间件，描述访问这个Controller需要登录验证。index()方法则是在路由中指定的执行方法，返回值是一个视图层对象view，视图的目录位置是模板文件learnlaravel5/resources/views/home.blade.php，view(‘home’)中的home与模板文件的第一个关键字相同，index函数指定了返回的视图文件，并把Article数据通过Eloquent方法取出，使用withArticles方法携带返回到视图页面，此处withArticles标识在页面可以通过articles对象取得所有返回的数据，依次类推如果是withAcls,则在页面上使用acls对象获取返回的数据。home.blade.php示例（php模板语法自行解决）：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">@extends(&apos;layouts.app&apos;)</span><br><span class="line"></span><br><span class="line">@section(&apos;content&apos;)</span><br><span class="line">    &lt;div id=&quot;title&quot; style=&quot;text-align: center;&quot;&gt;</span><br><span class="line">        &lt;h1&gt;Learn Laravel 5&lt;/h1&gt;</span><br><span class="line">        &lt;div style=&quot;padding: 5px; font-size: 16px;&quot;&gt;Learn Laravel 5&lt;/div&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">    &lt;hr&gt;</span><br><span class="line">    &lt;div id=&quot;content&quot;&gt;</span><br><span class="line">        &lt;ul&gt;</span><br><span class="line">            @foreach ($articles as $article)</span><br><span class="line">                &lt;li style=&quot;margin: 50px 0;&quot;&gt;</span><br><span class="line">                    &lt;div class=&quot;title&quot;&gt;</span><br><span class="line">                        &lt;a href=&quot;&#123;&#123; url(&apos;article/&apos;.$article-&gt;id) &#125;&#125;&quot;&gt;</span><br><span class="line">                            &lt;h4&gt;&#123;&#123; $article-&gt;title &#125;&#125;&lt;/h4&gt;</span><br><span class="line">                        &lt;/a&gt;</span><br><span class="line">                    &lt;/div&gt;</span><br><span class="line">                    &lt;div class=&quot;body&quot;&gt;</span><br><span class="line">                        &lt;p&gt;&#123;&#123; $article-&gt;body &#125;&#125;&lt;/p&gt;</span><br><span class="line">                    &lt;/div&gt;</span><br><span class="line">                &lt;/li&gt;</span><br><span class="line">            @endforeach</span><br><span class="line">        &lt;/ul&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">@endsection</span><br></pre></td></tr></table></figure>
-<p>通过浏览器输入<a href="http://localhost:1024/home，就能看到数据加载到页面。" target="_blank" rel="noopener">http://localhost:1024/home，就能看到数据加载到页面。</a><br><img src="/images/home_articles.png" alt=""></p>
+        <h1><span id="删除哨兵节点">删除哨兵节点</span></h1><p>step1：停掉哨兵进程<br>ps -ef  | grep redis-sentinel<br>kill -9 PROCESSID<br>step2：过一会，在其他哨兵节点执行哨兵重置，清理旧哨兵的状态。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@eshop-cache01 ~]# redis-cli -h 192.168.1.210 -p 5000</span><br><span class="line">192.168.1.210:5000&gt; sentinel reset * </span><br><span class="line">(integer) 1</span><br></pre></td></tr></table></figure>
+<p>step3：在所有哨兵节点上执行以下命令，查看所有的哨兵数量是否一致。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sentinel master mymaster</span><br></pre></td></tr></table></figure>
+<h1><span id="redis的slave节点下线">Redis的slave节点下线</span></h1><p>停掉或删除Redis服务后，停掉哨兵节点，在其他所有哨兵节点上执行sentinel reset mymaster。</p>
 
       
     </div>
@@ -436,9 +432,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/PHP/" rel="tag"># PHP</a>
+            <a href="/tags/Redis/" rel="tag"># Redis</a>
           
-            <a href="/tags/Laravel5/" rel="tag"># Laravel5</a>
+            <a href="/tags/Sentinel/" rel="tag"># Sentinel</a>
           
         </div>
       
@@ -466,8 +462,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/08/01/p/Laravel5.x进阶笔记（三）/" rel="next" title="Laravel 5.x进阶笔记（二）">
-                <i class="fa fa-chevron-left"></i> Laravel 5.x进阶笔记（二）
+              <a href="/2018/05/31/使用Sentinel（哨兵）实现Redis主从切换的机制原理/" rel="next" title="使用Sentinel（哨兵）实现Redis主从切换的机制原理">
+                <i class="fa fa-chevron-left"></i> 使用Sentinel（哨兵）实现Redis主从切换的机制原理
               </a>
             
           </div>
@@ -475,10 +471,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/05/16/MySql分区操作（一）/" rel="prev" title="MySql分区操作（一）">
-                MySql分区操作（一） <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -650,7 +642,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">1.</span> <span class="nav-text">在浏览器中展示创建的Article列表</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">1.</span> <span class="nav-text">删除哨兵节点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">2.</span> <span class="nav-text">Redis的slave节点下线</span></a></li></ol></div>
             
 
           </div>
