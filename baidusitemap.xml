@@ -4,6 +4,25 @@
 
     
   <url>
+    <loc>http://www.forwardlee.com/2018/05/31/%E4%BD%BF%E7%94%A8Sentinel%EF%BC%88%E5%93%A8%E5%85%B5%EF%BC%89%E5%AE%9E%E7%8E%B0Redis%E4%B8%BB%E4%BB%8E%E5%88%87%E6%8D%A2%E7%9A%84%E6%9C%BA%E5%88%B6%E5%8E%9F%E7%90%86/</loc>
+    <lastmod>2018-05-31T09:20:28.711Z</lastmod>
+    <data>
+        <display>
+        <title>使用Sentinel（哨兵）实现Redis主从切换的机制原理</title>
+        <pubTime>2018-05-31T07:08:18.000Z</pubTime>
+        
+        <tag>Redis</tag>
+         
+        <tag>Sentinel</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://www.forwardlee.com/2015/01/05/Redis%E5%9C%A8CentOS6%E4%B8%8A%E5%AE%89%E8%A3%85%E5%B9%B6%E9%85%8D%E7%BD%AE%E4%B8%BB%E4%BB%8E/</loc>
     <lastmod>2018-05-31T03:46:46.924Z</lastmod>
     <data>
@@ -100,11 +119,11 @@
         
         <tag>MariaDB</tag>
          
-        <tag>Keepalived</tag>
-         
         <tag>Galera</tag>
          
         <tag>CentOS</tag>
+         
+        <tag>Keepalived</tag>
          
          
            
@@ -160,9 +179,9 @@
         
         <tag>Galera</tag>
          
-        <tag>CentOS</tag>
-         
         <tag>MySQL</tag>
+         
+        <tag>CentOS</tag>
          
          
            
@@ -179,11 +198,11 @@
         <title>Keepalived HA +LVS+ Galera Cluster环境</title>
         <pubTime>2018-05-23T08:14:48.000Z</pubTime>
         
-        <tag>Keepalived</tag>
-         
         <tag>Galera</tag>
          
         <tag>MySQL</tag>
+         
+        <tag>Keepalived</tag>
          
          
            
@@ -240,9 +259,9 @@
         
         <tag>MariaDB</tag>
          
-        <tag>Galera</tag>
-         
         <tag>Docker</tag>
+         
+        <tag>Galera</tag>
          
          
            

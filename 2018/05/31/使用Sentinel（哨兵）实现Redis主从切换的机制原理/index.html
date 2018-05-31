@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="JAVA, 架构师, MySql, Redis, Memcached, HA, Docker, Storm, Kafka, Cluster" />
+  <meta name="keywords" content="Redis,Sentinel," />
 
 
 
@@ -81,16 +81,18 @@
 
 
 
-<meta name="description" content="总结学习方法，实践技术技能。">
-<meta property="og:type" content="website">
-<meta property="og:title" content="不忘初心">
-<meta property="og:url" content="http://www.forwardlee.com/tags/Keepalived/index.html">
+<meta name="description" content="哨兵-Sentinel，用于监控和管理Redis集群的高可用中间件。 哨兵转换机制n个哨兵分别对Redis的master节点发送ping命令，如果在is-master-down-after-milliseconds指定的连接超时后，哨兵会“主观”认为master节点宕机-主观宕机（subjective down=sdown)。在哨兵机制中配置一个quorum参数m，用来判断m个哨兵都认为maste">
+<meta name="keywords" content="Redis,Sentinel">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用Sentinel（哨兵）实现Redis主从切换的机制原理">
+<meta property="og:url" content="http://www.forwardlee.com/2018/05/31/使用Sentinel（哨兵）实现Redis主从切换的机制原理/index.html">
 <meta property="og:site_name" content="不忘初心">
-<meta property="og:description" content="总结学习方法，实践技术技能。">
+<meta property="og:description" content="哨兵-Sentinel，用于监控和管理Redis集群的高可用中间件。 哨兵转换机制n个哨兵分别对Redis的master节点发送ping命令，如果在is-master-down-after-milliseconds指定的连接超时后，哨兵会“主观”认为master节点宕机-主观宕机（subjective down=sdown)。在哨兵机制中配置一个quorum参数m，用来判断m个哨兵都认为maste">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-05-31T09:20:28.711Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="不忘初心">
-<meta name="twitter:description" content="总结学习方法，实践技术技能。">
+<meta name="twitter:title" content="使用Sentinel（哨兵）实现Redis主从切换的机制原理">
+<meta name="twitter:description" content="哨兵-Sentinel，用于监控和管理Redis集群的高可用中间件。 哨兵转换机制n个哨兵分别对Redis的master节点发送ping命令，如果在is-master-down-after-milliseconds指定的连接超时后，哨兵会“主观”认为master节点宕机-主观宕机（subjective down=sdown)。在哨兵机制中配置一个quorum参数m，用来判断m个哨兵都认为maste">
 
 
 
@@ -120,13 +122,13 @@
 
 
 
-  <link rel="canonical" href="http://www.forwardlee.com/tags/Keepalived/"/>
+  <link rel="canonical" href="http://www.forwardlee.com/2018/05/31/使用Sentinel（哨兵）实现Redis主从切换的机制原理/"/>
 
 
 
 
 
-  <title>标签: Keepalived | 不忘初心</title>
+  <title>使用Sentinel（哨兵）实现Redis主从切换的机制原理 | 不忘初心</title>
   
 
 
@@ -155,7 +157,7 @@
     
   
 
-  <div class="container sidebar-position-left ">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -303,82 +305,194 @@
           <div id="content" class="content">
             
 
-  
-  
-  
-  <div class="post-block tag">
+  <div id="posts" class="posts-expand">
+    
 
-    <div id="posts" class="posts-collapse">
-      <div class="collection-title">
-        <h2>Keepalived<small>标签</small>
-        </h2>
-      </div>
+  
 
-      
-        
+  
+  
+  
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2018/05/31/使用Sentinel（哨兵）实现Redis主从切换的机制原理/">
 
-      <h3 class="post-title">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ForwardLee">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/head.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="不忘初心">
+    </span>
+
+    
+      <header class="post-header">
+
         
-            <a class="post-title-link" href="/2018/05/24/CentOS-6-8-MariaDB-10-0-with-Galera-Cluster-Keepalived高可用解决方案/" itemprop="url">
-              
-                <span itemprop="name">CentOS 6.8 + MariaDB 10.0 with Galera Cluster+Keepalived高可用解决方案</span>
-              
-            </a>
         
-      </h3>
+          <h2 class="post-title" itemprop="name headline">使用Sentinel（哨兵）实现Redis主从切换的机制原理</h2>
+        
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-05-24T19:40:46+08:00"
-              content="2018-05-24" >
-          05-24
-        </time>
-      </div>
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-31T15:08:18+08:00">
+                2018-05-31
+              </time>
+            
 
-    </header>
-  </article>
+            
 
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-        
+      
 
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h3 class="post-title">
-        
-            <a class="post-title-link" href="/2018/05/23/Keepalived-HA-LVS-Galera-Cluster环境/" itemprop="url">
-              
-                <span itemprop="name">Keepalived HA +LVS+ Galera Cluster环境</span>
-              
-            </a>
-        
-      </h3>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-05-23T16:14:48+08:00"
-              content="2018-05-23" >
-          05-23
-        </time>
-      </div>
-
-    </header>
-  </article>
-
+      
+        <p>哨兵-Sentinel，用于监控和管理Redis集群的高可用中间件。</p>
+<h1><span id="哨兵转换机制">哨兵转换机制</span></h1><p>n个哨兵分别对Redis的master节点发送ping命令，如果在is-master-down-after-milliseconds指定的连接超时后，哨兵会“主观”认为master节点宕机-主观宕机（subjective down=sdown)。在哨兵机制中配置一个quorum参数m，用来判断m个哨兵都认为master主观宕机sdown，此时master就被哨兵认为是“客观”上宕机了（objective down=odown)，也就完成了哨兵从主观宕机到客观宕机的转换。</p>
+<h1><span id="多个哨兵节点之间的相互发现机制">多个哨兵节点之间的相互发现机制</span></h1><p>Redis具有Pub/Sub的发布订阅消息队列的能力，每个哨兵都会往<em>sentinel</em>:hello这个channel中发送状态消息，并且其他的哨兵节点都监听这个channel的消息，感知到其他哨兵的存在。每隔2秒钟，每隔哨兵都会往<em>sentinel</em>:hello的channel发送自己的host、ip、runid、对master的监控配置信息。</p>
+<h1><span id="哨兵对redis的slave节点自动纠正">哨兵对Redis的slave节点自动纠正</span></h1><p>哨兵发现master宕机后，会把slave节点通过选举出新的master提供服务，并且其他slave节点都要连接到新的master上。</p>
+<h1><span id="redis的slave被转换为master的选举算法">Redis的slave被转换为master的选举算法</span></h1><p>如果一个master被quorum个哨兵认为主观宕机sdown了，master也就是达到了客观宕机odown的条件，而且配置的大多数（majority配置大多数的个数）哨兵同意进行主备切换，那么就通过选举算法，选出一个slave切换成master。<br>（1）与master断开时长过滤，如果一个slave跟master断开连接已经超过了down-after-milliseconds的10倍+master宕机的时长，那么slave就被认为不适合选举为master，这样的slave节点就会被过滤掉。<br>(down-after-milliseconds * 10) + milliseconds_since_master_is_in_SDOWN_state；<br>（2）slave的优先级slave-priority,在redis配置文件中默认是100，越小优先级越高；<br>（3）slave复制数据的offset，offset越大，优先级越高；（每个slave在与master同步后offset自动增加）<br>（4）slave节点run_id越小，优先级越高。（每个redis实例，都会有一个runid）</p>
+<h1><span id="哨兵接替进行主备切换的机制">哨兵接替进行主备切换的机制</span></h1><p>哨兵进行主备切换时，会从当选master的slave节点获取一个进行切换的版本号configuration epoch信息，如果进行操作主备切换的哨兵，执行切换的等待时间超过了failover-timeout配置，那么就会有新的哨兵接替进行主备切换，此时哨兵要重新获取configuration epoch版本号的值，保证每次主备切换版本号是唯一的。</p>
+<h1><span id="master配置信息的传播">master配置信息的传播</span></h1><p>哨兵把当选的slave节点转换成master，并且把新的master配置信息通过<em>sentinel</em>:hello这个channel发布出去，订阅这个channel的其他slave节点收到消息后，自动更改配置连接到新的master节点上。</p>
 
       
     </div>
+    
+    
+    
 
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>谢谢你请我吃糖果</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wxcode.jpeg" alt="ForwardLee 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Redis/" rel="tag"># Redis</a>
+          
+            <a href="/tags/Sentinel/" rel="tag"># Sentinel</a>
+          
+        </div>
+      
+
+      
+      
+        <div class="post-widgets">
+        
+
+        
+
+        
+          
+          <div id="needsharebutton-postbottom">
+            <span class="btn">
+              <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </span>
+          </div>
+        
+        </div>
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/05/29/Redis主从复制原理/" rel="next" title="Redis主从复制原理">
+                <i class="fa fa-chevron-left"></i> Redis主从复制原理
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -386,6 +500,10 @@
 
 
           
+
+  
+
+
 
         </div>
         
@@ -406,8 +524,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -507,6 +634,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">1.</span> <span class="nav-text">哨兵转换机制</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">2.</span> <span class="nav-text">多个哨兵节点之间的相互发现机制</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">3.</span> <span class="nav-text">哨兵对Redis的slave节点自动纠正</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">4.</span> <span class="nav-text">Redis的slave被转换为master的选举算法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">5.</span> <span class="nav-text">哨兵接替进行主备切换的机制</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">6.</span> <span class="nav-text">master配置信息的传播</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -652,6 +795,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
