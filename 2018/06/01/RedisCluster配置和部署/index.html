@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="PHP,Laravel5," />
+  <meta name="keywords" content="Redis,Redis集群," />
 
 
 
@@ -81,21 +81,18 @@
 
 
 
-<meta name="description" content="默认条件MacOS，&amp;gt;=PHP5.4，翻墙环境（默认创建的项目会请求*.google.com）懂得PHP基础知识和MVC的基本架构，开发环境已经安装Laravel所需的命令环境。 配置composer中国镜像，使得本地开发环境下载依赖速度更快。1composer config -g repo.packagist composer https://packagist.phpcomposer.c">
-<meta name="keywords" content="PHP,Laravel5">
+<meta name="description" content="创建配置文件需要n个节点的redis集群，就创建n份redis配置文件。For example：7001.conf 7002.conf 7003.conf 7004.conf 7005.conf 7006.conf 创建备用目录 12345mkdir -pv /etc/redis-clutermkdir -pv /var/log/redismkdir -pv /var/redis/7001mv /">
+<meta name="keywords" content="Redis,Redis集群">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Laravel 5.x进阶笔记（一）">
-<meta property="og:url" content="http://www.forwardlee.com/2017/08/01/p/Laravel5.x进阶笔记（一）/index.html">
+<meta property="og:title" content="RedisCluster配置和部署--创建多master多slave高可用集群环境">
+<meta property="og:url" content="http://www.forwardlee.com/2018/06/01/RedisCluster配置和部署/index.html">
 <meta property="og:site_name" content="不忘初心">
-<meta property="og:description" content="默认条件MacOS，&amp;gt;=PHP5.4，翻墙环境（默认创建的项目会请求*.google.com）懂得PHP基础知识和MVC的基本架构，开发环境已经安装Laravel所需的命令环境。 配置composer中国镜像，使得本地开发环境下载依赖速度更快。1composer config -g repo.packagist composer https://packagist.phpcomposer.c">
+<meta property="og:description" content="创建配置文件需要n个节点的redis集群，就创建n份redis配置文件。For example：7001.conf 7002.conf 7003.conf 7004.conf 7005.conf 7006.conf 创建备用目录 12345mkdir -pv /etc/redis-clutermkdir -pv /var/log/redismkdir -pv /var/redis/7001mv /">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://www.forwardlee.com/images/15011226008351.jpg">
-<meta property="og:image" content="http://www.forwardlee.com/images/15011235293792.jpg">
-<meta property="og:updated_time" content="2017-08-01T08:28:46.000Z">
+<meta property="og:updated_time" content="2018-06-01T05:04:42.172Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Laravel 5.x进阶笔记（一）">
-<meta name="twitter:description" content="默认条件MacOS，&amp;gt;=PHP5.4，翻墙环境（默认创建的项目会请求*.google.com）懂得PHP基础知识和MVC的基本架构，开发环境已经安装Laravel所需的命令环境。 配置composer中国镜像，使得本地开发环境下载依赖速度更快。1composer config -g repo.packagist composer https://packagist.phpcomposer.c">
-<meta name="twitter:image" content="http://www.forwardlee.com/images/15011226008351.jpg">
+<meta name="twitter:title" content="RedisCluster配置和部署--创建多master多slave高可用集群环境">
+<meta name="twitter:description" content="创建配置文件需要n个节点的redis集群，就创建n份redis配置文件。For example：7001.conf 7002.conf 7003.conf 7004.conf 7005.conf 7006.conf 创建备用目录 12345mkdir -pv /etc/redis-clutermkdir -pv /var/log/redismkdir -pv /var/redis/7001mv /">
 
 
 
@@ -125,13 +122,13 @@
 
 
 
-  <link rel="canonical" href="http://www.forwardlee.com/2017/08/01/p/Laravel5.x进阶笔记（一）/"/>
+  <link rel="canonical" href="http://www.forwardlee.com/2018/06/01/RedisCluster配置和部署/"/>
 
 
 
 
 
-  <title>Laravel 5.x进阶笔记（一） | 不忘初心</title>
+  <title>RedisCluster配置和部署--创建多master多slave高可用集群环境 | 不忘初心</title>
   
 
 
@@ -322,7 +319,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2017/08/01/p/Laravel5.x进阶笔记（一）/">
+    <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2018/06/01/RedisCluster配置和部署/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="ForwardLee">
@@ -339,7 +336,7 @@
 
         
         
-          <h2 class="post-title" itemprop="name headline">Laravel 5.x进阶笔记（一）</h2>
+          <h2 class="post-title" itemprop="name headline">RedisCluster配置和部署--创建多master多slave高可用集群环境</h2>
         
 
         <div class="post-meta">
@@ -351,8 +348,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-01T14:42:53+08:00">
-                2017-08-01
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-01T10:37:51+08:00">
+                2018-06-01
               </time>
             
 
@@ -389,48 +386,34 @@
       
 
       
-        <h2><span id="默认条件">默认条件</span></h2><p>MacOS，&gt;=PHP5.4，翻墙环境（默认创建的项目会请求*.google.com）<br>懂得PHP基础知识和MVC的基本架构，开发环境已经安装Laravel所需的命令环境。</p>
-<h2><span id="配置composer中国镜像使得本地开发环境下载依赖速度更快">配置composer中国镜像，使得本地开发环境下载依赖速度更快。</span></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">composer config -g repo.packagist composer https://packagist.phpcomposer.com</span><br></pre></td></tr></table></figure>
-<h2><span id="创建laravel项目">创建Laravel项目</span></h2><p>进入项目的工作空间目录</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd ~/workspace</span><br></pre></td></tr></table></figure>
-<p>创建Laravel项目<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">composer -vvv create-project laravel/laravel learnlaravel5 5.2.31</span><br></pre></td></tr></table></figure></p>
-<p>项目创建完成，进入刚刚创建的项目，并使用PHP内置server服务启动项目，访问页面验证。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd learnlaravel5/public</span><br><span class="line">php -S 0.0.0.0:1024</span><br></pre></td></tr></table></figure>
-<p>页面效果<br><img src="/images/15011226008351.jpg" alt=""><br>使用1024端口访问的目的是Unix系统的动态端口的开始端口，不需要进行端口配置，就可以启动监听。<br>如果单纯要学习Laravel或者PHP，请不要使用apache或者nginx这样的web服务器启动项目，对学习本身带来影响。</p>
-<h2><span id="启用laravel针对php54版本的trait特性实现用户注册登录的功能实现简单的用户权限管理">启用Laravel针对PHP5.4版本的trait特性实现用户注册登录的功能，实现简单的用户权限管理</span></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd .. ##cd ~/workspace/learnlaravel5</span><br><span class="line">php artisan make:auth</span><br></pre></td></tr></table></figure>
-<p>不需要停止php -S即可直接访问localhost:1024/login查看生成登录页面<br><img src="/images/15011235293792.jpg" alt=""></p>
-<h2><span id="mysql创建数据库laravel5用户名和密码均为root">Mysql创建数据库laravel5，用户名和密码均为root</span></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">create database laravel5</span><br></pre></td></tr></table></figure>
-<h2><span id="修改learnlaravel5项目的配置文件">修改learnlaravel5项目的配置文件</span></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd ~/workspace/learnlaravel5</span><br><span class="line">open .env ##.env文件不存在，需要拷贝一份.env.example</span><br></pre></td></tr></table></figure>
-<p>修改配置项</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">DB_CONNECTION=mysql</span><br><span class="line">DB_HOST=127.0.0.1</span><br><span class="line">DB_PORT=3306</span><br><span class="line">DB_DATABASE=laravel5</span><br><span class="line">DB_USERNAME=root</span><br><span class="line">DB_PASSWORD=root</span><br></pre></td></tr></table></figure>
-<h2><span id="使用laravel默认的数据库描述文件创建表">使用laravel默认的数据库描述文件创建表</span></h2><p>执行命令创建表</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php artisan migrate</span><br></pre></td></tr></table></figure>
-<p>migrate命令要执行的php描述文件是learnlaravel5/database/migrations下的文件</p>
-<ul>
-<li>2014_10_12_000000_create_users_table.php</li>
-<li>2014_10_12_100000_create_password_resets_table.php<br>再查看一下laravel5数据库中是否创建了这两个描述文件中的表，如果已经创建，说明命令执行成功，就可以用注册页面注册用户了，赶快试一试。<h2><span id="使用-laravel-的葵花宝典eloquent">使用 Laravel 的“葵花宝典”：Eloquent</span></h2>Eloquent是Laravel定义的Model基类，只要Larave创建Model就会继承Eloquent类，此时创建的Model就具有了十个异常强大的函数，从此想干啥事儿都是一行代码就搞定，创建一个Article的Model体验一下：</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php artisan make:model Article</span><br></pre></td></tr></table></figure>
-<p>创建Article对应的数据库描述文件</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php artisan make:migration create_article_table</span><br></pre></td></tr></table></figure>
-<p>打开刚刚创建的数据库迁移描述文件</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">open learnlaravel5/database/migration/*_create_article_table.php</span><br></pre></td></tr></table></figure>
-<p>修改文件的内容为：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line"></span><br><span class="line">use Illuminate\Database\Schema\Blueprint;</span><br><span class="line">use Illuminate\Database\Migrations\Migration;</span><br><span class="line"></span><br><span class="line">class CreateArticleTable extends Migration</span><br><span class="line">&#123;</span><br><span class="line">    /**</span><br><span class="line">     * Run the migrations.</span><br><span class="line">     *</span><br><span class="line">     * 创建文章表</span><br><span class="line">     *</span><br><span class="line">     * @return void</span><br><span class="line">     */</span><br><span class="line">    public function up()</span><br><span class="line">    &#123;</span><br><span class="line">        Schema::create(&apos;articles&apos;, function($table)</span><br><span class="line">        &#123;</span><br><span class="line">            $table-&gt;increments(&apos;id&apos;);</span><br><span class="line">            $table-&gt;string(&apos;title&apos;);</span><br><span class="line">            $table-&gt;text(&apos;body&apos;)-&gt;nullable();</span><br><span class="line">            $table-&gt;integer(&apos;user_id&apos;);</span><br><span class="line">            $table-&gt;timestamps();</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * Reverse the migrations.</span><br><span class="line">     *</span><br><span class="line">     * @return void</span><br><span class="line">     */</span><br><span class="line">    public function down()</span><br><span class="line">    &#123;</span><br><span class="line">        //</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>再次使用数据库迁移命令创建articles表</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php artisan migrate</span><br></pre></td></tr></table></figure>
-<p>执行完后，在laravel5的数据库中会创建出articles的表结构。<br>使用Seeder往数据库中插入默认数据。首先创建一个Seeder，例如：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php artisan make:seeder ArticleSeeder</span><br></pre></td></tr></table></figure>
-<p>在learnlaravel5/database/seeds/下打开并修改刚刚创建的ArticleSeeder.php文件，默认的run函数体为空，为其添加创建Article的数据脚本。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">public function run()</span><br><span class="line">    &#123;</span><br><span class="line">        DB::table(&apos;articles&apos;)-&gt;delete();</span><br><span class="line">        for ($i=0;$i&lt;10;$i++)&#123;</span><br><span class="line">            \App\Article::create([</span><br><span class="line">                &apos;title&apos;=&gt;&apos;Title&apos;.$i,</span><br><span class="line">                &apos;body&apos;=&gt;&apos;Body&apos;.$i,</span><br><span class="line">                &apos;user_id&apos;=&gt;1</span><br><span class="line">            ]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-<p>把ArticleSeeder注册到项目的数据库执行环境中。打开learnlaravel5/database/seeds/DatabaseSeeder.php，并修改run函数。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">public function run()</span><br><span class="line">    &#123;</span><br><span class="line">         $this-&gt;call(ArticleSeeder::class);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-<p>由于learnlaravel5/database目录不能被composer自动加载，所有需要执行命令让这个目录加载待composer环境，保证代码能找到ArticleSeedr这个类。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">composer dump-autoload</span><br></pre></td></tr></table></figure>
-<p>然后再执行</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php artisan db:seed</span><br></pre></td></tr></table></figure>
-<p>执行完，此时在数据库laravel5的article表中会产生10条数据。</p>
-<p>下一节再讲解如何展示插入的数据 &gt;&gt;&gt;<a href="http://www.forwardlee.com/2017/08/01/Laravel5.x%E8%BF%9B%E9%98%B6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%8C%EF%BC%89/">Laravel 5.x进阶笔记（二）</a></p>
+        <h1><span id="创建配置文件">创建配置文件</span></h1><p>需要n个节点的redis集群，就创建n份redis配置文件。For example：7001.conf 7002.conf 7003.conf 7004.conf 7005.conf 7006.conf</p>
+<p>创建备用目录</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mkdir -pv /etc/redis-cluter</span><br><span class="line">mkdir -pv /var/log/redis</span><br><span class="line">mkdir -pv /var/redis/7001</span><br><span class="line">mv /usr/local/common/redis-3.28/redis.conf /etc/redis/7001.conf</span><br><span class="line">vi /etc/redis/7001.conf</span><br></pre></td></tr></table></figure>
+<p>修改7001.conf以下配置项</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">port 7001</span><br><span class="line">cluster-enabled yes</span><br><span class="line">cluster-config-file /etc/redis-cluster/node-7001.conf</span><br><span class="line">cluster-node-timeout 15000</span><br><span class="line">daemonize yes</span><br><span class="line">pidfile /var/run/redis_7001.pid</span><br><span class="line">dir /var/redis/7001</span><br><span class="line">logfile /var/log/redis/7001.log</span><br><span class="line">bind 192.168.1.210</span><br><span class="line">appendonly yes</span><br></pre></td></tr></table></figure>
+<h1><span id="创建启动脚本">创建启动脚本</span></h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cp /etc/init.d/redis_6379 /etc/init.d/redis_7001</span><br><span class="line"></span><br><span class="line">vi redis_7001</span><br></pre></td></tr></table></figure>
+<p>修改启动脚本中使用的端口号即可。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">chkconfig redis_7001 on</span><br><span class="line"></span><br><span class="line">REDISPORT=7001</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p>启动</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./redis_7001 start</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<h1><span id="创建集群">创建集群</span></h1><p>step1：安装ruby环境</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">yum install gcc-c++ patch readline readline-devel zlib zlib-devel \</span><br><span class="line">   libyaml-devel libffi-devel openssl-devel make \</span><br><span class="line">   bzip2 autoconf automake libtool bison iconv-devel sqlite-devel</span><br><span class="line">   </span><br><span class="line">wget https://cache.ruby-lang.org/pub/ruby/2.3/ruby-2.3.4.tar.gz</span><br><span class="line">tar zxf ruby-2.3.4.tar.gz</span><br><span class="line">cd ruby-2.3.4</span><br><span class="line">./configure --prefix=/usr/local/ruby</span><br><span class="line">make</span><br><span class="line">make install</span><br><span class="line">cd /usr/local/ruby</span><br><span class="line">cp bin/ruby /usr/local/bin/</span><br><span class="line">cp bin/gem /usr/local/bin/</span><br></pre></td></tr></table></figure>
+<p>step2：使用ruby安装redis集群redis-trib</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wget http://rubygems.org/downloads/redis-3.3.0.gem</span><br><span class="line">gem install -l redis-3.3.0.gem</span><br></pre></td></tr></table></figure>
+<p>此时在redis-3.2.8/src/下出现一个redis-trib.rb文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp /usr/local/common/redis-3.2.8/src/redis-trib.rb /usr/local/bin/</span><br></pre></td></tr></table></figure>
+<p>使用redis-trib.rb创建集群，–replicas 1表示每个master有1个slave，并且会让master和slave尽量不在一台机器上。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">redis-trib.rb create --replicas 1 192.168.1.210:7001 192.168.1.210:7002 192.168.1.211:7003 192.168.1.211:7004 192.168.1.212:7005 192.168.1.212:7006</span><br></pre></td></tr></table></figure>
+<p>输出以下集群信息：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; Creating cluster</span><br><span class="line">&gt;&gt;&gt; Performing hash slots allocation on 6 nodes...</span><br><span class="line">Using 3 masters:</span><br><span class="line">192.168.1.210:7001</span><br><span class="line">192.168.1.211:7003</span><br><span class="line">192.168.1.212:7005</span><br><span class="line">Adding replica 192.168.1.211:7004 to 192.168.1.210:7001</span><br><span class="line">Adding replica 192.168.1.210:7002 to 192.168.1.211:7003</span><br><span class="line">Adding replica 192.168.1.212:7006 to 192.168.1.212:7005</span><br><span class="line">M: 279addebc5ef0f0d7beef81d86201e3f8874fbd7 192.168.1.210:7001</span><br><span class="line">   slots:0-5460 (5461 slots) master</span><br><span class="line">S: d2e15ab71bbe2cca6cce19a5bacd92944368d230 192.168.1.210:7002</span><br><span class="line">   replicates 434f96e83bea38adeb97a5df293da3b008f76768</span><br><span class="line">M: 434f96e83bea38adeb97a5df293da3b008f76768 192.168.1.211:7003</span><br><span class="line">   slots:5461-10922 (5462 slots) master</span><br><span class="line">S: 389568b7d660edfb016521d2c06aa898733a28c0 192.168.1.211:7004</span><br><span class="line">   replicates 279addebc5ef0f0d7beef81d86201e3f8874fbd7</span><br><span class="line">M: b843b0530233e861dc674f1d78856a0de1f5c438 192.168.1.212:7005</span><br><span class="line">   slots:10923-16383 (5461 slots) master</span><br><span class="line">S: 70ae536a26cd28807a41b2009755f613d9691322 192.168.1.212:7006</span><br><span class="line">   replicates b843b0530233e861dc674f1d78856a0de1f5c438</span><br><span class="line">Can I set the above configuration? (type &apos;yes&apos; to accept): yes</span><br><span class="line">&gt;&gt;&gt; Nodes configuration updated</span><br><span class="line">&gt;&gt;&gt; Assign a different config epoch to each node</span><br><span class="line">&gt;&gt;&gt; Sending CLUSTER MEET messages to join the cluster</span><br><span class="line">Waiting for the cluster to join....</span><br><span class="line">&gt;&gt;&gt; Performing Cluster Check (using node 192.168.1.210:7001)</span><br><span class="line">M: 279addebc5ef0f0d7beef81d86201e3f8874fbd7 192.168.1.210:7001</span><br><span class="line">   slots:0-5460 (5461 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">S: d2e15ab71bbe2cca6cce19a5bacd92944368d230 192.168.1.210:7002</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates 434f96e83bea38adeb97a5df293da3b008f76768</span><br><span class="line">M: b843b0530233e861dc674f1d78856a0de1f5c438 192.168.1.212:7005</span><br><span class="line">   slots:10923-16383 (5461 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">M: 434f96e83bea38adeb97a5df293da3b008f76768 192.168.1.211:7003</span><br><span class="line">   slots:5461-10922 (5462 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">S: 389568b7d660edfb016521d2c06aa898733a28c0 192.168.1.211:7004</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates 279addebc5ef0f0d7beef81d86201e3f8874fbd7</span><br><span class="line">S: 70ae536a26cd28807a41b2009755f613d9691322 192.168.1.212:7006</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates b843b0530233e861dc674f1d78856a0de1f5c438</span><br><span class="line">[OK] All nodes agree about slots configuration.</span><br><span class="line">&gt;&gt;&gt; Check for open slots...</span><br><span class="line">&gt;&gt;&gt; Check slots coverage...</span><br><span class="line">[OK] All 16384 slots covered.</span><br></pre></td></tr></table></figure>
+<h1><span id="集群创建成功">集群创建成功</span></h1><p>集群环境支持master+slave的读写分离，支持master宕机的，slave自动切换成master，支持Redis Hash Slot分布式算法，支持Redis服务高可用。</p>
+<p>查看集群状态</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">[root@eshop-cache01 src]# redis-trib.rb check 192.168.1.210:7001</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; Performing Cluster Check (using node 192.168.1.210:7001)</span><br><span class="line">M: 279addebc5ef0f0d7beef81d86201e3f8874fbd7 192.168.1.210:7001</span><br><span class="line">   slots:0-5460 (5461 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">S: d2e15ab71bbe2cca6cce19a5bacd92944368d230 192.168.1.210:7002</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates 434f96e83bea38adeb97a5df293da3b008f76768</span><br><span class="line">M: b843b0530233e861dc674f1d78856a0de1f5c438 192.168.1.212:7005</span><br><span class="line">   slots:10923-16383 (5461 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">M: 434f96e83bea38adeb97a5df293da3b008f76768 192.168.1.211:7003</span><br><span class="line">   slots:5461-10922 (5462 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">S: 389568b7d660edfb016521d2c06aa898733a28c0 192.168.1.211:7004</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates 279addebc5ef0f0d7beef81d86201e3f8874fbd7</span><br><span class="line">S: 70ae536a26cd28807a41b2009755f613d9691322 192.168.1.212:7006</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates b843b0530233e861dc674f1d78856a0de1f5c438</span><br><span class="line">[OK] All nodes agree about slots configuration.</span><br><span class="line">&gt;&gt;&gt; Check for open slots...</span><br><span class="line">&gt;&gt;&gt; Check slots coverage...</span><br><span class="line">[OK] All 16384 slots covered.</span><br></pre></td></tr></table></figure>
+<p>干掉其中一个master，在看集群状态</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">[root@eshop-cache01 src]# ps -ef | grep redis</span><br><span class="line">root      2300     1  0 12:16 ?        00:00:05 /usr/local/bin/redis-server 192.168.1.210:7001 [cluster]</span><br><span class="line">root      2309     1  0 12:16 ?        00:00:06 /usr/local/bin/redis-server 192.168.1.210:7002 [cluster]</span><br><span class="line">root     16856  2229  0 13:54 pts/2    00:00:00 grep redis</span><br><span class="line">[root@eshop-cache01 src]# kill -9 2300</span><br><span class="line">[root@eshop-cache01 src]# rm -rf /var/run/redis_7001.pid </span><br><span class="line">[root@eshop-cache01 src]# redis-trib.rb check 192.168.1.210:7002</span><br><span class="line">&gt;&gt;&gt; Performing Cluster Check (using node 192.168.1.210:7002)</span><br><span class="line">S: d2e15ab71bbe2cca6cce19a5bacd92944368d230 192.168.1.210:7002</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates 434f96e83bea38adeb97a5df293da3b008f76768</span><br><span class="line">M: 434f96e83bea38adeb97a5df293da3b008f76768 192.168.1.211:7003</span><br><span class="line">   slots:5461-10922 (5462 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">S: 70ae536a26cd28807a41b2009755f613d9691322 192.168.1.212:7006</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates b843b0530233e861dc674f1d78856a0de1f5c438</span><br><span class="line">M: 389568b7d660edfb016521d2c06aa898733a28c0 192.168.1.211:7004</span><br><span class="line">   slots:0-5460 (5461 slots) master</span><br><span class="line">   0 additional replica(s)</span><br><span class="line">M: b843b0530233e861dc674f1d78856a0de1f5c438 192.168.1.212:7005</span><br><span class="line">   slots:10923-16383 (5461 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">[OK] All nodes agree about slots configuration.</span><br><span class="line">&gt;&gt;&gt; Check for open slots...</span><br><span class="line">&gt;&gt;&gt; Check slots coverage...</span><br><span class="line">[OK] All 16384 slots covered.</span><br></pre></td></tr></table></figure>
+<p>恢复启动7001的redis，再看集群状态：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">[root@eshop-cache01 src]# cd /etc/init.d/</span><br><span class="line">[root@eshop-cache01 init.d]# ./redis_7001 start</span><br><span class="line">Starting Redis server...</span><br><span class="line">[root@eshop-cache01 init.d]# redis-trib.rb check 192.168.1.210:7001</span><br><span class="line">&gt;&gt;&gt; Performing Cluster Check (using node 192.168.1.210:7001)</span><br><span class="line">S: 279addebc5ef0f0d7beef81d86201e3f8874fbd7 192.168.1.210:7001</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates 389568b7d660edfb016521d2c06aa898733a28c0</span><br><span class="line">S: d2e15ab71bbe2cca6cce19a5bacd92944368d230 192.168.1.210:7002</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates 434f96e83bea38adeb97a5df293da3b008f76768</span><br><span class="line">M: b843b0530233e861dc674f1d78856a0de1f5c438 192.168.1.212:7005</span><br><span class="line">   slots:10923-16383 (5461 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">M: 434f96e83bea38adeb97a5df293da3b008f76768 192.168.1.211:7003</span><br><span class="line">   slots:5461-10922 (5462 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">M: 389568b7d660edfb016521d2c06aa898733a28c0 192.168.1.211:7004</span><br><span class="line">   slots:0-5460 (5461 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">S: 70ae536a26cd28807a41b2009755f613d9691322 192.168.1.212:7006</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates b843b0530233e861dc674f1d78856a0de1f5c438</span><br><span class="line">[OK] All nodes agree about slots configuration.</span><br><span class="line">&gt;&gt;&gt; Check for open slots...</span><br><span class="line">&gt;&gt;&gt; Check slots coverage...</span><br><span class="line">[OK] All 16384 slots covered.</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -472,9 +455,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/PHP/" rel="tag"># PHP</a>
+            <a href="/tags/Redis/" rel="tag"># Redis</a>
           
-            <a href="/tags/Laravel5/" rel="tag"># Laravel5</a>
+            <a href="/tags/Redis集群/" rel="tag"># Redis集群</a>
           
         </div>
       
@@ -502,8 +485,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/05/21/Docker清理命令/" rel="next" title="Docker清理命令">
-                <i class="fa fa-chevron-left"></i> Docker清理命令
+              <a href="/2018/05/31/Sentinels哨兵管理/" rel="next" title="Sentinels哨兵管理">
+                <i class="fa fa-chevron-left"></i> Sentinels哨兵管理
               </a>
             
           </div>
@@ -511,10 +494,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/08/01/p/Laravel5.x进阶笔记（三）/" rel="prev" title="Laravel 5.x进阶笔记（二）">
-                Laravel 5.x进阶笔记（二） <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -686,7 +665,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">1.</span> <span class="nav-text">默认条件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">2.</span> <span class="nav-text">配置composer中国镜像，使得本地开发环境下载依赖速度更快。</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">3.</span> <span class="nav-text">创建Laravel项目</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">4.</span> <span class="nav-text">启用Laravel针对PHP5.4版本的trait特性实现用户注册登录的功能，实现简单的用户权限管理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">5.</span> <span class="nav-text">Mysql创建数据库laravel5，用户名和密码均为root</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">6.</span> <span class="nav-text">修改learnlaravel5项目的配置文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">7.</span> <span class="nav-text">使用laravel默认的数据库描述文件创建表</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">8.</span> <span class="nav-text">使用 Laravel 的“葵花宝典”：Eloquent</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">1.</span> <span class="nav-text">创建配置文件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">2.</span> <span class="nav-text">创建启动脚本</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">3.</span> <span class="nav-text">创建集群</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">4.</span> <span class="nav-text">集群创建成功</span></a></li></ol></div>
             
 
           </div>
