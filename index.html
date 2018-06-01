@@ -389,16 +389,9 @@
       
         
           <p>官方推荐至少3个master，3个slave，这样可以让数据冗余1份。 </p>
-<h1 id="创建配置文件"><a href="#创建配置文件" class="headerlink" title="创建配置文件"></a>创建配置文件</h1><p>需要n个节点的redis集群，就创建n份redis配置文件。For example：7001.conf 7002.conf 7003.conf 7004.conf 7005.conf 7006.conf</p>
-<p>创建备用目录</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mkdir -pv /etc/redis-cluter</span><br><span class="line">mkdir -pv /var/log/redis</span><br><span class="line">mkdir -pv /var/redis/7001</span><br><span class="line">mv /usr/local/common/redis-3.28/redis.conf /etc/redis/7001.conf</span><br><span class="line">vi /etc/redis/7001.conf</span><br></pre></td></tr></table></figure>
-<p>修改7001.conf以下配置项</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">port 7001</span><br><span class="line">cluster-enabled yes</span><br><span class="line">cluster-config-file /etc/redis-cluster/node-7001.conf</span><br><span class="line">cluster-node-timeout 15000</span><br><span class="line">daemonize yes</span><br><span class="line">pidfile /var/run/redis_7001.pid</span><br><span class="line">dir /var/redis/7001</span><br><span class="line">logfile /var/log/redis/7001.log</span><br><span class="line">bind 192.168.1.210</span><br><span class="line">appendonly yes</span><br></pre></td></tr></table></figure>
-<h1 id="创建启动脚本"><a href="#创建启动脚本" class="headerlink" title="创建启动脚本"></a>创建启动脚本</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cp /etc/init.d/redis_6379 /etc/init.d/redis_7001</span><br><span class="line"></span><br><span class="line">vi redis_7001</span><br></pre></td></tr></table></figure>
-<p>修改启动脚本中使用的端口号即可。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">chkconfig redis_7001 on</span><br><span class="line"></span><br><span class="line">REDISPORT=7001</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
-<p>启动</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./redis_7001 start</span><br></pre></td></tr></table></figure>
+<p>Redis Cluster的用处可以实现多主多从，实现读写分离，实现Redis高可用。</p>
+<p>Redis的主从配置的主要作用是实现读写分离，并且可以通过配置一主多从来实现Redis横向扩展，保证Redis读取数据的QPS能够达到10W+。==如果应用的Redis写数据量QPS只需要几万，而读数据要几十万或上百万QPS，那么Redis Sentinel集群就可以满足业务需求，一主多从，而且可以实现自动Master主备切换，实现高可用。==当写数据的QPS需要几十万或者上百万QPS，或者写数据量达到1T以上的场景，Sentinel的一主多从就不能满足业务需求，此时需要更多的Master来支撑写操作。</p>
+<p>Redis Cluster实现多主多从的集群架构，并且能够进行自动故障节点转移和恢复，并支持多Master节点写入，能够支撑更大数据量的写操作。虽然Redis Cluster实现了读写分离的主从结构，但是Redis的客户端Jedis操作对读写分离支持不够完善，需要对Jedis进行扩展才能支持读写分离。而且Redis Cluster本身slave节点不能直接读取数据，需要先执行readonly命令，再读取数据。所以==Redis Cluster的重点在实现Master节点的横向扩展支撑更大数据量，能够通过Master节点实现读写操作，Slave节点的作用主要用是数据热备和在Master节点故障时的主备自动切换，保证Redis Cluster的高可用。==</p>
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2018/06/01/RedisCluster配置和部署/#more" rel="contents">
