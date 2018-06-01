@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.forwardlee.com/"/>
-  <updated>2018-06-01T10:02:28.366Z</updated>
+  <updated>2018-06-01T10:08:18.908Z</updated>
   <id>http://www.forwardlee.com/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://www.forwardlee.com/2018/06/01/Redis-Cluster%E7%BB%B4%E6%8A%A4/"/>
     <id>http://www.forwardlee.com/2018/06/01/Redis-Cluster维护/</id>
     <published>2018-06-01T08:49:11.000Z</published>
-    <updated>2018-06-01T10:02:28.366Z</updated>
+    <updated>2018-06-01T10:08:18.908Z</updated>
     
     <content type="html"><![CDATA[<h1><span id="增加redis-cluster-master节点">增加Redis Cluster Master节点</span></h1><p>在安装了Redis Cluster集群环境机器上执行增加节点命令。<br>redis-trib.rb add-node NEW_NODE ANY_NODE_OF_CLUSTER</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">redis-trib.rb add-node 192.168.1.212:7007 192.168.1.212:7005</span><br><span class="line"></span><br><span class="line">[root@eshop-cache01 init.d]# redis-trib.rb add-node 192.168.1.212:7007 192.168.1.211:7003</span><br><span class="line">&gt;&gt;&gt; Adding node 192.168.1.212:7007 to cluster 192.168.1.211:7003</span><br><span class="line">&gt;&gt;&gt; Performing Cluster Check (using node 192.168.1.211:7003)</span><br><span class="line">M: 434f96e83bea38adeb97a5df293da3b008f76768 192.168.1.211:7003</span><br><span class="line">   slots:5461-10922 (5462 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">S: 279addebc5ef0f0d7beef81d86201e3f8874fbd7 192.168.1.210:7001</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates 389568b7d660edfb016521d2c06aa898733a28c0</span><br><span class="line">S: d2e15ab71bbe2cca6cce19a5bacd92944368d230 192.168.1.210:7002</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates 434f96e83bea38adeb97a5df293da3b008f76768</span><br><span class="line">S: 70ae536a26cd28807a41b2009755f613d9691322 192.168.1.212:7006</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates b843b0530233e861dc674f1d78856a0de1f5c438</span><br><span class="line">M: b843b0530233e861dc674f1d78856a0de1f5c438 192.168.1.212:7005</span><br><span class="line">   slots:10923-16383 (5461 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">M: 389568b7d660edfb016521d2c06aa898733a28c0 192.168.1.211:7004</span><br><span class="line">   slots:0-5460 (5461 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">[OK] All nodes agree about slots configuration.</span><br><span class="line">&gt;&gt;&gt; Check for open slots...</span><br><span class="line">&gt;&gt;&gt; Check slots coverage...</span><br><span class="line">[OK] All 16384 slots covered.</span><br><span class="line">&gt;&gt;&gt; Send CLUSTER MEET to node 192.168.1.212:7007 to make it join the cluster.</span><br><span class="line">[OK] New node added correctly.</span><br></pre></td></tr></table></figure>
@@ -33,7 +33,7 @@
 <p>后面还需要输入从哪几个Master源获取Slot，输入Master Node ID，最后一个需要结束时输入done，Redis Cluster重新规划Hash Slot。</p>
 <p>查看重新规划后的Slot，每个Master都是4096个。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">redis-trib.rb check 192.168.1.212:7005</span><br><span class="line"></span><br><span class="line">[root@eshop-cache01 init.d]# redis-trib.rb check 192.168.1.212:7005</span><br><span class="line">&gt;&gt;&gt; Performing Cluster Check (using node 192.168.1.212:7005)</span><br><span class="line">M: b843b0530233e861dc674f1d78856a0de1f5c438 192.168.1.212:7005</span><br><span class="line">   slots:12288-16383 (4096 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">M: 434f96e83bea38adeb97a5df293da3b008f76768 192.168.1.211:7003</span><br><span class="line">   slots:6827-10922 (4096 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">S: 70ae536a26cd28807a41b2009755f613d9691322 192.168.1.212:7006</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates b843b0530233e861dc674f1d78856a0de1f5c438</span><br><span class="line">M: 389568b7d660edfb016521d2c06aa898733a28c0 192.168.1.211:7004</span><br><span class="line">   slots:1365-5460 (4096 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">S: d2e15ab71bbe2cca6cce19a5bacd92944368d230 192.168.1.210:7002</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates 434f96e83bea38adeb97a5df293da3b008f76768</span><br><span class="line">S: 279addebc5ef0f0d7beef81d86201e3f8874fbd7 192.168.1.210:7001</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates 389568b7d660edfb016521d2c06aa898733a28c0</span><br><span class="line">M: db864e7965225405f65f36c1cd0a0bb32f2df6ce 192.168.1.212:7007</span><br><span class="line">   slots:0-1364,5461-6826,10923-12287 (4096 slots) master</span><br><span class="line">   0 additional replica(s)</span><br><span class="line">[OK] All nodes agree about slots configuration.</span><br><span class="line">&gt;&gt;&gt; Check for open slots...</span><br><span class="line">&gt;&gt;&gt; Check slots coverage...</span><br><span class="line">[OK] All 16384 slots covered.</span><br></pre></td></tr></table></figure>
-<h1><span id="给新增的master增加slave节点">给新增的Master增加Slave节点</span></h1><p>redis-trib.rb add-node –slave –master-id MASTER_ID NEW_NODE ANY_NODE_OF_CLUSTER</p>
+<h1><span id="给master节点增加slave">给Master节点增加Slave</span></h1><p>redis-trib.rb add-node –slave –master-id MASTER_ID NEW_NODE ANY_NODE_OF_CLUSTER</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">[root@eshop-cache01 init.d]# redis-trib.rb add-node --slave --master-id 389568b7d660edfb016521d2c06aa898733a28c0 192.168.1.211:7008 192.168.1.211:7003</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; Adding node 192.168.1.211:7008 to cluster 192.168.1.211:7003</span><br><span class="line">&gt;&gt;&gt; Performing Cluster Check (using node 192.168.1.211:7003)</span><br><span class="line">M: 434f96e83bea38adeb97a5df293da3b008f76768 192.168.1.211:7003</span><br><span class="line">   slots:6827-10922 (4096 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">M: db864e7965225405f65f36c1cd0a0bb32f2df6ce 192.168.1.212:7007</span><br><span class="line">   slots:0-1364,5461-6826,10923-12287 (4096 slots) master</span><br><span class="line">   0 additional replica(s)</span><br><span class="line">S: 279addebc5ef0f0d7beef81d86201e3f8874fbd7 192.168.1.210:7001</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates 389568b7d660edfb016521d2c06aa898733a28c0</span><br><span class="line">S: d2e15ab71bbe2cca6cce19a5bacd92944368d230 192.168.1.210:7002</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates 434f96e83bea38adeb97a5df293da3b008f76768</span><br><span class="line">S: 70ae536a26cd28807a41b2009755f613d9691322 192.168.1.212:7006</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates b843b0530233e861dc674f1d78856a0de1f5c438</span><br><span class="line">M: b843b0530233e861dc674f1d78856a0de1f5c438 192.168.1.212:7005</span><br><span class="line">   slots:12288-16383 (4096 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">M: 389568b7d660edfb016521d2c06aa898733a28c0 192.168.1.211:7004</span><br><span class="line">   slots:1365-5460 (4096 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">[OK] All nodes agree about slots configuration.</span><br><span class="line">&gt;&gt;&gt; Check for open slots...</span><br><span class="line">&gt;&gt;&gt; Check slots coverage...</span><br><span class="line">[OK] All 16384 slots covered.</span><br><span class="line">&gt;&gt;&gt; Send CLUSTER MEET to node 192.168.1.211:7008 to make it join the cluster.</span><br><span class="line">Waiting for the cluster to join.</span><br><span class="line">&gt;&gt;&gt; Configure node as replica of 192.168.1.211:7004.</span><br><span class="line">[OK] New node added correctly.</span><br></pre></td></tr></table></figure>
 <p>检查新增的slave节点</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">[root@eshop-cache01 init.d]# redis-trib.rb check 192.168.1.211:7003</span><br><span class="line">&gt;&gt;&gt; Performing Cluster Check (using node 192.168.1.211:7003)</span><br><span class="line">M: 434f96e83bea38adeb97a5df293da3b008f76768 192.168.1.211:7003</span><br><span class="line">   slots:6827-10922 (4096 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">M: db864e7965225405f65f36c1cd0a0bb32f2df6ce 192.168.1.212:7007</span><br><span class="line">   slots:0-1364,5461-6826,10923-12287 (4096 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">S: 279addebc5ef0f0d7beef81d86201e3f8874fbd7 192.168.1.210:7001</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates db864e7965225405f65f36c1cd0a0bb32f2df6ce</span><br><span class="line">S: 7fe0f90658458209f39578981b32d24a223e26b1 192.168.1.211:7008</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates 389568b7d660edfb016521d2c06aa898733a28c0</span><br><span class="line">S: d2e15ab71bbe2cca6cce19a5bacd92944368d230 192.168.1.210:7002</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates 434f96e83bea38adeb97a5df293da3b008f76768</span><br><span class="line">S: 70ae536a26cd28807a41b2009755f613d9691322 192.168.1.212:7006</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates b843b0530233e861dc674f1d78856a0de1f5c438</span><br><span class="line">M: b843b0530233e861dc674f1d78856a0de1f5c438 192.168.1.212:7005</span><br><span class="line">   slots:12288-16383 (4096 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">M: 389568b7d660edfb016521d2c06aa898733a28c0 192.168.1.211:7004</span><br><span class="line">   slots:1365-5460 (4096 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">[OK] All nodes agree about slots configuration.</span><br><span class="line">&gt;&gt;&gt; Check for open slots...</span><br><span class="line">&gt;&gt;&gt; Check slots coverage...</span><br><span class="line">[OK] All 16384 slots covered.</span><br></pre></td></tr></table></figure>
@@ -470,13 +470,13 @@
     </summary>
     
     
-      <category term="MariaDB" scheme="http://www.forwardlee.com/tags/MariaDB/"/>
-    
-      <category term="Keepalived" scheme="http://www.forwardlee.com/tags/Keepalived/"/>
-    
       <category term="Galera" scheme="http://www.forwardlee.com/tags/Galera/"/>
     
       <category term="CentOS" scheme="http://www.forwardlee.com/tags/CentOS/"/>
+    
+      <category term="Keepalived" scheme="http://www.forwardlee.com/tags/Keepalived/"/>
+    
+      <category term="MariaDB" scheme="http://www.forwardlee.com/tags/MariaDB/"/>
     
   </entry>
   
@@ -498,9 +498,9 @@
     </summary>
     
     
-      <category term="Galera" scheme="http://www.forwardlee.com/tags/Galera/"/>
-    
       <category term="MySQL" scheme="http://www.forwardlee.com/tags/MySQL/"/>
+    
+      <category term="Galera" scheme="http://www.forwardlee.com/tags/Galera/"/>
     
   </entry>
   
@@ -547,11 +547,11 @@
     </summary>
     
     
-      <category term="Keepalived" scheme="http://www.forwardlee.com/tags/Keepalived/"/>
+      <category term="MySQL" scheme="http://www.forwardlee.com/tags/MySQL/"/>
     
       <category term="Galera" scheme="http://www.forwardlee.com/tags/Galera/"/>
     
-      <category term="MySQL" scheme="http://www.forwardlee.com/tags/MySQL/"/>
+      <category term="Keepalived" scheme="http://www.forwardlee.com/tags/Keepalived/"/>
     
   </entry>
   
@@ -597,11 +597,11 @@
     </summary>
     
     
+      <category term="MySQL" scheme="http://www.forwardlee.com/tags/MySQL/"/>
+    
       <category term="Galera" scheme="http://www.forwardlee.com/tags/Galera/"/>
     
       <category term="CentOS" scheme="http://www.forwardlee.com/tags/CentOS/"/>
-    
-      <category term="MySQL" scheme="http://www.forwardlee.com/tags/MySQL/"/>
     
   </entry>
   
@@ -643,11 +643,11 @@
     </summary>
     
     
-      <category term="MariaDB" scheme="http://www.forwardlee.com/tags/MariaDB/"/>
-    
       <category term="Galera" scheme="http://www.forwardlee.com/tags/Galera/"/>
     
       <category term="Docker" scheme="http://www.forwardlee.com/tags/Docker/"/>
+    
+      <category term="MariaDB" scheme="http://www.forwardlee.com/tags/MariaDB/"/>
     
   </entry>
   
@@ -883,6 +883,24 @@
   </entry>
   
   <entry>
+    <title>Laravel 5.x进阶笔记（二）</title>
+    <link href="http://www.forwardlee.com/2017/08/01/p/Laravel5.x%E8%BF%9B%E9%98%B6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89/"/>
+    <id>http://www.forwardlee.com/2017/08/01/p/Laravel5.x进阶笔记（三）/</id>
+    <published>2017-08-01T06:42:53.000Z</published>
+    <updated>2017-08-01T08:21:34.000Z</updated>
+    
+    <summary type="html">
+    
+    </summary>
+    
+    
+      <category term="PHP" scheme="http://www.forwardlee.com/tags/PHP/"/>
+    
+      <category term="Laravel5" scheme="http://www.forwardlee.com/tags/Laravel5/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Laravel 5.x进阶笔记（一）</title>
     <link href="http://www.forwardlee.com/2017/08/01/p/Laravel5.x%E8%BF%9B%E9%98%B6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/"/>
     <id>http://www.forwardlee.com/2017/08/01/p/Laravel5.x进阶笔记（一）/</id>
@@ -937,24 +955,6 @@
     
       &lt;h2&gt;&lt;span id=&quot;默认条件&quot;&gt;默认条件&lt;/span&gt;&lt;/h2&gt;&lt;p&gt;MacOS，&amp;gt;=PHP5.4，翻墙环境（默认创建的项目会请求*.google.com）&lt;br&gt;懂得PHP基础知识和MVC的基本架构，开发环境已经安装Laravel所需的命令环境。&lt;/p&gt;
 &lt;h2&gt;
-    
-    </summary>
-    
-    
-      <category term="PHP" scheme="http://www.forwardlee.com/tags/PHP/"/>
-    
-      <category term="Laravel5" scheme="http://www.forwardlee.com/tags/Laravel5/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Laravel 5.x进阶笔记（二）</title>
-    <link href="http://www.forwardlee.com/2017/08/01/p/Laravel5.x%E8%BF%9B%E9%98%B6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89/"/>
-    <id>http://www.forwardlee.com/2017/08/01/p/Laravel5.x进阶笔记（三）/</id>
-    <published>2017-08-01T06:42:53.000Z</published>
-    <updated>2017-08-01T08:21:34.000Z</updated>
-    
-    <summary type="html">
     
     </summary>
     
