@@ -72,10 +72,10 @@
     <link href="http://www.forwardlee.com/2018/06/01/RedisCluster%E9%85%8D%E7%BD%AE%E5%92%8C%E9%83%A8%E7%BD%B2/"/>
     <id>http://www.forwardlee.com/2018/06/01/RedisCluster配置和部署/</id>
     <published>2018-06-01T02:37:51.000Z</published>
-    <updated>2018-06-01T08:46:54.996Z</updated>
+    <updated>2018-06-01T10:04:40.208Z</updated>
     
-    <content type="html"><![CDATA[<p>Redis的主从配置的主要作用是实现读写分离，并且可以通过配置一主多从来实现Redis横向扩展，保证Redis读取数据的QPS能够达到10W+。==如果应用的Redis写数据量QPS只需要几万，而读数据要几十万或上百万QPS，那么Redis Sentinel集群就可以满足业务需求，一主多从，而且可以实现自动Master主备切换，实现高可用。==当写数据的QPS需要几十万或者上百万QPS，或者写数据量达到1T以上的场景，Sentinel的一主多从就不能满足业务需求，此时需要更多的Master来支撑写操作。</p>
-<p>Redis Cluster实现多主多从的集群架构，并且能够进行自动故障节点转移和恢复，并支持多Master节点写入，能够支撑更大数据量的写操作。虽然Redis Cluster实现了读写分离的主从结构，但是Redis的客户端Jedis操作对读写分离支持不够完善，需要对Jedis进行扩展才能支持读写分离。而且Redis Cluster本身slave节点不能直接读取数据，需要先执行readonly命令，再读取数据。所以==Redis Cluster的重点在实现Master节点的横向扩展支撑更大数据量，能够通过Master节点实现读写操作，Slave节点的作用主要用是数据热备和在Master节点故障时的主备自动切换，保证Redis Cluster的高可用。==</p>
+    <content type="html"><![CDATA[<p>Redis的主从配置的主要作用是实现读写分离，并且可以通过配置一主多从来实现Redis横向扩展，保证Redis读取数据的QPS能够达到10W+。<strong>如果应用的Redis写数据量QPS只需要几万，而读数据要几十万或上百万QPS，那么Redis Sentinel集群就可以满足业务需求，一主多从，而且可以实现自动Master主备切换，实现高可用。</strong>当写数据的QPS需要几十万或者上百万QPS，或者写数据量达到1T以上的场景，Sentinel的一主多从就不能满足业务需求，此时需要更多的Master来支撑写操作。</p>
+<p>Redis Cluster实现多主多从的集群架构，并且能够进行自动故障节点转移和恢复，并支持多Master节点写入，能够支撑更大数据量的写操作。虽然Redis Cluster实现了读写分离的主从结构，但是Redis的客户端Jedis操作对读写分离支持不够完善，需要对Jedis进行扩展才能支持读写分离。而且Redis Cluster本身slave节点不能直接读取数据，需要先执行readonly命令，再读取数据。所以<strong>Redis Cluster的重点在实现Master节点的横向扩展支撑更大数据量，能够通过Master节点实现读写操作，Slave节点的作用主要用是数据热备和在Master节点故障时的主备自动切换，保证Redis Cluster的高可用。</strong></p>
 <a id="more"></a>
 <h1><span id="创建配置文件">创建配置文件</span></h1><p>Redis Cluster的用处可以实现多主多从，实现读写分离，实现Redis高可用。</p>
 <p>官方推荐至少3个master，3个slave，这样可以让数据冗余1份。</p>
@@ -120,8 +120,8 @@
     
     <summary type="html">
     
-      &lt;p&gt;Redis的主从配置的主要作用是实现读写分离，并且可以通过配置一主多从来实现Redis横向扩展，保证Redis读取数据的QPS能够达到10W+。==如果应用的Redis写数据量QPS只需要几万，而读数据要几十万或上百万QPS，那么Redis Sentinel集群就可以满足业务需求，一主多从，而且可以实现自动Master主备切换，实现高可用。==当写数据的QPS需要几十万或者上百万QPS，或者写数据量达到1T以上的场景，Sentinel的一主多从就不能满足业务需求，此时需要更多的Master来支撑写操作。&lt;/p&gt;
-&lt;p&gt;Redis Cluster实现多主多从的集群架构，并且能够进行自动故障节点转移和恢复，并支持多Master节点写入，能够支撑更大数据量的写操作。虽然Redis Cluster实现了读写分离的主从结构，但是Redis的客户端Jedis操作对读写分离支持不够完善，需要对Jedis进行扩展才能支持读写分离。而且Redis Cluster本身slave节点不能直接读取数据，需要先执行readonly命令，再读取数据。所以==Redis Cluster的重点在实现Master节点的横向扩展支撑更大数据量，能够通过Master节点实现读写操作，Slave节点的作用主要用是数据热备和在Master节点故障时的主备自动切换，保证Redis Cluster的高可用。==&lt;/p&gt;
+      &lt;p&gt;Redis的主从配置的主要作用是实现读写分离，并且可以通过配置一主多从来实现Redis横向扩展，保证Redis读取数据的QPS能够达到10W+。&lt;strong&gt;如果应用的Redis写数据量QPS只需要几万，而读数据要几十万或上百万QPS，那么Redis Sentinel集群就可以满足业务需求，一主多从，而且可以实现自动Master主备切换，实现高可用。&lt;/strong&gt;当写数据的QPS需要几十万或者上百万QPS，或者写数据量达到1T以上的场景，Sentinel的一主多从就不能满足业务需求，此时需要更多的Master来支撑写操作。&lt;/p&gt;
+&lt;p&gt;Redis Cluster实现多主多从的集群架构，并且能够进行自动故障节点转移和恢复，并支持多Master节点写入，能够支撑更大数据量的写操作。虽然Redis Cluster实现了读写分离的主从结构，但是Redis的客户端Jedis操作对读写分离支持不够完善，需要对Jedis进行扩展才能支持读写分离。而且Redis Cluster本身slave节点不能直接读取数据，需要先执行readonly命令，再读取数据。所以&lt;strong&gt;Redis Cluster的重点在实现Master节点的横向扩展支撑更大数据量，能够通过Master节点实现读写操作，Slave节点的作用主要用是数据热备和在Master节点故障时的主备自动切换，保证Redis Cluster的高可用。&lt;/strong&gt;&lt;/p&gt;
     
     </summary>
     
@@ -883,24 +883,6 @@
   </entry>
   
   <entry>
-    <title>Laravel 5.x进阶笔记（二）</title>
-    <link href="http://www.forwardlee.com/2017/08/01/p/Laravel5.x%E8%BF%9B%E9%98%B6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89/"/>
-    <id>http://www.forwardlee.com/2017/08/01/p/Laravel5.x进阶笔记（三）/</id>
-    <published>2017-08-01T06:42:53.000Z</published>
-    <updated>2017-08-01T08:21:34.000Z</updated>
-    
-    <summary type="html">
-    
-    </summary>
-    
-    
-      <category term="PHP" scheme="http://www.forwardlee.com/tags/PHP/"/>
-    
-      <category term="Laravel5" scheme="http://www.forwardlee.com/tags/Laravel5/"/>
-    
-  </entry>
-  
-  <entry>
     <title>Laravel 5.x进阶笔记（一）</title>
     <link href="http://www.forwardlee.com/2017/08/01/p/Laravel5.x%E8%BF%9B%E9%98%B6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/"/>
     <id>http://www.forwardlee.com/2017/08/01/p/Laravel5.x进阶笔记（一）/</id>
@@ -955,6 +937,24 @@
     
       &lt;h2&gt;&lt;span id=&quot;默认条件&quot;&gt;默认条件&lt;/span&gt;&lt;/h2&gt;&lt;p&gt;MacOS，&amp;gt;=PHP5.4，翻墙环境（默认创建的项目会请求*.google.com）&lt;br&gt;懂得PHP基础知识和MVC的基本架构，开发环境已经安装Laravel所需的命令环境。&lt;/p&gt;
 &lt;h2&gt;
+    
+    </summary>
+    
+    
+      <category term="PHP" scheme="http://www.forwardlee.com/tags/PHP/"/>
+    
+      <category term="Laravel5" scheme="http://www.forwardlee.com/tags/Laravel5/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Laravel 5.x进阶笔记（二）</title>
+    <link href="http://www.forwardlee.com/2017/08/01/p/Laravel5.x%E8%BF%9B%E9%98%B6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89/"/>
+    <id>http://www.forwardlee.com/2017/08/01/p/Laravel5.x进阶笔记（三）/</id>
+    <published>2017-08-01T06:42:53.000Z</published>
+    <updated>2017-08-01T08:21:34.000Z</updated>
+    
+    <summary type="html">
     
     </summary>
     
