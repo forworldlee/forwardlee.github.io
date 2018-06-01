@@ -81,18 +81,18 @@
 
 
 
-<meta name="description" content="创建配置文件需要n个节点的redis集群，就创建n份redis配置文件。For example：7001.conf 7002.conf 7003.conf 7004.conf 7005.conf 7006.conf 创建备用目录 12345mkdir -pv /etc/redis-clutermkdir -pv /var/log/redismkdir -pv /var/redis/7001mv /">
+<meta name="description" content="官方推荐至少3个master，3个slave，这样可以让数据冗余1份。  创建配置文件需要n个节点的redis集群，就创建n份redis配置文件。For example：7001.conf 7002.conf 7003.conf 7004.conf 7005.conf 7006.conf 创建备用目录 12345mkdir -pv /etc/redis-clutermkdir -pv /var/l">
 <meta name="keywords" content="Redis,Redis集群">
 <meta property="og:type" content="article">
 <meta property="og:title" content="RedisCluster配置和部署--创建多master多slave高可用集群环境">
 <meta property="og:url" content="http://www.forwardlee.com/2018/06/01/RedisCluster配置和部署/index.html">
 <meta property="og:site_name" content="不忘初心">
-<meta property="og:description" content="创建配置文件需要n个节点的redis集群，就创建n份redis配置文件。For example：7001.conf 7002.conf 7003.conf 7004.conf 7005.conf 7006.conf 创建备用目录 12345mkdir -pv /etc/redis-clutermkdir -pv /var/log/redismkdir -pv /var/redis/7001mv /">
+<meta property="og:description" content="官方推荐至少3个master，3个slave，这样可以让数据冗余1份。  创建配置文件需要n个节点的redis集群，就创建n份redis配置文件。For example：7001.conf 7002.conf 7003.conf 7004.conf 7005.conf 7006.conf 创建备用目录 12345mkdir -pv /etc/redis-clutermkdir -pv /var/l">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-06-01T08:13:30.168Z">
+<meta property="og:updated_time" content="2018-06-01T08:29:10.495Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="RedisCluster配置和部署--创建多master多slave高可用集群环境">
-<meta name="twitter:description" content="创建配置文件需要n个节点的redis集群，就创建n份redis配置文件。For example：7001.conf 7002.conf 7003.conf 7004.conf 7005.conf 7006.conf 创建备用目录 12345mkdir -pv /etc/redis-clutermkdir -pv /var/log/redismkdir -pv /var/redis/7001mv /">
+<meta name="twitter:description" content="官方推荐至少3个master，3个slave，这样可以让数据冗余1份。  创建配置文件需要n个节点的redis集群，就创建n份redis配置文件。For example：7001.conf 7002.conf 7003.conf 7004.conf 7005.conf 7006.conf 创建备用目录 12345mkdir -pv /etc/redis-clutermkdir -pv /var/l">
 
 
 
@@ -386,7 +386,8 @@
       
 
       
-        <h1><span id="创建配置文件">创建配置文件</span></h1><p>需要n个节点的redis集群，就创建n份redis配置文件。For example：7001.conf 7002.conf 7003.conf 7004.conf 7005.conf 7006.conf</p>
+        <p>官方推荐至少3个master，3个slave，这样可以让数据冗余1份。 </p>
+<h1><span id="创建配置文件">创建配置文件</span></h1><p>需要n个节点的redis集群，就创建n份redis配置文件。For example：7001.conf 7002.conf 7003.conf 7004.conf 7005.conf 7006.conf</p>
 <p>创建备用目录</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mkdir -pv /etc/redis-cluter</span><br><span class="line">mkdir -pv /var/log/redis</span><br><span class="line">mkdir -pv /var/redis/7001</span><br><span class="line">mv /usr/local/common/redis-3.28/redis.conf /etc/redis/7001.conf</span><br><span class="line">vi /etc/redis/7001.conf</span><br></pre></td></tr></table></figure>
 <p>修改7001.conf以下配置项</p>

@@ -388,7 +388,8 @@
 
       
         
-          <h1 id="创建配置文件"><a href="#创建配置文件" class="headerlink" title="创建配置文件"></a>创建配置文件</h1><p>需要n个节点的redis集群，就创建n份redis配置文件。For example：7001.conf 7002.conf 7003.conf 7004.conf 7005.conf 7006.conf</p>
+          <p>官方推荐至少3个master，3个slave，这样可以让数据冗余1份。 </p>
+<h1 id="创建配置文件"><a href="#创建配置文件" class="headerlink" title="创建配置文件"></a>创建配置文件</h1><p>需要n个节点的redis集群，就创建n份redis配置文件。For example：7001.conf 7002.conf 7003.conf 7004.conf 7005.conf 7006.conf</p>
 <p>创建备用目录</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mkdir -pv /etc/redis-cluter</span><br><span class="line">mkdir -pv /var/log/redis</span><br><span class="line">mkdir -pv /var/redis/7001</span><br><span class="line">mv /usr/local/common/redis-3.28/redis.conf /etc/redis/7001.conf</span><br><span class="line">vi /etc/redis/7001.conf</span><br></pre></td></tr></table></figure>
 <p>修改7001.conf以下配置项</p>

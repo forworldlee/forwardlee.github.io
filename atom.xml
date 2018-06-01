@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.forwardlee.com/"/>
-  <updated>2018-06-01T08:13:30.168Z</updated>
+  <updated>2018-06-01T08:29:10.495Z</updated>
   <id>http://www.forwardlee.com/</id>
   
   <author>
@@ -20,9 +20,10 @@
     <link href="http://www.forwardlee.com/2018/06/01/RedisCluster%E9%85%8D%E7%BD%AE%E5%92%8C%E9%83%A8%E7%BD%B2/"/>
     <id>http://www.forwardlee.com/2018/06/01/RedisCluster配置和部署/</id>
     <published>2018-06-01T02:37:51.000Z</published>
-    <updated>2018-06-01T08:13:30.168Z</updated>
+    <updated>2018-06-01T08:29:10.495Z</updated>
     
-    <content type="html"><![CDATA[<h1><span id="创建配置文件">创建配置文件</span></h1><p>需要n个节点的redis集群，就创建n份redis配置文件。For example：7001.conf 7002.conf 7003.conf 7004.conf 7005.conf 7006.conf</p>
+    <content type="html"><![CDATA[<p>官方推荐至少3个master，3个slave，这样可以让数据冗余1份。 </p>
+<h1><span id="创建配置文件">创建配置文件</span></h1><p>需要n个节点的redis集群，就创建n份redis配置文件。For example：7001.conf 7002.conf 7003.conf 7004.conf 7005.conf 7006.conf</p>
 <p>创建备用目录</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mkdir -pv /etc/redis-cluter</span><br><span class="line">mkdir -pv /var/log/redis</span><br><span class="line">mkdir -pv /var/redis/7001</span><br><span class="line">mv /usr/local/common/redis-3.28/redis.conf /etc/redis/7001.conf</span><br><span class="line">vi /etc/redis/7001.conf</span><br></pre></td></tr></table></figure>
 <p>修改7001.conf以下配置项</p>
@@ -64,7 +65,8 @@
     
     <summary type="html">
     
-      &lt;h1 id=&quot;创建配置文件&quot;&gt;&lt;a href=&quot;#创建配置文件&quot; class=&quot;headerlink&quot; title=&quot;创建配置文件&quot;&gt;&lt;/a&gt;创建配置文件&lt;/h1&gt;&lt;p&gt;需要n个节点的redis集群，就创建n份redis配置文件。For example：7001.conf 7002.conf 7003.conf 7004.conf 7005.conf 7006.conf&lt;/p&gt;
+      &lt;p&gt;官方推荐至少3个master，3个slave，这样可以让数据冗余1份。 &lt;/p&gt;
+&lt;h1 id=&quot;创建配置文件&quot;&gt;&lt;a href=&quot;#创建配置文件&quot; class=&quot;headerlink&quot; title=&quot;创建配置文件&quot;&gt;&lt;/a&gt;创建配置文件&lt;/h1&gt;&lt;p&gt;需要n个节点的redis集群，就创建n份redis配置文件。For example：7001.conf 7002.conf 7003.conf 7004.conf 7005.conf 7006.conf&lt;/p&gt;
 &lt;p&gt;创建备用目录&lt;/p&gt;
 &lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;mkdir -pv /etc/redis-cluter&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;mkdir -pv /var/log/redis&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;mkdir -pv /var/redis/7001&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;mv /usr/local/common/redis-3.28/redis.conf /etc/redis/7001.conf&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;vi /etc/redis/7001.conf&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 &lt;p&gt;修改7001.conf以下配置项&lt;/p&gt;
@@ -422,13 +424,13 @@
     </summary>
     
     
-      <category term="MariaDB" scheme="http://www.forwardlee.com/tags/MariaDB/"/>
-    
-      <category term="Keepalived" scheme="http://www.forwardlee.com/tags/Keepalived/"/>
-    
       <category term="Galera" scheme="http://www.forwardlee.com/tags/Galera/"/>
     
       <category term="CentOS" scheme="http://www.forwardlee.com/tags/CentOS/"/>
+    
+      <category term="MariaDB" scheme="http://www.forwardlee.com/tags/MariaDB/"/>
+    
+      <category term="Keepalived" scheme="http://www.forwardlee.com/tags/Keepalived/"/>
     
   </entry>
   
@@ -450,9 +452,9 @@
     </summary>
     
     
-      <category term="Galera" scheme="http://www.forwardlee.com/tags/Galera/"/>
-    
       <category term="MySQL" scheme="http://www.forwardlee.com/tags/MySQL/"/>
+    
+      <category term="Galera" scheme="http://www.forwardlee.com/tags/Galera/"/>
     
   </entry>
   
@@ -499,11 +501,11 @@
     </summary>
     
     
-      <category term="Keepalived" scheme="http://www.forwardlee.com/tags/Keepalived/"/>
+      <category term="MySQL" scheme="http://www.forwardlee.com/tags/MySQL/"/>
     
       <category term="Galera" scheme="http://www.forwardlee.com/tags/Galera/"/>
     
-      <category term="MySQL" scheme="http://www.forwardlee.com/tags/MySQL/"/>
+      <category term="Keepalived" scheme="http://www.forwardlee.com/tags/Keepalived/"/>
     
   </entry>
   
@@ -549,11 +551,11 @@
     </summary>
     
     
+      <category term="MySQL" scheme="http://www.forwardlee.com/tags/MySQL/"/>
+    
       <category term="Galera" scheme="http://www.forwardlee.com/tags/Galera/"/>
     
       <category term="CentOS" scheme="http://www.forwardlee.com/tags/CentOS/"/>
-    
-      <category term="MySQL" scheme="http://www.forwardlee.com/tags/MySQL/"/>
     
   </entry>
   
@@ -595,9 +597,9 @@
     </summary>
     
     
-      <category term="MariaDB" scheme="http://www.forwardlee.com/tags/MariaDB/"/>
-    
       <category term="Galera" scheme="http://www.forwardlee.com/tags/Galera/"/>
+    
+      <category term="MariaDB" scheme="http://www.forwardlee.com/tags/MariaDB/"/>
     
       <category term="Docker" scheme="http://www.forwardlee.com/tags/Docker/"/>
     
