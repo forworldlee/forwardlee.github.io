@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="PHP,Laravel5," />
+  <meta name="keywords" content="Redis,Redis集群," />
 
 
 
@@ -81,18 +81,18 @@
 
 
 
-<meta name="description" content="总结学习方法，实践技术技能。">
-<meta name="keywords" content="PHP,Laravel5">
+<meta name="description" content="fork导致的Redis延时增大Redis在进行RDB和AOF持久化时，为了使主进程继续提供读写服务，Redis就会fork一个子进程进行RDB和AOF持久化，子进程会拷贝Redis主进程的全量数据，此时Redis会阻塞执行读写服务，如果Redis中存储的数据量过大，那么在拷贝时耗时会增大，因为阻塞导致Redis的响应速度从几毫秒延迟到几百或者达到1秒。 解决方案：单个Redis实例分配的内存空间">
+<meta name="keywords" content="Redis,Redis集群">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Laravel 5.x进阶笔记（二）">
-<meta property="og:url" content="http://www.forwardlee.com/2017/08/01/p/Laravel5.x进阶笔记（三）/index.html">
+<meta property="og:title" content="Redis生产环境常见问题及优化">
+<meta property="og:url" content="http://www.forwardlee.com/2018/06/06/Redis生产环境常见问题及优化/index.html">
 <meta property="og:site_name" content="不忘初心">
-<meta property="og:description" content="总结学习方法，实践技术技能。">
+<meta property="og:description" content="fork导致的Redis延时增大Redis在进行RDB和AOF持久化时，为了使主进程继续提供读写服务，Redis就会fork一个子进程进行RDB和AOF持久化，子进程会拷贝Redis主进程的全量数据，此时Redis会阻塞执行读写服务，如果Redis中存储的数据量过大，那么在拷贝时耗时会增大，因为阻塞导致Redis的响应速度从几毫秒延迟到几百或者达到1秒。 解决方案：单个Redis实例分配的内存空间">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-08-01T08:21:34.000Z">
+<meta property="og:updated_time" content="2018-06-06T09:16:38.860Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Laravel 5.x进阶笔记（二）">
-<meta name="twitter:description" content="总结学习方法，实践技术技能。">
+<meta name="twitter:title" content="Redis生产环境常见问题及优化">
+<meta name="twitter:description" content="fork导致的Redis延时增大Redis在进行RDB和AOF持久化时，为了使主进程继续提供读写服务，Redis就会fork一个子进程进行RDB和AOF持久化，子进程会拷贝Redis主进程的全量数据，此时Redis会阻塞执行读写服务，如果Redis中存储的数据量过大，那么在拷贝时耗时会增大，因为阻塞导致Redis的响应速度从几毫秒延迟到几百或者达到1秒。 解决方案：单个Redis实例分配的内存空间">
 
 
 
@@ -122,13 +122,13 @@
 
 
 
-  <link rel="canonical" href="http://www.forwardlee.com/2017/08/01/p/Laravel5.x进阶笔记（三）/"/>
+  <link rel="canonical" href="http://www.forwardlee.com/2018/06/06/Redis生产环境常见问题及优化/"/>
 
 
 
 
 
-  <title>Laravel 5.x进阶笔记（二） | 不忘初心</title>
+  <title>Redis生产环境常见问题及优化 | 不忘初心</title>
   
 
 
@@ -319,7 +319,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2017/08/01/p/Laravel5.x进阶笔记（三）/">
+    <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2018/06/06/Redis生产环境常见问题及优化/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="ForwardLee">
@@ -336,7 +336,7 @@
 
         
         
-          <h2 class="post-title" itemprop="name headline">Laravel 5.x进阶笔记（二）</h2>
+          <h2 class="post-title" itemprop="name headline">Redis生产环境常见问题及优化</h2>
         
 
         <div class="post-meta">
@@ -348,8 +348,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-01T14:42:53+08:00">
-                2017-08-01
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-06T14:33:39+08:00">
+                2018-06-06
               </time>
             
 
@@ -386,7 +386,33 @@
       
 
       
-        
+        <h1><span id="fork导致的redis延时增大">fork导致的Redis延时增大</span></h1><p>Redis在进行RDB和AOF持久化时，为了使主进程继续提供读写服务，Redis就会fork一个子进程进行RDB和AOF持久化，子进程会拷贝Redis主进程的全量数据，此时Redis会阻塞执行读写服务，如果Redis中存储的数据量过大，那么在拷贝时耗时会增大，因为阻塞导致Redis的响应速度从几毫秒延迟到几百或者达到1秒。</p>
+<p><strong>解决方案：</strong>单个Redis实例分配的内存空间不要大于10G，降低fork给Redis带来的延迟影响</p>
+<h1><span id="一主多从导致的复制风暴问题">一主多从导致的复制风暴问题</span></h1><p>如果一个Master带有n多个Slava，可能会出现Slave在某一个时间节点，同时对Master进行复制，那么就会导致网络带宽被复制数据占满，导致Redis服务不可用。</p>
+<p><strong>解决方案：</strong>把围绕一个Master创建n个Slave的网络拓扑结构进行优化，减少1个Master的Slave节点。Redis集群只支持一层Slave，如果要使用更多的Slave节点，那么就不能使用集群，而使用Redis的主从复制能力进行纵向扩展，给Slave节点创建Slave节点，使Redis节点成树形结构。</p>
+<h1><span id="aof持久化导致的redis阻塞问题">AOF持久化导致的Redis阻塞问题</span></h1><p>Redis的AOF持久化方式，把数据以Redis写指令日志的形式先被写入os cache，然后进每秒进行fsync操作，把数据从os cache落入磁盘。Redis自身会对fsync的状态进行检查，如果两次fsync操作的时间间隔超过2s，那么Redis的写数据服务就会被阻塞，整个Redis的写服务就会被严重拖慢。</p>
+<p><strong>解决方案：</strong> 造成两次fsync操作的间隔超过两秒，是因为磁盘的I/O性能不足所导致数据不能高效地从os cache落入磁盘，可以通过更换SSD固态硬盘，提高磁盘的I/O来提高fsync的数据写入速度，减少延迟。</p>
+<h1><span id="主从复制的数据同步状态延迟较大">主从复制的数据同步状态延迟较大</span></h1><p>Redis在主从复制过程中，可能因为网络等例外因素导致主从复制延迟过大问题，影响Redis的数据一致性。</p>
+<p><strong>解决方案：</strong>人为介入，写定时任务脚本检查主从复制的offset值之间的差值，当差值达到预设阈值时，进行报警通知，排查估值，使主从复制的数据延迟缩小到有效范围内。</p>
+<h1><span id="redis申请内存的linux内核参数优化-vmovercommit_memory">Redis申请内存的linux内核参数优化-vm.overcommit_memory</span></h1><p>看一下redis启动日志的警告提醒：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">25483:M 27 May 13:41:39.856 # WARNING overcommit_memory is set to 0! Background save may fail under low memory condition. </span><br><span class="line">To fix this issue add &apos;vm.overcommit_memory = 1&apos; to /etc/sysctl.conf and then reboot or run the command &apos;sysctl vm.overcommit_memory=1&apos; for this to take effect.</span><br></pre></td></tr></table></figure>
+<p>0：检查有没有足够的内存，没有的话申请内存失败。例如fork子进程时申请内存，可能因为申请不到内存导致fork操作失败。<br>1：允许使用内存，直到用完为止。<strong>常用配置</strong><br>2：内存地址使用率不能超过swap+50%</p>
+<p>按照redis的警告提醒进行修改：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cat /proc/sys/vm/overcommit_memory</span><br><span class="line">echo &quot;vm.overcommit_memory=1&quot; &gt;&gt; /etc/sysctl.conf</span><br><span class="line">sysctl vm.overcommit_memory=1</span><br></pre></td></tr></table></figure>
+<h1><span id="redis申请内存的linux内核参数优化-swappiness">Redis申请内存的linux内核参数优化-swappiness</span></h1><p>设置linux在内存不足时，是否杀掉进程以获得更多空间。<br>查看linux内核版本</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat /proc/version</span><br></pre></td></tr></table></figure>
+<p>linux内核版本&lt;3.5，swappiness设置为0，<br>linux内核版本&gt;=3.5，swappiness设置为1，<br>这样在内存不足时lunix进行swap操作，也不会杀掉进程，保证Redis进程不会被linux杀掉。</p>
+<p>修改方法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">echo 0 &gt; /proc/sys/vm/swappiness</span><br><span class="line">echo vm.swappiness=0 &gt;&gt; /etc/sysctl.conf</span><br></pre></td></tr></table></figure>
+<h1><span id="linux打开的文件句柄数修改">linux打开的文件句柄数修改</span></h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">25525:M 27 May 15:48:29.008 * Increased maximum number of open files to 10032 (it was originally set to 1024).</span><br></pre></td></tr></table></figure>
+<p>linux系统默认的打开句柄数最大为1024，修改为10032。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ulimit -n 10032 10032</span><br></pre></td></tr></table></figure>
+<h1><span id="linux内核进行tcp-socket连接通信参数优化-tcp-backlog">linux内核进行TCP Socket连接通信参数优化-tcp backlog</span></h1><p>backlog在Redis主从复制时，用来缓存每次进行socket连接复制的数据和offset。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">25483:M 27 May 13:41:39.856 # WARNING: The TCP backlog setting of 511 cannot be enforced because /proc/sys/net/core/somaxconn is set to the lower value of 128.</span><br></pre></td></tr></table></figure>
+<p>修改</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo 511 &gt;&gt; /proc/sys/net/core/somaxconn</span><br></pre></td></tr></table></figure>
+<p>PS:TCP socket服务开发的4个步骤 socket-&gt;bind-&gt;listen-&gt;accept<br>调用listen函数时,有一个backlog参数，此时TCP请求的连接状态是ESTABLISHED，TCP backlog值表示的就是ESTABLISHED状态的请求连接所在的队列大小，在linux内核中/proc/sys/net/core/somaxconn进行设置。</p>
+
       
     </div>
     
@@ -427,9 +453,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/PHP/" rel="tag"># PHP</a>
+            <a href="/tags/Redis/" rel="tag"># Redis</a>
           
-            <a href="/tags/Laravel5/" rel="tag"># Laravel5</a>
+            <a href="/tags/Redis集群/" rel="tag"># Redis集群</a>
           
         </div>
       
@@ -457,8 +483,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/05/21/Docker清理命令/" rel="next" title="Docker清理命令">
-                <i class="fa fa-chevron-left"></i> Docker清理命令
+              <a href="/2018/06/01/Redis-Cluster维护/" rel="next" title="Redis Cluster维护">
+                <i class="fa fa-chevron-left"></i> Redis Cluster维护
               </a>
             
           </div>
@@ -466,10 +492,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/08/01/p/Laravel5.x进阶笔记（一）/" rel="prev" title="Laravel 5.x进阶笔记（一）">
-                Laravel 5.x进阶笔记（一） <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -521,8 +543,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -622,6 +653,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">1.</span> <span class="nav-text">fork导致的Redis延时增大</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">2.</span> <span class="nav-text">一主多从导致的复制风暴问题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">3.</span> <span class="nav-text">AOF持久化导致的Redis阻塞问题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">4.</span> <span class="nav-text">主从复制的数据同步状态延迟较大</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">5.</span> <span class="nav-text">Redis申请内存的linux内核参数优化-vm.overcommit_memory</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">6.</span> <span class="nav-text">Redis申请内存的linux内核参数优化-swappiness</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">7.</span> <span class="nav-text">linux打开的文件句柄数修改</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">8.</span> <span class="nav-text">linux内核进行TCP Socket连接通信参数优化-tcp backlog</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
