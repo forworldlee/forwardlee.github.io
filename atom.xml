@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.forwardlee.com/"/>
-  <updated>2018-06-06T09:16:38.860Z</updated>
+  <updated>2018-06-06T09:20:09.813Z</updated>
   <id>http://www.forwardlee.com/</id>
   
   <author>
@@ -20,12 +20,13 @@
     <link href="http://www.forwardlee.com/2018/06/06/Redis%E7%94%9F%E4%BA%A7%E7%8E%AF%E5%A2%83%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E5%8F%8A%E4%BC%98%E5%8C%96/"/>
     <id>http://www.forwardlee.com/2018/06/06/Redis生产环境常见问题及优化/</id>
     <published>2018-06-06T06:33:39.000Z</published>
-    <updated>2018-06-06T09:16:38.860Z</updated>
+    <updated>2018-06-06T09:20:09.813Z</updated>
     
     <content type="html"><![CDATA[<h1><span id="fork导致的redis延时增大">fork导致的Redis延时增大</span></h1><p>Redis在进行RDB和AOF持久化时，为了使主进程继续提供读写服务，Redis就会fork一个子进程进行RDB和AOF持久化，子进程会拷贝Redis主进程的全量数据，此时Redis会阻塞执行读写服务，如果Redis中存储的数据量过大，那么在拷贝时耗时会增大，因为阻塞导致Redis的响应速度从几毫秒延迟到几百或者达到1秒。</p>
 <p><strong>解决方案：</strong>单个Redis实例分配的内存空间不要大于10G，降低fork给Redis带来的延迟影响</p>
 <h1><span id="一主多从导致的复制风暴问题">一主多从导致的复制风暴问题</span></h1><p>如果一个Master带有n多个Slava，可能会出现Slave在某一个时间节点，同时对Master进行复制，那么就会导致网络带宽被复制数据占满，导致Redis服务不可用。</p>
 <p><strong>解决方案：</strong>把围绕一个Master创建n个Slave的网络拓扑结构进行优化，减少1个Master的Slave节点。Redis集群只支持一层Slave，如果要使用更多的Slave节点，那么就不能使用集群，而使用Redis的主从复制能力进行纵向扩展，给Slave节点创建Slave节点，使Redis节点成树形结构。</p>
+<a id="more"></a>
 <h1><span id="aof持久化导致的redis阻塞问题">AOF持久化导致的Redis阻塞问题</span></h1><p>Redis的AOF持久化方式，把数据以Redis写指令日志的形式先被写入os cache，然后进每秒进行fsync操作，把数据从os cache落入磁盘。Redis自身会对fsync的状态进行检查，如果两次fsync操作的时间间隔超过2s，那么Redis的写数据服务就会被阻塞，整个Redis的写服务就会被严重拖慢。</p>
 <p><strong>解决方案：</strong> 造成两次fsync操作的间隔超过两秒，是因为磁盘的I/O性能不足所导致数据不能高效地从os cache落入磁盘，可以通过更换SSD固态硬盘，提高磁盘的I/O来提高fsync的数据写入速度，减少延迟。</p>
 <h1><span id="主从复制的数据同步状态延迟较大">主从复制的数据同步状态延迟较大</span></h1><p>Redis在主从复制过程中，可能因为网络等例外因素导致主从复制延迟过大问题，影响Redis的数据一致性。</p>
@@ -52,7 +53,10 @@
     
     <summary type="html">
     
-      &lt;h1&gt;&lt;span id=&quot;fork导致的redis延时增大&quot;&gt;fork导致的Redis延时增大&lt;/span&gt;&lt;/h1&gt;&lt;p&gt;Redis在进行RDB和AOF持久化时，为了使主进程继续提供读写服务，Redis就会fork一个子进程进行RDB和AOF持久化，子进程会拷贝Redis主进
+      &lt;h1 id=&quot;fork导致的Redis延时增大&quot;&gt;&lt;a href=&quot;#fork导致的Redis延时增大&quot; class=&quot;headerlink&quot; title=&quot;fork导致的Redis延时增大&quot;&gt;&lt;/a&gt;fork导致的Redis延时增大&lt;/h1&gt;&lt;p&gt;Redis在进行RDB和AOF持久化时，为了使主进程继续提供读写服务，Redis就会fork一个子进程进行RDB和AOF持久化，子进程会拷贝Redis主进程的全量数据，此时Redis会阻塞执行读写服务，如果Redis中存储的数据量过大，那么在拷贝时耗时会增大，因为阻塞导致Redis的响应速度从几毫秒延迟到几百或者达到1秒。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;解决方案：&lt;/strong&gt;单个Redis实例分配的内存空间不要大于10G，降低fork给Redis带来的延迟影响&lt;/p&gt;
+&lt;h1 id=&quot;一主多从导致的复制风暴问题&quot;&gt;&lt;a href=&quot;#一主多从导致的复制风暴问题&quot; class=&quot;headerlink&quot; title=&quot;一主多从导致的复制风暴问题&quot;&gt;&lt;/a&gt;一主多从导致的复制风暴问题&lt;/h1&gt;&lt;p&gt;如果一个Master带有n多个Slava，可能会出现Slave在某一个时间节点，同时对Master进行复制，那么就会导致网络带宽被复制数据占满，导致Redis服务不可用。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;解决方案：&lt;/strong&gt;把围绕一个Master创建n个Slave的网络拓扑结构进行优化，减少1个Master的Slave节点。Redis集群只支持一层Slave，如果要使用更多的Slave节点，那么就不能使用集群，而使用Redis的主从复制能力进行纵向扩展，给Slave节点创建Slave节点，使Redis节点成树形结构。&lt;/p&gt;
     
     </summary>
     
@@ -931,6 +935,24 @@
   </entry>
   
   <entry>
+    <title>Laravel 5.x进阶笔记（二）</title>
+    <link href="http://www.forwardlee.com/2017/08/01/p/Laravel5.x%E8%BF%9B%E9%98%B6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89/"/>
+    <id>http://www.forwardlee.com/2017/08/01/p/Laravel5.x进阶笔记（三）/</id>
+    <published>2017-08-01T06:42:53.000Z</published>
+    <updated>2017-08-01T08:21:34.000Z</updated>
+    
+    <summary type="html">
+    
+    </summary>
+    
+    
+      <category term="PHP" scheme="http://www.forwardlee.com/tags/PHP/"/>
+    
+      <category term="Laravel5" scheme="http://www.forwardlee.com/tags/Laravel5/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Laravel 5.x进阶笔记（一）</title>
     <link href="http://www.forwardlee.com/2017/08/01/p/Laravel5.x%E8%BF%9B%E9%98%B6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/"/>
     <id>http://www.forwardlee.com/2017/08/01/p/Laravel5.x进阶笔记（一）/</id>
@@ -985,24 +1007,6 @@
     
       &lt;h2&gt;&lt;span id=&quot;默认条件&quot;&gt;默认条件&lt;/span&gt;&lt;/h2&gt;&lt;p&gt;MacOS，&amp;gt;=PHP5.4，翻墙环境（默认创建的项目会请求*.google.com）&lt;br&gt;懂得PHP基础知识和MVC的基本架构，开发环境已经安装Laravel所需的命令环境。&lt;/p&gt;
 &lt;h2&gt;
-    
-    </summary>
-    
-    
-      <category term="PHP" scheme="http://www.forwardlee.com/tags/PHP/"/>
-    
-      <category term="Laravel5" scheme="http://www.forwardlee.com/tags/Laravel5/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Laravel 5.x进阶笔记（二）</title>
-    <link href="http://www.forwardlee.com/2017/08/01/p/Laravel5.x%E8%BF%9B%E9%98%B6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89/"/>
-    <id>http://www.forwardlee.com/2017/08/01/p/Laravel5.x进阶笔记（三）/</id>
-    <published>2017-08-01T06:42:53.000Z</published>
-    <updated>2017-08-01T08:21:34.000Z</updated>
-    
-    <summary type="html">
     
     </summary>
     

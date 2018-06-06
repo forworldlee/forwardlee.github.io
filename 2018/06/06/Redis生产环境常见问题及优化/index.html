@@ -89,7 +89,7 @@
 <meta property="og:site_name" content="不忘初心">
 <meta property="og:description" content="fork导致的Redis延时增大Redis在进行RDB和AOF持久化时，为了使主进程继续提供读写服务，Redis就会fork一个子进程进行RDB和AOF持久化，子进程会拷贝Redis主进程的全量数据，此时Redis会阻塞执行读写服务，如果Redis中存储的数据量过大，那么在拷贝时耗时会增大，因为阻塞导致Redis的响应速度从几毫秒延迟到几百或者达到1秒。 解决方案：单个Redis实例分配的内存空间">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-06-06T09:16:38.860Z">
+<meta property="og:updated_time" content="2018-06-06T09:20:09.813Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Redis生产环境常见问题及优化">
 <meta name="twitter:description" content="fork导致的Redis延时增大Redis在进行RDB和AOF持久化时，为了使主进程继续提供读写服务，Redis就会fork一个子进程进行RDB和AOF持久化，子进程会拷贝Redis主进程的全量数据，此时Redis会阻塞执行读写服务，如果Redis中存储的数据量过大，那么在拷贝时耗时会增大，因为阻塞导致Redis的响应速度从几毫秒延迟到几百或者达到1秒。 解决方案：单个Redis实例分配的内存空间">
@@ -390,6 +390,7 @@
 <p><strong>解决方案：</strong>单个Redis实例分配的内存空间不要大于10G，降低fork给Redis带来的延迟影响</p>
 <h1><span id="一主多从导致的复制风暴问题">一主多从导致的复制风暴问题</span></h1><p>如果一个Master带有n多个Slava，可能会出现Slave在某一个时间节点，同时对Master进行复制，那么就会导致网络带宽被复制数据占满，导致Redis服务不可用。</p>
 <p><strong>解决方案：</strong>把围绕一个Master创建n个Slave的网络拓扑结构进行优化，减少1个Master的Slave节点。Redis集群只支持一层Slave，如果要使用更多的Slave节点，那么就不能使用集群，而使用Redis的主从复制能力进行纵向扩展，给Slave节点创建Slave节点，使Redis节点成树形结构。</p>
+<a id="more"></a>
 <h1><span id="aof持久化导致的redis阻塞问题">AOF持久化导致的Redis阻塞问题</span></h1><p>Redis的AOF持久化方式，把数据以Redis写指令日志的形式先被写入os cache，然后进每秒进行fsync操作，把数据从os cache落入磁盘。Redis自身会对fsync的状态进行检查，如果两次fsync操作的时间间隔超过2s，那么Redis的写数据服务就会被阻塞，整个Redis的写服务就会被严重拖慢。</p>
 <p><strong>解决方案：</strong> 造成两次fsync操作的间隔超过两秒，是因为磁盘的I/O性能不足所导致数据不能高效地从os cache落入磁盘，可以通过更换SSD固态硬盘，提高磁盘的I/O来提高fsync的数据写入速度，减少延迟。</p>
 <h1><span id="主从复制的数据同步状态延迟较大">主从复制的数据同步状态延迟较大</span></h1><p>Redis在主从复制过程中，可能因为网络等例外因素导致主从复制延迟过大问题，影响Redis的数据一致性。</p>
