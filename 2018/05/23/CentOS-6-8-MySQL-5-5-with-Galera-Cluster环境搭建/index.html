@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Galera,MySQL,CentOS," />
+  <meta name="keywords" content="MySQL,Galera,CentOS," />
 
 
 
@@ -82,7 +82,7 @@
 
 
 <meta name="description" content="123456789101112131415161718##先安装依赖库yum install libaio gcc gcc-c++ boost-devel scons check-devel openssl-develln -sf /usr/lib64/libssl.so.10 /usr/lib64/libssl.so.6ln -sf /usr/lib64/libcrypto.so.10 /usr">
-<meta name="keywords" content="Galera,MySQL,CentOS">
+<meta name="keywords" content="MySQL,Galera,CentOS">
 <meta property="og:type" content="article">
 <meta property="og:title" content="CentOS 6.8+MySQL 5.5 with Galera Cluster环境搭建">
 <meta property="og:url" content="http://www.forwardlee.com/2018/05/23/CentOS-6-8-MySQL-5-5-with-Galera-Cluster环境搭建/index.html">
@@ -368,7 +368,7 @@
                   <i class="fa fa-comment-o"></i>
                 </span>
                 <a href="/2018/05/23/CentOS-6-8-MySQL-5-5-with-Galera-Cluster环境搭建/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2018/05/23/CentOS-6-8-MySQL-5-5-with-Galera-Cluster环境搭建/" itemprop="commentCount"></span>
+                  <span class="post-comments-count gitment-comments-count" data-xid="/2018/05/23/CentOS-6-8-MySQL-5-5-with-Galera-Cluster环境搭建/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -463,9 +463,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Galera/" rel="tag"># Galera</a>
-          
             <a href="/tags/MySQL/" rel="tag"># MySQL</a>
+          
+            <a href="/tags/Galera/" rel="tag"># Galera</a>
           
             <a href="/tags/CentOS/" rel="tag"># CentOS</a>
           
@@ -538,7 +538,11 @@
 
   
     <div class="comments" id="comments">
+      
+        <div id="gitment-container"></div>
+      
     </div>
+
   
 
 
@@ -847,30 +851,45 @@
 
 
 
+<!-- LOCAL: You can save these files to your site and update links -->
+    
+        
+        <link rel="stylesheet" href="https://aimingoo.github.io/gitmint/style/default.css">
+        <script src="https://aimingoo.github.io/gitmint/dist/gitmint.browser.js"></script>
+    
+<!-- END LOCAL -->
+
+    
+
+    
+      <script type="text/javascript">
+      function renderGitment(){
+        var gitment = new Gitmint({
+            id: window.location.pathname, 
+            owner: '5186712',
+            repo: 'gitment',
+            
+            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
+            
+            oauth: {
+            
+            
+                client_secret: 'e84ed43a122ffe38e55a2372f27e4639ec673564',
+            
+                client_id: '38b9430818b98ed8d839'
+            }});
+        gitment.render('gitment-container');
+      }
+
+      
+      renderGitment();
+      
+      </script>
+    
 
 
 
-  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
-  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
-  
-  <script type="text/javascript">
-    var GUEST = ['nick','mail','link'];
-    var guest = 'nick,mail,link';
-    guest = guest.split(',').filter(item=>{
-      return GUEST.indexOf(item)>-1;
-    });
-    new Valine({
-        el: '#comments' ,
-        verify: false,
-        notify: false,
-        appId: '8zBXKOvCpU95bOyr2dxOw0hH-gzGzoHsz',
-        appKey: 'cKzoQMRVL8HhjvXGJp3obspJ',
-        placeholder: 'Just go go',
-        avatar:'mm',
-        guest_info:guest,
-        pageSize:'10' || 10,
-    });
-  </script>
+
 
 
 
