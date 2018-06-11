@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.forwardlee.com/"/>
-  <updated>2018-06-07T04:39:16.589Z</updated>
+  <updated>2018-06-11T12:02:22.103Z</updated>
   <id>http://www.forwardlee.com/</id>
   
   <author>
@@ -14,6 +14,26 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>tttttttttt</title>
+    <link href="http://www.forwardlee.com/2018/06/11/tttttttttt/"/>
+    <id>http://www.forwardlee.com/2018/06/11/tttttttttt/</id>
+    <published>2018-06-11T12:02:08.000Z</published>
+    <updated>2018-06-11T12:02:22.103Z</updated>
+    
+    <content type="html"><![CDATA[<p>dsafdafadfadf</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;dsafdafadfadf&lt;/p&gt;
+
+    
+    </summary>
+    
+    
+  </entry>
   
   <entry>
     <title>数据库和缓存致数据不一致问题分析和解决方案</title>
@@ -953,71 +973,6 @@
     <summary type="html">
     
       &lt;h2&gt;&lt;span id=&quot;在浏览器中展示创建的article列表&quot;&gt;在浏览器中展示创建的Article列表&lt;/span&gt;&lt;/h2&gt;&lt;p&gt;在浏览器中展示创建的Article数据，需要使用Http请求Web服务器，Web服务器接收请求并将Article数据在视图页面中展示，即MVC
-    
-    </summary>
-    
-    
-      <category term="PHP" scheme="http://www.forwardlee.com/tags/PHP/"/>
-    
-      <category term="Laravel5" scheme="http://www.forwardlee.com/tags/Laravel5/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Laravel 5.x进阶笔记（一）</title>
-    <link href="http://www.forwardlee.com/2017/08/01/p/Laravel5.x%E8%BF%9B%E9%98%B6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/"/>
-    <id>http://www.forwardlee.com/2017/08/01/p/Laravel5.x进阶笔记（一）/</id>
-    <published>2017-08-01T06:42:53.000Z</published>
-    <updated>2017-08-01T08:28:46.000Z</updated>
-    
-    <content type="html"><![CDATA[<h2><span id="默认条件">默认条件</span></h2><p>MacOS，&gt;=PHP5.4，翻墙环境（默认创建的项目会请求*.google.com）<br>懂得PHP基础知识和MVC的基本架构，开发环境已经安装Laravel所需的命令环境。</p>
-<h2><span id="配置composer中国镜像使得本地开发环境下载依赖速度更快">配置composer中国镜像，使得本地开发环境下载依赖速度更快。</span></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">composer config -g repo.packagist composer https://packagist.phpcomposer.com</span><br></pre></td></tr></table></figure>
-<h2><span id="创建laravel项目">创建Laravel项目</span></h2><p>进入项目的工作空间目录</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd ~/workspace</span><br></pre></td></tr></table></figure>
-<p>创建Laravel项目<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">composer -vvv create-project laravel/laravel learnlaravel5 5.2.31</span><br></pre></td></tr></table></figure></p>
-<p>项目创建完成，进入刚刚创建的项目，并使用PHP内置server服务启动项目，访问页面验证。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd learnlaravel5/public</span><br><span class="line">php -S 0.0.0.0:1024</span><br></pre></td></tr></table></figure>
-<p>页面效果<br><img src="/images/15011226008351.jpg" alt=""><br>使用1024端口访问的目的是Unix系统的动态端口的开始端口，不需要进行端口配置，就可以启动监听。<br>如果单纯要学习Laravel或者PHP，请不要使用apache或者nginx这样的web服务器启动项目，对学习本身带来影响。</p>
-<h2><span id="启用laravel针对php54版本的trait特性实现用户注册登录的功能实现简单的用户权限管理">启用Laravel针对PHP5.4版本的trait特性实现用户注册登录的功能，实现简单的用户权限管理</span></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd .. ##cd ~/workspace/learnlaravel5</span><br><span class="line">php artisan make:auth</span><br></pre></td></tr></table></figure>
-<p>不需要停止php -S即可直接访问localhost:1024/login查看生成登录页面<br><img src="/images/15011235293792.jpg" alt=""></p>
-<h2><span id="mysql创建数据库laravel5用户名和密码均为root">Mysql创建数据库laravel5，用户名和密码均为root</span></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">create database laravel5</span><br></pre></td></tr></table></figure>
-<h2><span id="修改learnlaravel5项目的配置文件">修改learnlaravel5项目的配置文件</span></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd ~/workspace/learnlaravel5</span><br><span class="line">open .env ##.env文件不存在，需要拷贝一份.env.example</span><br></pre></td></tr></table></figure>
-<p>修改配置项</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">DB_CONNECTION=mysql</span><br><span class="line">DB_HOST=127.0.0.1</span><br><span class="line">DB_PORT=3306</span><br><span class="line">DB_DATABASE=laravel5</span><br><span class="line">DB_USERNAME=root</span><br><span class="line">DB_PASSWORD=root</span><br></pre></td></tr></table></figure>
-<h2><span id="使用laravel默认的数据库描述文件创建表">使用laravel默认的数据库描述文件创建表</span></h2><p>执行命令创建表</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php artisan migrate</span><br></pre></td></tr></table></figure>
-<p>migrate命令要执行的php描述文件是learnlaravel5/database/migrations下的文件</p>
-<ul>
-<li>2014_10_12_000000_create_users_table.php</li>
-<li>2014_10_12_100000_create_password_resets_table.php<br>再查看一下laravel5数据库中是否创建了这两个描述文件中的表，如果已经创建，说明命令执行成功，就可以用注册页面注册用户了，赶快试一试。<h2><span id="使用-laravel-的葵花宝典eloquent">使用 Laravel 的“葵花宝典”：Eloquent</span></h2>Eloquent是Laravel定义的Model基类，只要Larave创建Model就会继承Eloquent类，此时创建的Model就具有了十个异常强大的函数，从此想干啥事儿都是一行代码就搞定，创建一个Article的Model体验一下：</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php artisan make:model Article</span><br></pre></td></tr></table></figure>
-<p>创建Article对应的数据库描述文件</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php artisan make:migration create_article_table</span><br></pre></td></tr></table></figure>
-<p>打开刚刚创建的数据库迁移描述文件</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">open learnlaravel5/database/migration/*_create_article_table.php</span><br></pre></td></tr></table></figure>
-<p>修改文件的内容为：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line"></span><br><span class="line">use Illuminate\Database\Schema\Blueprint;</span><br><span class="line">use Illuminate\Database\Migrations\Migration;</span><br><span class="line"></span><br><span class="line">class CreateArticleTable extends Migration</span><br><span class="line">&#123;</span><br><span class="line">    /**</span><br><span class="line">     * Run the migrations.</span><br><span class="line">     *</span><br><span class="line">     * 创建文章表</span><br><span class="line">     *</span><br><span class="line">     * @return void</span><br><span class="line">     */</span><br><span class="line">    public function up()</span><br><span class="line">    &#123;</span><br><span class="line">        Schema::create(&apos;articles&apos;, function($table)</span><br><span class="line">        &#123;</span><br><span class="line">            $table-&gt;increments(&apos;id&apos;);</span><br><span class="line">            $table-&gt;string(&apos;title&apos;);</span><br><span class="line">            $table-&gt;text(&apos;body&apos;)-&gt;nullable();</span><br><span class="line">            $table-&gt;integer(&apos;user_id&apos;);</span><br><span class="line">            $table-&gt;timestamps();</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * Reverse the migrations.</span><br><span class="line">     *</span><br><span class="line">     * @return void</span><br><span class="line">     */</span><br><span class="line">    public function down()</span><br><span class="line">    &#123;</span><br><span class="line">        //</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>再次使用数据库迁移命令创建articles表</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php artisan migrate</span><br></pre></td></tr></table></figure>
-<p>执行完后，在laravel5的数据库中会创建出articles的表结构。<br>使用Seeder往数据库中插入默认数据。首先创建一个Seeder，例如：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php artisan make:seeder ArticleSeeder</span><br></pre></td></tr></table></figure>
-<p>在learnlaravel5/database/seeds/下打开并修改刚刚创建的ArticleSeeder.php文件，默认的run函数体为空，为其添加创建Article的数据脚本。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">public function run()</span><br><span class="line">    &#123;</span><br><span class="line">        DB::table(&apos;articles&apos;)-&gt;delete();</span><br><span class="line">        for ($i=0;$i&lt;10;$i++)&#123;</span><br><span class="line">            \App\Article::create([</span><br><span class="line">                &apos;title&apos;=&gt;&apos;Title&apos;.$i,</span><br><span class="line">                &apos;body&apos;=&gt;&apos;Body&apos;.$i,</span><br><span class="line">                &apos;user_id&apos;=&gt;1</span><br><span class="line">            ]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-<p>把ArticleSeeder注册到项目的数据库执行环境中。打开learnlaravel5/database/seeds/DatabaseSeeder.php，并修改run函数。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">public function run()</span><br><span class="line">    &#123;</span><br><span class="line">         $this-&gt;call(ArticleSeeder::class);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-<p>由于learnlaravel5/database目录不能被composer自动加载，所有需要执行命令让这个目录加载待composer环境，保证代码能找到ArticleSeedr这个类。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">composer dump-autoload</span><br></pre></td></tr></table></figure>
-<p>然后再执行</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php artisan db:seed</span><br></pre></td></tr></table></figure>
-<p>执行完，此时在数据库laravel5的article表中会产生10条数据。</p>
-<p>下一节再讲解如何展示插入的数据 &gt;&gt;&gt;<a href="http://www.forwardlee.com/2017/08/01/Laravel5.x%E8%BF%9B%E9%98%B6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%8C%EF%BC%89/">Laravel 5.x进阶笔记（二）</a></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2&gt;&lt;span id=&quot;默认条件&quot;&gt;默认条件&lt;/span&gt;&lt;/h2&gt;&lt;p&gt;MacOS，&amp;gt;=PHP5.4，翻墙环境（默认创建的项目会请求*.google.com）&lt;br&gt;懂得PHP基础知识和MVC的基本架构，开发环境已经安装Laravel所需的命令环境。&lt;/p&gt;
-&lt;h2&gt;
     
     </summary>
     
