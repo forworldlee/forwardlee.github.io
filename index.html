@@ -1,0 +1,2276 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="JAVA, 架构师, MySql, Redis, Memcached, HA, Docker, Storm, Kafka, Cluster" />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="不忘初心" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="总结学习方法，实践技术技能。">
+<meta property="og:type" content="website">
+<meta property="og:title" content="不忘初心">
+<meta property="og:url" content="http://www.forwardlee.com/index.html">
+<meta property="og:site_name" content="不忘初心">
+<meta property="og:description" content="总结学习方法，实践技术技能。">
+<meta property="og:locale" content="zh-Hans">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="不忘初心">
+<meta name="twitter:description" content="总结学习方法，实践技术技能。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":true,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://www.forwardlee.com/"/>
+
+
+
+
+
+  <title>不忘初心</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?50857b0d8e7884431cb1d182fefd4c1a";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left 
+  page-home">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">不忘初心</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">李奉华的个人博客</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+  <section id="posts" class="posts-expand">
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2018/06/11/测试评论/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ForwardLee">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/head.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="不忘初心">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/06/11/测试评论/" itemprop="url">测试评论</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-11T18:12:51+08:00">
+                2018-06-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>测试一下评论功能</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2018/06/07/数据库和缓存双写导致数据不一致问题分析和解决方案/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ForwardLee">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/head.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="不忘初心">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/06/07/数据库和缓存双写导致数据不一致问题分析和解决方案/" itemprop="url">数据库和缓存致数据不一致问题分析和解决方案</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-07T10:15:31+08:00">
+                2018-06-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1><span id="低并发读写更新数据和删除缓存的双写导致数据不一致">低并发读写—更新数据和删除缓存的双写导致数据不一致</span></h1><p><img src="/2018/06/07/数据库和缓存双写导致数据不一致问题分析和解决方案/1.png" alt="数据更新操作"><br>step1：更新数据库中的数据<br>step2：删除缓存<br>如果step1执行成功，step2执行失败，那么客户端获取缓存中的数据就是旧数据，而数据库中是新数据，造成数据不一致。</p>
+<p><strong>解决方案：</strong>先删除缓存，在执行数据库更新，保证缓存和数据库中数据一致。</p>
+<h1><span id="高并发读写更新数据和删除缓存双写导致数据不一致">高并发读写—更新数据和删除缓存双写导致数据不一致</span></h1><p>低并发的读写策略在高并发场景下也会出现数据不一致的问题，图片中展示的操作步骤就会出现此类问题。<br><img src="/2018/06/07/数据库和缓存双写导致数据不一致问题分析和解决方案/2.png" alt="优化后的数据更新操作"><br>step1：删除缓存<br>step2：更新数据库</p>
+<p>如果step1执行完，step2正在执行的过程中还未flush到数据库，此时，客户端来一个请求获取正在更新的数据，缓存中已经删除了该数据，那么服务端会转到后端服务从数据库中加载旧数据并存到缓存一份，恰巧缓存完成后，step2执行完成了，该数据在数据库被更新了，那么就导致数据库和缓存中的数据是不一致的。</p>
+<p><strong>解决方案：</strong>把并发读写的的指令在服务层内存做成串行队列按顺序执行，在内存中执行效率高，不会明显影响数据服务的响应速度。把被执行更新操作的对象id做hash，然后根据队列数取模，对应该对象的操作指令队列。（可采取nginx的hash路由功能，保证在读取每个对象数据时，每次都从同一个内存队列中执行）</p>
+<p>读写指令的内存队列：<br><img src="/2018/06/07/数据库和缓存双写导致数据不一致问题分析和解决方案/3.png" alt="指令内存队列"></p>
+<p>进一步优化，因为服务接口每次查询都会把数据放入缓存，那么有一个更新后堆积了大量的查询操作，就会造成数据读取性能。可以在查询操作在内存队列存储之前，先查找队列上一个指令是不是update操作，如果是update操作，那么就直接存储当前select操作，如果是select操作，那么就把当前的查询服务等待200ms后，等待上一个select完成把数据存入缓存，当前select转向查询缓存数据。</p>
+<p>优化后，出现update指令堆积的内存队列：<br><img src="/2018/06/07/数据库和缓存双写导致数据不一致问题分析和解决方案/4.png" alt="指令内存队列"></p>
+<p>PS：需要做数据演练，监视内存队列中update指令和最后一个select指令的个数，判断最后一个select需要等待前面n个update操作完成后的时间间隔t（单个update请求执行时间t/n应该小于10ms），t不能超过系统预期要求（通常要求一个读请求在200ms内完成）。如果内存队列堆积的update操作指令数据量太大，那么就需要考虑增加更多机器处理内存队列中的update操作，减少队列堆积量，提高服务接口的响应速度。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2018/06/06/Redis生产环境常见问题及优化/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ForwardLee">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/head.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="不忘初心">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/06/06/Redis生产环境常见问题及优化/" itemprop="url">Redis生产环境常见问题及优化</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-06T14:33:39+08:00">
+                2018-06-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="fork导致的Redis延时增大"><a href="#fork导致的Redis延时增大" class="headerlink" title="fork导致的Redis延时增大"></a>fork导致的Redis延时增大</h1><p>Redis在进行RDB和AOF持久化时，为了使主进程继续提供读写服务，Redis就会fork一个子进程进行RDB和AOF持久化，子进程会拷贝Redis主进程的全量数据，此时Redis会阻塞执行读写服务，如果Redis中存储的数据量过大，那么在拷贝时耗时会增大，因为阻塞导致Redis的响应速度从几毫秒延迟到几百或者达到1秒。</p>
+<p><strong>解决方案：</strong>单个Redis实例分配的内存空间不要大于10G，降低fork给Redis带来的延迟影响</p>
+<h1 id="一主多从导致的复制风暴问题"><a href="#一主多从导致的复制风暴问题" class="headerlink" title="一主多从导致的复制风暴问题"></a>一主多从导致的复制风暴问题</h1><p>如果一个Master带有n多个Slava，可能会出现Slave在某一个时间节点，同时对Master进行复制，那么就会导致网络带宽被复制数据占满，导致Redis服务不可用。</p>
+<p><strong>解决方案：</strong>把围绕一个Master创建n个Slave的网络拓扑结构进行优化，减少1个Master的Slave节点。Redis集群只支持一层Slave，如果要使用更多的Slave节点，那么就不能使用集群，而使用Redis的主从复制能力进行纵向扩展，给Slave节点创建Slave节点，使Redis节点成树形结构。</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/06/06/Redis生产环境常见问题及优化/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2018/06/01/Redis-Cluster维护/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ForwardLee">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/head.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="不忘初心">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/06/01/Redis-Cluster维护/" itemprop="url">Redis Cluster维护</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-01T16:49:11+08:00">
+                2018-06-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="增加Redis-Cluster-Master节点"><a href="#增加Redis-Cluster-Master节点" class="headerlink" title="增加Redis Cluster Master节点"></a>增加Redis Cluster Master节点</h1><p>在安装了Redis Cluster集群环境机器上执行增加节点命令。<br>redis-trib.rb add-node NEW_NODE ANY_NODE_OF_CLUSTER</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">redis-trib.rb add-node 192.168.1.212:7007 192.168.1.212:7005</span><br><span class="line"></span><br><span class="line">[root@eshop-cache01 init.d]# redis-trib.rb add-node 192.168.1.212:7007 192.168.1.211:7003</span><br><span class="line">&gt;&gt;&gt; Adding node 192.168.1.212:7007 to cluster 192.168.1.211:7003</span><br><span class="line">&gt;&gt;&gt; Performing Cluster Check (using node 192.168.1.211:7003)</span><br><span class="line">M: 434f96e83bea38adeb97a5df293da3b008f76768 192.168.1.211:7003</span><br><span class="line">   slots:5461-10922 (5462 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">S: 279addebc5ef0f0d7beef81d86201e3f8874fbd7 192.168.1.210:7001</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates 389568b7d660edfb016521d2c06aa898733a28c0</span><br><span class="line">S: d2e15ab71bbe2cca6cce19a5bacd92944368d230 192.168.1.210:7002</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates 434f96e83bea38adeb97a5df293da3b008f76768</span><br><span class="line">S: 70ae536a26cd28807a41b2009755f613d9691322 192.168.1.212:7006</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates b843b0530233e861dc674f1d78856a0de1f5c438</span><br><span class="line">M: b843b0530233e861dc674f1d78856a0de1f5c438 192.168.1.212:7005</span><br><span class="line">   slots:10923-16383 (5461 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">M: 389568b7d660edfb016521d2c06aa898733a28c0 192.168.1.211:7004</span><br><span class="line">   slots:0-5460 (5461 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">[OK] All nodes agree about slots configuration.</span><br><span class="line">&gt;&gt;&gt; Check for open slots...</span><br><span class="line">&gt;&gt;&gt; Check slots coverage...</span><br><span class="line">[OK] All 16384 slots covered.</span><br><span class="line">&gt;&gt;&gt; Send CLUSTER MEET to node 192.168.1.212:7007 to make it join the cluster.</span><br><span class="line">[OK] New node added correctly.</span><br></pre></td></tr></table></figure>
+<p>再次查看集群状态</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">redis-trib.rb check 192.168.1.211:7003</span><br><span class="line"></span><br><span class="line">[root@eshop-cache01 init.d]# redis-trib.rb  check 192.168.1.212:7007</span><br><span class="line">&gt;&gt;&gt; Performing Cluster Check (using node 192.168.1.212:7007)</span><br><span class="line">M: db864e7965225405f65f36c1cd0a0bb32f2df6ce 192.168.1.212:7007</span><br><span class="line">   slots: (0 slots) master</span><br><span class="line">   0 additional replica(s)</span><br><span class="line">M: 434f96e83bea38adeb97a5df293da3b008f76768 192.168.1.211:7003</span><br><span class="line">   slots:5461-10922 (5462 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">M: 389568b7d660edfb016521d2c06aa898733a28c0 192.168.1.211:7004</span><br><span class="line">   slots:0-5460 (5461 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">S: 279addebc5ef0f0d7beef81d86201e3f8874fbd7 192.168.1.210:7001</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates 389568b7d660edfb016521d2c06aa898733a28c0</span><br><span class="line">M: b843b0530233e861dc674f1d78856a0de1f5c438 192.168.1.212:7005</span><br><span class="line">   slots:10923-16383 (5461 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">S: 70ae536a26cd28807a41b2009755f613d9691322 192.168.1.212:7006</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates b843b0530233e861dc674f1d78856a0de1f5c438</span><br><span class="line">S: d2e15ab71bbe2cca6cce19a5bacd92944368d230 192.168.1.210:7002</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates 434f96e83bea38adeb97a5df293da3b008f76768</span><br><span class="line">[OK] All nodes agree about slots configuration.</span><br><span class="line">&gt;&gt;&gt; Check for open slots...</span><br><span class="line">&gt;&gt;&gt; Check slots coverage...</span><br><span class="line">[OK] All 16384 slots covered.</span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/06/01/Redis-Cluster维护/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2018/06/01/RedisCluster配置和部署/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ForwardLee">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/head.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="不忘初心">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/06/01/RedisCluster配置和部署/" itemprop="url">RedisCluster配置和部署--创建多master多slave高可用集群环境</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-01T10:37:51+08:00">
+                2018-06-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>Redis的主从配置的主要作用是实现读写分离，并且可以通过配置一主多从来实现Redis横向扩展，保证Redis读取数据的QPS能够达到10W+。<strong>如果应用的Redis写数据量QPS只需要几万，而读数据要几十万或上百万QPS，那么Redis Sentinel集群就可以满足业务需求，一主多从，而且可以实现自动Master主备切换，实现高可用。</strong>当写数据的QPS需要几十万或者上百万QPS，或者写数据量达到1T以上的场景，Sentinel的一主多从就不能满足业务需求，此时需要更多的Master来支撑写操作。</p>
+<p>Redis Cluster实现多主多从的集群架构，并且能够进行自动故障节点转移和恢复，并支持多Master节点写入，能够支撑更大数据量的写操作。虽然Redis Cluster实现了读写分离的主从结构，但是Redis的客户端Jedis操作对读写分离支持不够完善，需要对Jedis进行扩展才能支持读写分离。而且Redis Cluster本身slave节点不能直接读取数据，需要先执行readonly命令，再读取数据。所以<strong>Redis Cluster的重点在实现Master节点的横向扩展支撑更大数据量，能够通过Master节点实现读写操作，Slave节点的作用主要用是数据热备和在Master节点故障时的主备自动切换，保证Redis Cluster的高可用。</strong></p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/06/01/RedisCluster配置和部署/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2018/05/31/Sentinels哨兵管理/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ForwardLee">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/head.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="不忘初心">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/05/31/Sentinels哨兵管理/" itemprop="url">Sentinels哨兵管理</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-31T18:58:16+08:00">
+                2018-05-31
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1><span id="删除哨兵节点">删除哨兵节点</span></h1><p>step1：停掉哨兵进程<br>ps -ef  | grep redis-sentinel<br>kill -9 PROCESSID<br>step2：过一会，在其他哨兵节点执行哨兵重置，清理旧哨兵的状态。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@eshop-cache01 ~]# redis-cli -h 192.168.1.210 -p 5000</span><br><span class="line">192.168.1.210:5000&gt; sentinel reset * </span><br><span class="line">(integer) 1</span><br></pre></td></tr></table></figure>
+<p>step3：在所有哨兵节点上执行以下命令，查看所有的哨兵数量是否一致。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sentinel master mymaster</span><br></pre></td></tr></table></figure>
+<h1><span id="redis的slave节点下线">Redis的slave节点下线</span></h1><p>停掉或删除Redis服务后，停掉哨兵节点，在其他所有哨兵节点上执行sentinel reset mymaster。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2018/05/31/使用Sentinel（哨兵）实现Redis主从切换的机制原理/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ForwardLee">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/head.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="不忘初心">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/05/31/使用Sentinel（哨兵）实现Redis主从切换的机制原理/" itemprop="url">使用Sentinel（哨兵）实现Redis主从切换的机制原理</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-31T15:08:18+08:00">
+                2018-05-31
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>哨兵-Sentinel，用于监控和管理Redis集群的高可用中间件。</p>
+<h1 id="哨兵配置和启动"><a href="#哨兵配置和启动" class="headerlink" title="哨兵配置和启动"></a>哨兵配置和启动</h1><p>创建需要的目录</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mkdir -pv /etc/sentinel</span><br><span class="line">mkdir -pv /var/sentinel/5000</span><br><span class="line">mkdir -pv /var/log/sentinel/5000/</span><br><span class="line"></span><br><span class="line">cp /usr/local/common/redis-3.2.8/sentinel.conf /etc/sentinel/5000.conf</span><br></pre></td></tr></table></figure>
+<p>5000.conf哨兵配置,可以配置多份，监控多个redis。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">#守护进程启动</span><br><span class="line">daemonize yes</span><br><span class="line">#哨兵日志</span><br><span class="line">logfile /var/log/sentinel/5000</span><br><span class="line">#哨兵绑定本机IP</span><br><span class="line">bind 192.168.1.212 </span><br><span class="line">#哨兵服务端口号</span><br><span class="line">port 5002</span><br><span class="line">#sentinel工作空间</span><br><span class="line">dir /var/sentinel/5000/</span><br><span class="line">#哨兵监控的master配置信息 master_redis_name master_redis_ip master_redis_port quorum</span><br><span class="line">sentinel monitor mymaster 192.168.1.210 6379 2</span><br><span class="line">#哨兵给master发送ping指令的超时时间，用来确定master的主观宕机sdown</span><br><span class="line">sentinel down-after-milliseconds mymaster 5000 </span><br><span class="line">#哨兵执行slave切换成master的失败超时，新的哨兵接替执行</span><br><span class="line">sentinel failover-timeout mymaster 60000</span><br><span class="line">#slave切换成master后，设置n个slave节点同时连接新master进行数据复制</span><br><span class="line">sentinel parallel-syncs mymaster 1</span><br></pre></td></tr></table></figure>
+<p>哨兵启动</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">redis-sentinel /etc/sentinel/5000.conf</span><br><span class="line"></span><br><span class="line">2083:X 27 May 07:29:50.702 * Increased maximum number of open files to 10032 (it was originally set to 1024).</span><br><span class="line">                _._                                                  </span><br><span class="line">           _.-``__ &apos;&apos;-._                                             </span><br><span class="line">      _.-``    `.  `_.  &apos;&apos;-._           Redis 3.2.8 (00000000/0) 32 bit</span><br><span class="line">  .-`` .-```.  ```\/    _.,_ &apos;&apos;-._                                   </span><br><span class="line"> (    &apos;      ,       .-`  | `,    )     Running in sentinel mode</span><br><span class="line"> |`-._`-...-` __...-.``-._|&apos;` _.-&apos;|     Port: 5000</span><br><span class="line"> |    `-._   `._    /     _.-&apos;    |     PID: 2083</span><br><span class="line">  `-._    `-._  `-./  _.-&apos;    _.-&apos;                                   </span><br><span class="line"> |`-._`-._    `-.__.-&apos;    _.-&apos;_.-&apos;|                                  </span><br><span class="line"> |    `-._`-._        _.-&apos;_.-&apos;    |           http://redis.io        </span><br><span class="line">  `-._    `-._`-.__.-&apos;_.-&apos;    _.-&apos;                                   </span><br><span class="line"> |`-._`-._    `-.__.-&apos;    _.-&apos;_.-&apos;|                                  </span><br><span class="line"> |    `-._`-._        _.-&apos;_.-&apos;    |                                  </span><br><span class="line">  `-._    `-._`-.__.-&apos;_.-&apos;    _.-&apos;                                   </span><br><span class="line">      `-._    `-.__.-&apos;    _.-&apos;                                       </span><br><span class="line">          `-._        _.-&apos;                                           </span><br><span class="line">              `-.__.-&apos;                                               </span><br><span class="line"></span><br><span class="line">2083:X 27 May 07:29:50.703 # WARNING: The TCP backlog setting of 511 cannot be enforced because /proc/sys/net/core/somaxconn is set to the lower value of 128.</span><br><span class="line">2083:X 27 May 07:29:50.703 # Sentinel ID is 79c3f195844be0b84babec19b2fa8a84cc07190d</span><br><span class="line">2083:X 27 May 07:29:50.703 # +monitor master mymaster 192.168.1.210 6379 quorum 2</span><br><span class="line">2083:X 27 May 07:29:50.704 * +slave slave 192.168.1.211:6379 192.168.1.211 6379 @ mymaster 192.168.1.210 6379</span><br><span class="line">2083:X 27 May 07:29:50.714 * +slave slave 192.168.1.212:6379 192.168.1.212 6379 @ mymaster 192.168.1.210 6379</span><br><span class="line">2083:X 27 May 07:30:22.643 * +sentinel sentinel 6e8c9dbc97a385acbbb2cd640e63b0370d1a5c31 192.168.1.211 5000 @ mymaster 192.168.1.210 6379</span><br><span class="line">2083:X 27 May 07:30:43.491 * +sentinel sentinel b273c5b89b90f01ca5b90bd167a8092dedfae69a 192.168.1.212 5000 @ mymaster 192.168.1.210 6379</span><br><span class="line">2083:X 27 May 07:30:51.041 * +fix-slave-config slave 192.168.1.211:6379 192.168.1.211 6379 @ mymaster 192.168.1.210 6379</span><br></pre></td></tr></table></figure>
+<p>连接并查看哨兵信息</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">redis-cli -h 192.168.1.210 -p 5000</span><br><span class="line">192.168.1.210:5000&gt; sentinel master mymaster</span><br><span class="line"> 1) &quot;name&quot;</span><br><span class="line"> 2) &quot;mymaster&quot;</span><br><span class="line"> 3) &quot;ip&quot;</span><br><span class="line"> 4) &quot;192.168.1.210&quot;</span><br><span class="line"> 5) &quot;port&quot;</span><br><span class="line"> 6) &quot;6379&quot;</span><br><span class="line"> 7) &quot;runid&quot;</span><br><span class="line"> 8) &quot;8e990a05ba6ab1e915870dffc9184b689e960c7d&quot;</span><br><span class="line"> 9) &quot;flags&quot;</span><br><span class="line">10) &quot;master&quot;</span><br><span class="line">11) &quot;link-pending-commands&quot;</span><br><span class="line">12) &quot;0&quot;</span><br><span class="line">13) &quot;link-refcount&quot;</span><br><span class="line">14) &quot;1&quot;</span><br><span class="line">15) &quot;last-ping-sent&quot;</span><br><span class="line">16) &quot;0&quot;</span><br><span class="line">17) &quot;last-ok-ping-reply&quot;</span><br><span class="line">18) &quot;394&quot;</span><br><span class="line">19) &quot;last-ping-reply&quot;</span><br><span class="line">20) &quot;394&quot;</span><br><span class="line">21) &quot;down-after-milliseconds&quot;</span><br><span class="line">22) &quot;5000&quot;</span><br><span class="line">23) &quot;info-refresh&quot;</span><br><span class="line">24) &quot;159&quot;</span><br><span class="line">25) &quot;role-reported&quot;</span><br><span class="line">26) &quot;master&quot;</span><br><span class="line">27) &quot;role-reported-time&quot;</span><br><span class="line">28) &quot;381542&quot;</span><br><span class="line">29) &quot;config-epoch&quot;</span><br><span class="line">30) &quot;0&quot;</span><br><span class="line">31) &quot;num-slaves&quot;</span><br><span class="line">32) &quot;2&quot;</span><br><span class="line">33) &quot;num-other-sentinels&quot;</span><br><span class="line">34) &quot;2&quot;</span><br><span class="line">35) &quot;quorum&quot;</span><br><span class="line">36) &quot;2&quot;</span><br><span class="line">37) &quot;failover-timeout&quot;</span><br><span class="line">38) &quot;60000&quot;</span><br><span class="line">39) &quot;parallel-syncs&quot;</span><br><span class="line">40) &quot;1&quot;</span><br></pre></td></tr></table></figure>
+<p>其他命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">#查看master下的slave信息</span><br><span class="line">sentinel slaves mymaster</span><br><span class="line"></span><br><span class="line">#mymaster下所有的哨兵</span><br><span class="line">sentinel sentinels mymaster</span><br><span class="line"></span><br><span class="line">#当前哨兵所指向的master地址和端口</span><br><span class="line">sentinel get-master-addr-by-name mymaster</span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/05/31/使用Sentinel（哨兵）实现Redis主从切换的机制原理/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2018/05/29/Redis主从复制原理/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ForwardLee">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/head.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="不忘初心">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/05/29/Redis主从复制原理/" itemprop="url">Redis主从复制原理</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-29T14:37:15+08:00">
+                2018-05-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="主从复制原理"><a href="#主从复制原理" class="headerlink" title="主从复制原理"></a>主从复制原理</h1><p> <img src="/2018/05/29/Redis主从复制原理/Redis主从复制原理.jpg" alt="Redis主从复制原理"><br><strong> PS:</strong></p>
+<p> full resynchronization:新的slave节点连接master同步复制数据，是一个完整的数据同步过程，叫做full resynchronization操作。</p>
+<p> backlog：master在进行主从复制时，先在本机内存生成backlog，并且把要每次复制给slave的数据保存到backlog一份，目的是要记录数据同步的位置标识offset，以便于全量复制失败后，能够再次进行断点续传的增量复制。backlog的大小为1M。</p>
+<p> master run id：salve用来区分master节点是新数据同步还是已有数据同步，如果slave发现mater的run id发生了变化，那么slava就会进行全量数据复制。<br>在slave执行命令，查看master的run id：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; info server</span><br><span class="line"># Server</span><br><span class="line">redis_version:3.2.8</span><br><span class="line">redis_git_sha1:00000000</span><br><span class="line">redis_git_dirty:0</span><br><span class="line">redis_build_id:5da7c5438a3ad5de</span><br><span class="line">redis_mode:standalone</span><br><span class="line">os:Linux 2.6.32-431.el6.i686 i686</span><br><span class="line">arch_bits:32</span><br><span class="line">multiplexing_api:epoll</span><br><span class="line">gcc_version:4.4.7</span><br><span class="line">process_id:2119</span><br><span class="line">run_id:5b80bdc81f1624e2ee403c5ccfa0a542e99fbb3e</span><br><span class="line">tcp_port:6379</span><br><span class="line">uptime_in_seconds:62</span><br><span class="line">uptime_in_days:0</span><br><span class="line">hz:10</span><br><span class="line">lru_clock:562478</span><br><span class="line">executable:/usr/local/bin/redis-server</span><br><span class="line">config_file:/etc/redis/6379.conf</span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/05/29/Redis主从复制原理/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2018/05/28/Redis数据灾备和恢复过程中踩到的雷/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ForwardLee">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/head.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="不忘初心">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/05/28/Redis数据灾备和恢复过程中踩到的雷/" itemprop="url">Redis数据灾备和恢复过程中踩到的雷</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-28T16:35:45+08:00">
+                2018-05-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="生产环境配置策略"><a href="#生产环境配置策略" class="headerlink" title="生产环境配置策略"></a>生产环境配置策略</h1><p>RDB 生成快照的频率策略要在每分钟生成一次，但是有多少key发生变化可根据自身业务量配置。<br>save 60 1000</p>
+<p>AOF 在生产环境一定要打开，与RDB同时运行，fsync策略为everysec。</p>
+<h1 id="生产环境备份策略"><a href="#生产环境备份策略" class="headerlink" title="生产环境备份策略"></a>生产环境备份策略</h1><p>RDB主要做冷备，用craontab执行定时脚本，做数据备份。<br>备份数据保留48小时，脚本清理48小时以前的数据。<br>每天备份当日的数据，每天的数据保存一个月。<br>把所有数据再备份到远程云服务器上。</p>
+<p>每小时备份脚本</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash</span><br><span class="line"></span><br><span class="line">cur_date=`date +%Y%m%d%H`</span><br><span class="line">rm -rf /var/redis/6379/bak/hour/$cur_date</span><br><span class="line">cp /var/redis/6379/dump.rdb /var/redis/6379/bak/hour/$cur_date</span><br><span class="line"></span><br><span class="line">pre_date=`date -d -48hour +%Y%m%d%H`</span><br><span class="line">rm -rf /var/redis/6379/bak/hour/$pre_date</span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/05/28/Redis数据灾备和恢复过程中踩到的雷/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2018/05/25/Redis持久化方式RDB和AOF比较应用/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ForwardLee">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/head.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="不忘初心">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/05/25/Redis持久化方式RDB和AOF比较应用/" itemprop="url">Redis持久化方式RDB和AOF比较应用</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-25T18:00:11+08:00">
+                2018-05-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p><img src="/2018/05/25/Redis持久化方式RDB和AOF比较应用/RDB和AOF的介绍.png" alt="RDB和AOF工作原理"></p>
+<h1 id="RDB持久化方式的工作原理"><a href="#RDB持久化方式的工作原理" class="headerlink" title="RDB持久化方式的工作原理"></a>RDB持久化方式的工作原理</h1><p>设定时间间隔t内有n次key的操作检查，就进行持久化。例如save 60 1000，每个60秒有1000个key发生变化，则进行持久化。<br>RDB在做持久化时，保存完整的一份数据快照，旧的快照文件被覆盖。</p>
+<h2 id="RDB持久化方案的优点"><a href="#RDB持久化方案的优点" class="headerlink" title="RDB持久化方案的优点"></a>RDB持久化方案的优点</h2><p>（1）持久化的时间间隔可以由redis控制，所以可以按照一定的时间间隔把数据快照文件拷贝出来，更好的支撑数据冷备份。<br>（2）RDB持久化文件是Redis数据文件，在做redis故障恢复时，数据加载效率更高。<br>（3）Redis数据操作都在内存中进行，效率高。<br>（4）Redis会创建一个副本进程（fork）进行数据持久化，持久化过程中，对redis本身的数据操作影响较小。</p>
+<h2 id="RDB持久化方式的缺点"><a href="#RDB持久化方式的缺点" class="headerlink" title="RDB持久化方式的缺点"></a>RDB持久化方式的缺点</h2><p>（1）两次持久化操作的间隔时间内，Redis发生故障，那么将丢失这个时间内的所有数据。–重点<br>（2）当两次持久化操作间隔时间较长，Redis内可能产生大量新的数据，生成数据快照文件时，可能导致Redis数据服务暂停数秒。</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/05/25/Redis持久化方式RDB和AOF比较应用/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+  </section>
+
+  
+  <nav class="pagination">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+  </nav>
+
+
+
+          </div>
+          
+
+
+          
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/head.jpeg"
+                alt="ForwardLee" />
+            
+              <p class="site-author-name" itemprop="name">ForwardLee</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">29</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/forworldlee" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:279079608@qq.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://wujun.name" title="武军" target="_blank">武军</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.laruence.com/" title="鸟哥" target="_blank">鸟哥</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://lvwenhan.com/" title="岁寒" target="_blank">岁寒</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+            <span id="scrollpercent"><span>0</span>%</span>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">forwardlee</span>
+
+  
+</div>
+
+
+
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a></div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+<!-- LOCAL: You can save these files to your site and update links -->
+    
+        
+        <link rel="stylesheet" href="https://aimingoo.github.io/gitmint/style/default.css">
+        <script src="https://aimingoo.github.io/gitmint/dist/gitmint.browser.js"></script>
+    
+<!-- END LOCAL -->
+
+    
+
+    
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+  
+  <link rel="stylesheet" href="/lib/needsharebutton/needsharebutton.css">
+
+  
+  
+  <script src="/lib/needsharebutton/needsharebutton.js"></script>
+
+  <script>
+    
+      pbOptions = {};
+      
+          pbOptions.iconStyle = "box";
+      
+          pbOptions.boxForm = "horizontal";
+      
+          pbOptions.position = "bottomCenter";
+      
+          pbOptions.networks = "Weibo,Wechat,Douban,QQZone,Twitter,Facebook";
+      
+      new needShareButton('#needsharebutton-postbottom', pbOptions);
+    
+    
+  </script>
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
