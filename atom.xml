@@ -746,11 +746,11 @@
     </summary>
     
     
-      <category term="Docker" scheme="http://www.forwardlee.com/tags/Docker/"/>
-    
       <category term="Galera" scheme="http://www.forwardlee.com/tags/Galera/"/>
     
       <category term="MariaDB" scheme="http://www.forwardlee.com/tags/MariaDB/"/>
+    
+      <category term="Docker" scheme="http://www.forwardlee.com/tags/Docker/"/>
     
   </entry>
   
