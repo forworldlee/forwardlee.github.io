@@ -5,12 +5,14 @@
     
   <url>
     <loc>http://www.forwardlee.com/2018/06/11/%E6%B5%8B%E8%AF%95%E8%AF%84%E8%AE%BA/</loc>
-    <lastmod>2018-06-11T10:13:26.285Z</lastmod>
+    <lastmod>2018-06-11T10:29:25.366Z</lastmod>
     <data>
         <display>
         <title>测试评论</title>
-        <pubTime>2018-06-11T10:12:51.000Z</pubTime>
+        <pubTime>2018-06-11T10:28:58.000Z</pubTime>
         
+        <tag>Docker</tag>
+         
          
            
         </display>
@@ -282,9 +284,9 @@
         
         <tag>MariaDB</tag>
          
-        <tag>Galera</tag>
-         
         <tag>Keepalived</tag>
+         
+        <tag>Galera</tag>
          
         <tag>CentOS</tag>
          
@@ -342,9 +344,9 @@
         <title>Keepalived HA +LVS+ Galera Cluster环境</title>
         <pubTime>2018-05-23T08:14:48.000Z</pubTime>
         
-        <tag>Galera</tag>
-         
         <tag>Keepalived</tag>
+         
+        <tag>Galera</tag>
          
         <tag>MySQL</tag>
          
@@ -384,9 +386,9 @@
         
         <tag>MariaDB</tag>
          
-        <tag>Docker</tag>
-         
         <tag>Galera</tag>
+         
+        <tag>Docker</tag>
          
          
            

@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.forwardlee.com/"/>
-  <updated>2018-06-11T10:13:26.285Z</updated>
+  <updated>2018-06-11T10:29:25.366Z</updated>
   <id>http://www.forwardlee.com/</id>
   
   <author>
@@ -19,19 +19,21 @@
     <title>测试评论</title>
     <link href="http://www.forwardlee.com/2018/06/11/%E6%B5%8B%E8%AF%95%E8%AF%84%E8%AE%BA/"/>
     <id>http://www.forwardlee.com/2018/06/11/测试评论/</id>
-    <published>2018-06-11T10:12:51.000Z</published>
-    <updated>2018-06-11T10:13:26.285Z</updated>
+    <published>2018-06-11T10:28:58.000Z</published>
+    <updated>2018-06-11T10:29:25.366Z</updated>
     
-    <content type="html"><![CDATA[<p>测试一下评论功能</p>
+    <content type="html"><![CDATA[<p>测试评论功能</p>
 ]]></content>
     
     <summary type="html">
     
-      &lt;p&gt;测试一下评论功能&lt;/p&gt;
+      &lt;p&gt;测试评论功能&lt;/p&gt;
 
     
     </summary>
     
+    
+      <category term="Docker" scheme="http://www.forwardlee.com/tags/Docker/"/>
     
   </entry>
   
@@ -573,9 +575,9 @@
     
       <category term="MariaDB" scheme="http://www.forwardlee.com/tags/MariaDB/"/>
     
-      <category term="Galera" scheme="http://www.forwardlee.com/tags/Galera/"/>
-    
       <category term="Keepalived" scheme="http://www.forwardlee.com/tags/Keepalived/"/>
+    
+      <category term="Galera" scheme="http://www.forwardlee.com/tags/Galera/"/>
     
       <category term="CentOS" scheme="http://www.forwardlee.com/tags/CentOS/"/>
     
@@ -648,9 +650,9 @@
     </summary>
     
     
-      <category term="Galera" scheme="http://www.forwardlee.com/tags/Galera/"/>
-    
       <category term="Keepalived" scheme="http://www.forwardlee.com/tags/Keepalived/"/>
+    
+      <category term="Galera" scheme="http://www.forwardlee.com/tags/Galera/"/>
     
       <category term="MySQL" scheme="http://www.forwardlee.com/tags/MySQL/"/>
     
@@ -746,9 +748,9 @@
     
       <category term="MariaDB" scheme="http://www.forwardlee.com/tags/MariaDB/"/>
     
-      <category term="Docker" scheme="http://www.forwardlee.com/tags/Docker/"/>
-    
       <category term="Galera" scheme="http://www.forwardlee.com/tags/Galera/"/>
+    
+      <category term="Docker" scheme="http://www.forwardlee.com/tags/Docker/"/>
     
   </entry>
   
