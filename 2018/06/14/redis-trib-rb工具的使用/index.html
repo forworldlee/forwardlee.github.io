@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Redis," />
+  <meta name="keywords" content="Redis,Redis集群," />
 
 
 
@@ -81,18 +81,18 @@
 
 
 
-<meta name="description" content="master重要配置min-slaves-to-write 1min-slaves-max-lag 10 两个配置一起解释，至少有一个slave节点的数据同步延迟不能超过10s，否则master将暂停接收新数据的写入操作。这样能保证在主从复制过程中出现问题，master节点丢失的数据量可控。 场景一：主从异步复制导致的数据丢失场景：master接收到新数据，还没有把新数据异步传输给slave，此时">
-<meta name="keywords" content="Redis">
+<meta name="description" content="【转】https://www.jianshu.com/p/21f67bd739cc【官方】http://www.redis.cn/topics/cluster-tutorial.html 参数配置12345678910111、create：创建集群2、check：检查集群3、info：查看集群信息4、fix：修复集群5、reshard：在线迁移slot6、rebalance：平衡集群节点slot数">
+<meta name="keywords" content="Redis,Redis集群">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Redis主从复制丢失数据问题">
-<meta property="og:url" content="http://www.forwardlee.com/2015/01/20/Redis主从复制丢失数据问题/index.html">
+<meta property="og:title" content="redis-trib.rb工具的使用">
+<meta property="og:url" content="http://www.forwardlee.com/2018/06/14/redis-trib-rb工具的使用/index.html">
 <meta property="og:site_name" content="不忘初心">
-<meta property="og:description" content="master重要配置min-slaves-to-write 1min-slaves-max-lag 10 两个配置一起解释，至少有一个slave节点的数据同步延迟不能超过10s，否则master将暂停接收新数据的写入操作。这样能保证在主从复制过程中出现问题，master节点丢失的数据量可控。 场景一：主从异步复制导致的数据丢失场景：master接收到新数据，还没有把新数据异步传输给slave，此时">
+<meta property="og:description" content="【转】https://www.jianshu.com/p/21f67bd739cc【官方】http://www.redis.cn/topics/cluster-tutorial.html 参数配置12345678910111、create：创建集群2、check：检查集群3、info：查看集群信息4、fix：修复集群5、reshard：在线迁移slot6、rebalance：平衡集群节点slot数">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-05-30T08:32:07.156Z">
+<meta property="og:updated_time" content="2018-06-14T02:04:39.210Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Redis主从复制丢失数据问题">
-<meta name="twitter:description" content="master重要配置min-slaves-to-write 1min-slaves-max-lag 10 两个配置一起解释，至少有一个slave节点的数据同步延迟不能超过10s，否则master将暂停接收新数据的写入操作。这样能保证在主从复制过程中出现问题，master节点丢失的数据量可控。 场景一：主从异步复制导致的数据丢失场景：master接收到新数据，还没有把新数据异步传输给slave，此时">
+<meta name="twitter:title" content="redis-trib.rb工具的使用">
+<meta name="twitter:description" content="【转】https://www.jianshu.com/p/21f67bd739cc【官方】http://www.redis.cn/topics/cluster-tutorial.html 参数配置12345678910111、create：创建集群2、check：检查集群3、info：查看集群信息4、fix：修复集群5、reshard：在线迁移slot6、rebalance：平衡集群节点slot数">
 
 
 
@@ -122,13 +122,13 @@
 
 
 
-  <link rel="canonical" href="http://www.forwardlee.com/2015/01/20/Redis主从复制丢失数据问题/"/>
+  <link rel="canonical" href="http://www.forwardlee.com/2018/06/14/redis-trib-rb工具的使用/"/>
 
 
 
 
 
-  <title>Redis主从复制丢失数据问题 | 不忘初心</title>
+  <title>redis-trib.rb工具的使用 | 不忘初心</title>
   
 
 
@@ -319,7 +319,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2015/01/20/Redis主从复制丢失数据问题/">
+    <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2018/06/14/redis-trib-rb工具的使用/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="ForwardLee">
@@ -336,7 +336,7 @@
 
         
         
-          <h2 class="post-title" itemprop="name headline">Redis主从复制丢失数据问题</h2>
+          <h2 class="post-title" itemprop="name headline">redis-trib.rb工具的使用</h2>
         
 
         <div class="post-meta">
@@ -348,8 +348,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2015-01-20T15:58:32+08:00">
-                2015-01-20
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-14T09:52:43+08:00">
+                2018-06-14
               </time>
             
 
@@ -367,8 +367,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2015/01/20/Redis主从复制丢失数据问题/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count gitment-comments-count" data-xid="/2015/01/20/Redis主从复制丢失数据问题/" itemprop="commentsCount"></span>
+                <a href="/2018/06/14/redis-trib-rb工具的使用/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count gitment-comments-count" data-xid="/2018/06/14/redis-trib-rb工具的使用/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -396,11 +396,39 @@
       
 
       
-        <h1><span id="master重要配置">master重要配置</span></h1><p>min-slaves-to-write 1<br>min-slaves-max-lag 10</p>
-<p>两个配置一起解释，至少有一个slave节点的数据同步延迟不能超过10s，否则master将暂停接收新数据的写入操作。这样能保证在主从复制过程中出现问题，master节点丢失的数据量可控。</p>
-<h1><span id="场景一主从异步复制导致的数据丢失">场景一：主从异步复制导致的数据丢失</span></h1><p>场景：master接收到新数据，还没有把新数据异步传输给slave，此时master宕机，那么master在内存中接收到的新数据将会丢失。</p>
-<h1><span id="场景二哨兵机制下sentinel集群主从节点发生脑裂">场景二：哨兵机制下（Sentinel）集群主从节点发生脑裂</span></h1><p>场景：master节点与slave节点断开网络连接，但是master的client端依然与master正常通信，此时数据还一直往master节点写入，哨兵（Sentinel）认为master已经挂掉，哨兵会进行主从转换，选举出一个slave节点转换为master节点接收数据，而原来的master在恢复网络连接后会变成slave从新的master中同步数据，那么这就导致原来master在断开与slave的连接后，接收到client端的新数据被丢弃，造成数据丢失。</p>
-<h1><span id="解决方案">解决方案</span></h1><p>依赖以上两个配置，控制数据丢失的数量。如果发生master暂停写入新数据，那么redis的client端可以进行如下操作，保证服务的可用性：<br>（1）client端做降级处理，把数据写入本地磁盘，等master能够写操作时写入master；然后对client对外提供服务的接口做降级处理，减少client接收到的请求数量，降低redis的并发写入量。<br>（2）client端将数据写入异步消息队列，每隔一段时间把数据从消息队列中取出，再写回到master当中。</p>
+        <p>【转】<a href="https://www.jianshu.com/p/21f67bd739cc" target="_blank" rel="noopener">https://www.jianshu.com/p/21f67bd739cc</a><br>【官方】<a href="http://www.redis.cn/topics/cluster-tutorial.html" target="_blank" rel="noopener">http://www.redis.cn/topics/cluster-tutorial.html</a></p>
+<h1><span id="参数配置">参数配置</span></h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">1、create：创建集群</span><br><span class="line">2、check：检查集群</span><br><span class="line">3、info：查看集群信息</span><br><span class="line">4、fix：修复集群</span><br><span class="line">5、reshard：在线迁移slot</span><br><span class="line">6、rebalance：平衡集群节点slot数量</span><br><span class="line">7、add-node：将新节点加入集群</span><br><span class="line">8、del-node：从集群中删除节点</span><br><span class="line">9、set-timeout：设置集群节点间心跳连接的超时时间</span><br><span class="line">10、call：在集群全部节点上执行命令</span><br><span class="line">11、import：将外部redis数据导入集群</span><br></pre></td></tr></table></figure>
+<h1><span id="创建集群">创建集群</span></h1><p>用户无需指定哪台节点为master，哪台节点为slave，因为redis内部算法帮我们实现了</p>
+<p>create<br>–replicas # 可选参数，replicas表示每个master需要有几个slave。<br> 只有master节点的创建方式</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./redis-trib.rb create  192.168.66.2:7000 192.168.66.2:7001 192.168.66.2:7002 192.168.66.3:7003 192.168.66.3:7004 192.168.66.3:7005</span><br></pre></td></tr></table></figure>
+<p>使用 –replicas 1 创建 每个master带一个 slave 指令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./redis-trib.rb create --replicas 1  192.168.66.2:7000 192.168.66.2:7001 192.168.66.2:7002 192.168.66.3:7003 192.168.66.3:7004 192.168.66.3:7005</span><br></pre></td></tr></table></figure>
+<h1><span id="检查集群情况check">检查集群情况check</span></h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./redis-trib.rb check 192.168.66.2:7000    #后面的IP与端口,随便指定集群中的一个就行了。</span><br></pre></td></tr></table></figure>
+<h1><span id="查看集群信息info">查看集群信息info</span></h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./redis-trib.rb info 192.168.66.2:7000</span><br></pre></td></tr></table></figure>
+<p>输出：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[OK] 1 keys in 4 masters.</span><br><span class="line">0.00 keys per slot on average.</span><br></pre></td></tr></table></figure>
+<h1><span id="使用reshard在线迁移slot">使用reshard在线迁移slot</span></h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">host:port：这个是必传参数，用来从一个节点获取整个集群信息，相当于获取集群信息的入口。</span><br><span class="line">--from &lt;arg&gt;：需要从哪些源节点上迁移slot，可从多个源节点完成迁移，以逗号隔开，传递的是节点的node id，还可以直接传递--from all，这样源节点就是集群的所有节点，不传递该参数的话，则会在迁移过程中提示用户输入。</span><br><span class="line">--to &lt;arg&gt;：slot需要迁移的目的节点的node id，目的节点只能填写一个，不传递该参数的话，则会在迁移过程中提示用户输入。</span><br><span class="line">--slots &lt;arg&gt;：需要迁移的slot数量，不传递该参数的话，则会在迁移过程中提示用户输入。</span><br><span class="line">--yes：设置该参数，可以在打印执行reshard计划的时候，提示用户输入yes确认后再执行reshard。</span><br><span class="line">--timeout &lt;arg&gt;：设置migrate命令的超时时间。</span><br><span class="line">--pipeline &lt;arg&gt;：定义cluster getkeysinslot命令一次取出的key数量，不传的话使用默认值为10。</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./redis-trib.rb reshard --from all --to 80b661ecca260c89e3d8ea9b98f77edaeef43dcd --slots 11</span><br></pre></td></tr></table></figure>
+<h1><span id="平衡集群节点slot数量rebalance">平衡集群节点slot数量rebalance</span></h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">host:port：这个是必传参数，用来从一个节点获取整个集群信息，相当于获取集群信息的入口。</span><br><span class="line">--weight &lt;arg&gt;：节点的权重，格式为node_id=weight，如果需要为多个节点分配权重的话，需要添加多个--weight &lt;arg&gt;参数，即--weight b31e3a2e=5 --weight 60b8e3a1=5，node_id可为节点名称的前缀，只要保证前缀位数能唯一区分该节点即可。没有传递–weight的节点的权重默认为1。</span><br><span class="line">--auto-weights：这个参数在rebalance流程中并未用到。</span><br><span class="line">--threshold &lt;arg&gt;：只有节点需要迁移的slot阈值超过threshold，才会执行rebalance操作。具体计算方法可以参考下面的rebalance命令流程的第四步。</span><br><span class="line">--use-empty-masters：rebalance是否考虑没有节点的master，默认没有分配slot节点的master是不参与rebalance的，设置--use-empty-masters可以让没有分配slot的节点参与rebalance。</span><br><span class="line">--timeout &lt;arg&gt;：设置migrate命令的超时时间。</span><br><span class="line">--simulate：设置该参数，可以模拟rebalance操作，提示用户会迁移哪些slots，而不会真正执行迁移操作。</span><br><span class="line">--pipeline &lt;arg&gt;：与reshar的pipeline参数一样，定义cluster getkeysinslot命令一次取出的key数量，不传的话使用默认值为10。</span><br></pre></td></tr></table></figure>
+<h1><span id="增加一个主节点">增加一个主节点</span></h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./redis-trib.rb add-node 192.168.66.3:7006 192.168.66.2:7000</span><br></pre></td></tr></table></figure>
+<p> 添加成功，但是并没有指定 slot ,所以必须 迁移slot节点</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./redis-trib.rb reshard 192.168.66.2:7000</span><br></pre></td></tr></table></figure>
+<p><strong>提示一 ：How many slots do you want to move (from 1 to 16384)?<br>为了平衡每个master管理的slot的个数，所以输入 16384/master  的数量。如这里为4 那么就是 16384/4 = 4096个。</strong></p>
+<p>输入 4096</p>
+<p><strong>提示二：What is the receiving node ID?(接受的node ID是多少)<br>            890d2c8d989cce50e5fa48e37cd35738887f3f7d </strong><br>输入7006的ID</p>
+<p><strong>提示三： Please enter all the source node IDs.<br>           Type ‘all’ to use all the nodes as source nodes for the hash slots.<br>           Type ‘done’ once you entered all the source nodes IDs.<br>                  （要从哪个节点中获取lost ？）</strong><br>不打算从特定的节点上取出指定数量的哈希槽， 那么可以输入 all，否则输入某个节点的 node ID </p>
+<p>检查是否成功</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./redis-trib.rb check 192.168.66.2:7000</span><br></pre></td></tr></table></figure>
+<h1><span id="增加一个从节点">增加一个从节点</span></h1><p>这样创建从节点会自动匹配主节点</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./redis-trib.rb add-node --slave 127.0.0.1:7007 127.0.0.1:7000</span><br></pre></td></tr></table></figure>
+<p>增加从节点的时候指定主节点。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./redis-trib.rb add-node --slave --master-id 890d2c8d989cce50e5fa48e37cd35738887f3f7d 192.168.66.3:7008 192.168.66.2:7000</span><br></pre></td></tr></table></figure>
+<h1><span id="从集群中删除节点del-node">从集群中删除节点del-node</span></h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">host:port：从该节点获取集群信息。</span><br><span class="line">node_id：需要删除的节点id。</span><br></pre></td></tr></table></figure>
+<p>例如</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./redis-trib.rb del-node 192.168.66.2:7000 d5f6d1d17426bd564a6e309f32d0f5b96962fe53</span><br></pre></td></tr></table></figure>
+<h1><span id="宕机情况">宕机情况</span></h1><p>当某个从节点挂掉之后，对于redis集群来说几乎没有什么影响，相当于这个从节点对应的 主节点少了一个备份而已。<br>当某一个主节点挂掉之后，redis 会从这个 主节点 的 多个从节点 中推选一个出来，担当master的工作，并且把之前依附在<br>主节点的从节点调整依附到新的master上。如果新任的master也挂掉并且他没有从节点了，那么这个集群也真正的挂掉了。<br>集群创建时 replicas 参数 指定情况。<br>使用 –replicas 1 参数时，如果节点数量<strong>少于六个</strong>。<br>报错</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">*** ERROR: Invalid configuration for cluster creation.</span><br><span class="line">*** Redis Cluster requires at least 3 master nodes.</span><br><span class="line">*** This is not possible with 5 nodes and 1 replicas per node.</span><br><span class="line">*** At least 6 nodes are required.</span><br></pre></td></tr></table></figure>
+<p>使用 –replicas 1 参数时，如果节点数量 大于六个，且为单数时。<br>这样会造成某个master拥有两个salve</p>
 
       
     </div>
@@ -444,6 +472,8 @@
           
             <a href="/tags/Redis/" rel="tag"># Redis</a>
           
+            <a href="/tags/Redis集群/" rel="tag"># Redis集群</a>
+          
         </div>
       
 
@@ -470,8 +500,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2015/01/18/Redis单机QPS压力测试/" rel="next" title="Redis单机QPS压力测试">
-                <i class="fa fa-chevron-left"></i> Redis单机QPS压力测试
+              <a href="/2018/06/07/数据库和缓存双写导致数据不一致问题分析和解决方案/" rel="next" title="数据库和缓存致数据不一致问题分析和解决方案">
+                <i class="fa fa-chevron-left"></i> 数据库和缓存致数据不一致问题分析和解决方案
               </a>
             
           </div>
@@ -479,10 +509,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2016/04/10/JDKBlockingQueue使用/" rel="prev" title="JDKBlockingQueue使用">
-                JDKBlockingQueue使用 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -660,7 +686,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">1.</span> <span class="nav-text">master重要配置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">2.</span> <span class="nav-text">场景一：主从异步复制导致的数据丢失</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">3.</span> <span class="nav-text">场景二：哨兵机制下（Sentinel）集群主从节点发生脑裂</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">4.</span> <span class="nav-text">解决方案</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">1.</span> <span class="nav-text">参数配置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">2.</span> <span class="nav-text">创建集群</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">3.</span> <span class="nav-text">检查集群情况check</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">4.</span> <span class="nav-text">查看集群信息info</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">5.</span> <span class="nav-text">使用reshard在线迁移slot</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">6.</span> <span class="nav-text">平衡集群节点slot数量rebalance</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">7.</span> <span class="nav-text">增加一个主节点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">8.</span> <span class="nav-text">增加一个从节点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">9.</span> <span class="nav-text">从集群中删除节点del-node</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">10.</span> <span class="nav-text">宕机情况</span></a></li></ol></div>
             
 
           </div>
