@@ -303,11 +303,11 @@
         
         <tag>MariaDB</tag>
          
+        <tag>Keepalived</tag>
+         
         <tag>Galera</tag>
          
         <tag>CentOS</tag>
-         
-        <tag>Keepalived</tag>
          
          
            
@@ -344,9 +344,9 @@
         
         <tag>Galera</tag>
          
-        <tag>MySQL</tag>
-         
         <tag>CentOS</tag>
+         
+        <tag>MySQL</tag>
          
          
            
@@ -363,11 +363,11 @@
         <title>Keepalived HA +LVS+ Galera Cluster环境</title>
         <pubTime>2018-05-23T08:14:48.000Z</pubTime>
         
+        <tag>Keepalived</tag>
+         
         <tag>Galera</tag>
          
         <tag>MySQL</tag>
-         
-        <tag>Keepalived</tag>
          
          
            
@@ -405,9 +405,9 @@
         
         <tag>MariaDB</tag>
          
-        <tag>Docker</tag>
-         
         <tag>Galera</tag>
+         
+        <tag>Docker</tag>
          
          
            

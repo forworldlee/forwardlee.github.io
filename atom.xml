@@ -642,11 +642,11 @@
     
       <category term="MariaDB" scheme="http://www.forwardlee.com/tags/MariaDB/"/>
     
+      <category term="Keepalived" scheme="http://www.forwardlee.com/tags/Keepalived/"/>
+    
       <category term="Galera" scheme="http://www.forwardlee.com/tags/Galera/"/>
     
       <category term="CentOS" scheme="http://www.forwardlee.com/tags/CentOS/"/>
-    
-      <category term="Keepalived" scheme="http://www.forwardlee.com/tags/Keepalived/"/>
     
   </entry>
   
@@ -717,11 +717,11 @@
     </summary>
     
     
+      <category term="Keepalived" scheme="http://www.forwardlee.com/tags/Keepalived/"/>
+    
       <category term="Galera" scheme="http://www.forwardlee.com/tags/Galera/"/>
     
       <category term="MySQL" scheme="http://www.forwardlee.com/tags/MySQL/"/>
-    
-      <category term="Keepalived" scheme="http://www.forwardlee.com/tags/Keepalived/"/>
     
   </entry>
   
@@ -769,9 +769,9 @@
     
       <category term="Galera" scheme="http://www.forwardlee.com/tags/Galera/"/>
     
-      <category term="MySQL" scheme="http://www.forwardlee.com/tags/MySQL/"/>
-    
       <category term="CentOS" scheme="http://www.forwardlee.com/tags/CentOS/"/>
+    
+      <category term="MySQL" scheme="http://www.forwardlee.com/tags/MySQL/"/>
     
   </entry>
   
@@ -815,9 +815,9 @@
     
       <category term="MariaDB" scheme="http://www.forwardlee.com/tags/MariaDB/"/>
     
-      <category term="Docker" scheme="http://www.forwardlee.com/tags/Docker/"/>
-    
       <category term="Galera" scheme="http://www.forwardlee.com/tags/Galera/"/>
+    
+      <category term="Docker" scheme="http://www.forwardlee.com/tags/Docker/"/>
     
   </entry>
   
