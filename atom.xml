@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.forwardlee.com/"/>
-  <updated>2018-06-14T02:35:37.331Z</updated>
+  <updated>2018-06-14T03:25:26.116Z</updated>
   <id>http://www.forwardlee.com/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://www.forwardlee.com/2018/06/14/Redis-LRU%E7%AE%97%E6%B3%95%E8%AF%A6%E6%83%85/"/>
     <id>http://www.forwardlee.com/2018/06/14/Redis-LRU算法详情/</id>
     <published>2018-06-14T02:14:56.000Z</published>
-    <updated>2018-06-14T02:35:37.331Z</updated>
+    <updated>2018-06-14T03:25:26.116Z</updated>
     
     <content type="html"><![CDATA[<h1><span id="什么是lru算法">什么是LRU算法</span></h1><p>LRU-Leaste Recently Use，最近使用最少。算法原理略。</p>
 <h1><span id="redis-lru算法">Redis LRU算法</span></h1><p>redis在存储数据时达到最大内存设置maxmemory后，自身会清理数据，以减少内存使用量，保证Reids服务的正常状态。<br>Redis 内存使用策略maxmemory-policy可配置项：</p>
@@ -47,7 +47,7 @@
     <link href="http://www.forwardlee.com/2018/06/14/redis-trib-rb%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8/"/>
     <id>http://www.forwardlee.com/2018/06/14/redis-trib-rb工具的使用/</id>
     <published>2018-06-14T01:52:43.000Z</published>
-    <updated>2018-06-14T02:06:21.637Z</updated>
+    <updated>2018-06-14T03:25:39.808Z</updated>
     
     <content type="html"><![CDATA[<p>【转】<a href="https://www.jianshu.com/p/21f67bd739cc" target="_blank" rel="noopener">https://www.jianshu.com/p/21f67bd739cc</a><br>【官方】<a href="http://www.redis.cn/topics/cluster-tutorial.html" target="_blank" rel="noopener">http://www.redis.cn/topics/cluster-tutorial.html</a></p>
 <h1><span id="参数配置">参数配置</span></h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">1、create：创建集群</span><br><span class="line">2、check：检查集群</span><br><span class="line">3、info：查看集群信息</span><br><span class="line">4、fix：修复集群</span><br><span class="line">5、reshard：在线迁移slot</span><br><span class="line">6、rebalance：平衡集群节点slot数量</span><br><span class="line">7、add-node：将新节点加入集群</span><br><span class="line">8、del-node：从集群中删除节点</span><br><span class="line">9、set-timeout：设置集群节点间心跳连接的超时时间</span><br><span class="line">10、call：在集群全部节点上执行命令</span><br><span class="line">11、import：将外部redis数据导入集群</span><br></pre></td></tr></table></figure>
@@ -640,13 +640,13 @@
     </summary>
     
     
-      <category term="MariaDB" scheme="http://www.forwardlee.com/tags/MariaDB/"/>
-    
-      <category term="Keepalived" scheme="http://www.forwardlee.com/tags/Keepalived/"/>
-    
       <category term="Galera" scheme="http://www.forwardlee.com/tags/Galera/"/>
     
       <category term="CentOS" scheme="http://www.forwardlee.com/tags/CentOS/"/>
+    
+      <category term="MariaDB" scheme="http://www.forwardlee.com/tags/MariaDB/"/>
+    
+      <category term="Keepalived" scheme="http://www.forwardlee.com/tags/Keepalived/"/>
     
   </entry>
   
@@ -668,9 +668,9 @@
     </summary>
     
     
-      <category term="Galera" scheme="http://www.forwardlee.com/tags/Galera/"/>
-    
       <category term="MySQL" scheme="http://www.forwardlee.com/tags/MySQL/"/>
+    
+      <category term="Galera" scheme="http://www.forwardlee.com/tags/Galera/"/>
     
   </entry>
   
@@ -717,11 +717,11 @@
     </summary>
     
     
-      <category term="Keepalived" scheme="http://www.forwardlee.com/tags/Keepalived/"/>
+      <category term="MySQL" scheme="http://www.forwardlee.com/tags/MySQL/"/>
     
       <category term="Galera" scheme="http://www.forwardlee.com/tags/Galera/"/>
     
-      <category term="MySQL" scheme="http://www.forwardlee.com/tags/MySQL/"/>
+      <category term="Keepalived" scheme="http://www.forwardlee.com/tags/Keepalived/"/>
     
   </entry>
   
@@ -767,11 +767,11 @@
     </summary>
     
     
+      <category term="MySQL" scheme="http://www.forwardlee.com/tags/MySQL/"/>
+    
       <category term="Galera" scheme="http://www.forwardlee.com/tags/Galera/"/>
     
       <category term="CentOS" scheme="http://www.forwardlee.com/tags/CentOS/"/>
-    
-      <category term="MySQL" scheme="http://www.forwardlee.com/tags/MySQL/"/>
     
   </entry>
   
@@ -813,9 +813,9 @@
     </summary>
     
     
-      <category term="MariaDB" scheme="http://www.forwardlee.com/tags/MariaDB/"/>
-    
       <category term="Galera" scheme="http://www.forwardlee.com/tags/Galera/"/>
+    
+      <category term="MariaDB" scheme="http://www.forwardlee.com/tags/MariaDB/"/>
     
       <category term="Docker" scheme="http://www.forwardlee.com/tags/Docker/"/>
     
