@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.forwardlee.com/"/>
-  <updated>2018-06-14T02:04:39.210Z</updated>
+  <updated>2018-06-14T02:06:21.637Z</updated>
   <id>http://www.forwardlee.com/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://www.forwardlee.com/2018/06/14/redis-trib-rb%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8/"/>
     <id>http://www.forwardlee.com/2018/06/14/redis-trib-rb工具的使用/</id>
     <published>2018-06-14T01:52:43.000Z</published>
-    <updated>2018-06-14T02:04:39.210Z</updated>
+    <updated>2018-06-14T02:06:21.637Z</updated>
     
     <content type="html"><![CDATA[<p>【转】<a href="https://www.jianshu.com/p/21f67bd739cc" target="_blank" rel="noopener">https://www.jianshu.com/p/21f67bd739cc</a><br>【官方】<a href="http://www.redis.cn/topics/cluster-tutorial.html" target="_blank" rel="noopener">http://www.redis.cn/topics/cluster-tutorial.html</a></p>
 <h1><span id="参数配置">参数配置</span></h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">1、create：创建集群</span><br><span class="line">2、check：检查集群</span><br><span class="line">3、info：查看集群信息</span><br><span class="line">4、fix：修复集群</span><br><span class="line">5、reshard：在线迁移slot</span><br><span class="line">6、rebalance：平衡集群节点slot数量</span><br><span class="line">7、add-node：将新节点加入集群</span><br><span class="line">8、del-node：从集群中删除节点</span><br><span class="line">9、set-timeout：设置集群节点间心跳连接的超时时间</span><br><span class="line">10、call：在集群全部节点上执行命令</span><br><span class="line">11、import：将外部redis数据导入集群</span><br></pre></td></tr></table></figure>
@@ -29,6 +29,7 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./redis-trib.rb create  192.168.66.2:7000 192.168.66.2:7001 192.168.66.2:7002 192.168.66.3:7003 192.168.66.3:7004 192.168.66.3:7005</span><br></pre></td></tr></table></figure>
 <p>使用 –replicas 1 创建 每个master带一个 slave 指令</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./redis-trib.rb create --replicas 1  192.168.66.2:7000 192.168.66.2:7001 192.168.66.2:7002 192.168.66.3:7003 192.168.66.3:7004 192.168.66.3:7005</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
 <h1><span id="检查集群情况check">检查集群情况check</span></h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./redis-trib.rb check 192.168.66.2:7000    #后面的IP与端口,随便指定集群中的一个就行了。</span><br></pre></td></tr></table></figure>
 <h1><span id="查看集群信息info">查看集群信息info</span></h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./redis-trib.rb info 192.168.66.2:7000</span><br></pre></td></tr></table></figure>
 <p>输出：</p>
@@ -59,7 +60,13 @@
     
     <summary type="html">
     
-      &lt;p&gt;【转】&lt;a href=&quot;https://www.jianshu.com/p/21f67bd739cc&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;https://www.jianshu.com/p/21f67bd739cc&lt;/a&gt;&lt;br&gt;【官方】&lt;a h
+      &lt;p&gt;【转】&lt;a href=&quot;https://www.jianshu.com/p/21f67bd739cc&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;https://www.jianshu.com/p/21f67bd739cc&lt;/a&gt;&lt;br&gt;【官方】&lt;a href=&quot;http://www.redis.cn/topics/cluster-tutorial.html&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;http://www.redis.cn/topics/cluster-tutorial.html&lt;/a&gt;&lt;/p&gt;
+&lt;h1 id=&quot;参数配置&quot;&gt;&lt;a href=&quot;#参数配置&quot; class=&quot;headerlink&quot; title=&quot;参数配置&quot;&gt;&lt;/a&gt;参数配置&lt;/h1&gt;&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1、create：创建集群&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2、check：检查集群&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3、info：查看集群信息&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4、fix：修复集群&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5、reshard：在线迁移slot&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6、rebalance：平衡集群节点slot数量&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7、add-node：将新节点加入集群&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8、del-node：从集群中删除节点&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9、set-timeout：设置集群节点间心跳连接的超时时间&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10、call：在集群全部节点上执行命令&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11、import：将外部redis数据导入集群&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;h1 id=&quot;创建集群&quot;&gt;&lt;a href=&quot;#创建集群&quot; class=&quot;headerlink&quot; title=&quot;创建集群&quot;&gt;&lt;/a&gt;创建集群&lt;/h1&gt;&lt;p&gt;用户无需指定哪台节点为master，哪台节点为slave，因为redis内部算法帮我们实现了&lt;/p&gt;
+&lt;p&gt;create&lt;br&gt;–replicas # 可选参数，replicas表示每个master需要有几个slave。&lt;br&gt; 只有master节点的创建方式&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;./redis-trib.rb create  192.168.66.2:7000 192.168.66.2:7001 192.168.66.2:7002 192.168.66.3:7003 192.168.66.3:7004 192.168.66.3:7005&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;使用 –replicas 1 创建 每个master带一个 slave 指令&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;./redis-trib.rb create --replicas 1  192.168.66.2:7000 192.168.66.2:7001 192.168.66.2:7002 192.168.66.3:7003 192.168.66.3:7004 192.168.66.3:7005&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
     
     </summary>
     

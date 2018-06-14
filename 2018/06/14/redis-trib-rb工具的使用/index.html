@@ -89,7 +89,7 @@
 <meta property="og:site_name" content="不忘初心">
 <meta property="og:description" content="【转】https://www.jianshu.com/p/21f67bd739cc【官方】http://www.redis.cn/topics/cluster-tutorial.html 参数配置12345678910111、create：创建集群2、check：检查集群3、info：查看集群信息4、fix：修复集群5、reshard：在线迁移slot6、rebalance：平衡集群节点slot数">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-06-14T02:04:39.210Z">
+<meta property="og:updated_time" content="2018-06-14T02:06:21.637Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="redis-trib.rb工具的使用">
 <meta name="twitter:description" content="【转】https://www.jianshu.com/p/21f67bd739cc【官方】http://www.redis.cn/topics/cluster-tutorial.html 参数配置12345678910111、create：创建集群2、check：检查集群3、info：查看集群信息4、fix：修复集群5、reshard：在线迁移slot6、rebalance：平衡集群节点slot数">
@@ -403,6 +403,7 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./redis-trib.rb create  192.168.66.2:7000 192.168.66.2:7001 192.168.66.2:7002 192.168.66.3:7003 192.168.66.3:7004 192.168.66.3:7005</span><br></pre></td></tr></table></figure>
 <p>使用 –replicas 1 创建 每个master带一个 slave 指令</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./redis-trib.rb create --replicas 1  192.168.66.2:7000 192.168.66.2:7001 192.168.66.2:7002 192.168.66.3:7003 192.168.66.3:7004 192.168.66.3:7005</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
 <h1><span id="检查集群情况check">检查集群情况check</span></h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./redis-trib.rb check 192.168.66.2:7000    #后面的IP与端口,随便指定集群中的一个就行了。</span><br></pre></td></tr></table></figure>
 <h1><span id="查看集群信息info">查看集群信息info</span></h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./redis-trib.rb info 192.168.66.2:7000</span><br></pre></td></tr></table></figure>
 <p>输出：</p>
