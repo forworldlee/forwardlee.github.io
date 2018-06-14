@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.forwardlee.com/"/>
-  <updated>2018-06-14T02:06:21.637Z</updated>
+  <updated>2018-06-14T02:35:37.331Z</updated>
   <id>http://www.forwardlee.com/</id>
   
   <author>
@@ -14,6 +14,33 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Redis LRU算法详情</title>
+    <link href="http://www.forwardlee.com/2018/06/14/Redis-LRU%E7%AE%97%E6%B3%95%E8%AF%A6%E6%83%85/"/>
+    <id>http://www.forwardlee.com/2018/06/14/Redis-LRU算法详情/</id>
+    <published>2018-06-14T02:14:56.000Z</published>
+    <updated>2018-06-14T02:35:37.331Z</updated>
+    
+    <content type="html"><![CDATA[<h1><span id="什么是lru算法">什么是LRU算法</span></h1><p>LRU-Leaste Recently Use，最近使用最少。算法原理略。</p>
+<h1><span id="redis-lru算法">Redis LRU算法</span></h1><p>redis在存储数据时达到最大内存设置maxmemory后，自身会清理数据，以减少内存使用量，保证Reids服务的正常状态。<br>Redis 内存使用策略maxmemory-policy可配置项：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">noeviction 如果内存使用达到了maxmemory，client继续写入数据，那么Redis就直接报错给客户端</span><br><span class="line">allkeys-lru 移除掉最近最少使用的那些key对应的数据</span><br><span class="line">volatile-lru 仅对设置了过期时间的key进行LRU清理</span><br><span class="line">allkeys-random 随机删除一些key的数据</span><br><span class="line">volatile-random 随机删除一些设置了过期时间的key对应的数据</span><br><span class="line">volatile-ttl 删除哪些过期时间比较短的key对应的数据</span><br></pre></td></tr></table></figure>
+<p>配置项多个，但实际应用场景中大多使用allkeys-lru策略</p>
+<h1><span id="maxmemory-sample配置">maxmemory-sample配置</span></h1><p>Redis在进行LRU算法清理数据时，需要对多个key进行采样，选出采样key中最近使用最少的key进行数据清理，maxmemory-sample选项就是用来配置采样大小的。Redis给出了3\5\10三个可配置的值，配置为3执行LRU速度更快，但是精确率不高，5是一个速度和精确率适中的配置，10使得LRU算法精确率更高，但是会消耗更多的CPU</p>
+<p><strong>在实际应用中，会选择配置10，消耗更多CPU以获得更精确的LRU数据清理</strong></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1&gt;&lt;span id=&quot;什么是lru算法&quot;&gt;什么是LRU算法&lt;/span&gt;&lt;/h1&gt;&lt;p&gt;LRU-Leaste Recently Use，最近使用最少。算法原理略。&lt;/p&gt;
+&lt;h1&gt;&lt;span id=&quot;redis-lru算法&quot;&gt;Redis LRU算法&lt;/span&gt;&lt;/h1&gt;&lt;
+    
+    </summary>
+    
+    
+      <category term="Redis" scheme="http://www.forwardlee.com/tags/Redis/"/>
+    
+  </entry>
   
   <entry>
     <title>redis-trib.rb工具的使用</title>
@@ -993,35 +1020,6 @@
     
     
       <category term="MySQL" scheme="http://www.forwardlee.com/tags/MySQL/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Laravel 5.x进阶笔记（二）</title>
-    <link href="http://www.forwardlee.com/2017/08/01/p/Laravel5.x%E8%BF%9B%E9%98%B6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%8C%EF%BC%89/"/>
-    <id>http://www.forwardlee.com/2017/08/01/p/Laravel5.x进阶笔记（二）/</id>
-    <published>2017-08-01T07:54:53.000Z</published>
-    <updated>2017-08-01T08:21:26.000Z</updated>
-    
-    <content type="html"><![CDATA[<h2><span id="在浏览器中展示创建的article列表">在浏览器中展示创建的Article列表</span></h2><p>在浏览器中展示创建的Article数据，需要使用Http请求Web服务器，Web服务器接收请求并将Article数据在视图页面中展示，即MVC。完成上述操作，离不开Laravel的路由功能，所谓路由就是请求的控制转发。Laravel把所有的请求地址预先配置在路由列表文件中learnlaravel5/app/Http/routes.php。描述路由的基本格式是：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Route::get(&apos;/home&apos;, &apos;HomeController@index&apos;);</span><br></pre></td></tr></table></figure>
-<p>Route类（\Illuminate\Support\Facades\Route）是Laravel框架提供的路由配置工具类，get标识http请求的Method（get/post/put/patch…），get函数的第一个参数是url格式定义，第二个参数用@分割成两部分，第一部分是Http请求的Controller类，第二部分标识Controller的具体执行方法，具体看HomeController类的内容描述：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line"></span><br><span class="line">namespace App\Http\Controllers;</span><br><span class="line"></span><br><span class="line">use App\Article;</span><br><span class="line">use App\Http\Requests;</span><br><span class="line">use Illuminate\Http\Request;</span><br><span class="line"></span><br><span class="line">class HomeController extends \Illuminate\Routing\Controller</span><br><span class="line">&#123;</span><br><span class="line">    /**</span><br><span class="line">     * Create a new controller instance.</span><br><span class="line">     *</span><br><span class="line">     * @return void</span><br><span class="line">     */</span><br><span class="line">    public function __construct()</span><br><span class="line">    &#123;</span><br><span class="line">        $this-&gt;middleware(&apos;auth&apos;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * Show the application dashboard.</span><br><span class="line">     *</span><br><span class="line">     * @return \Illuminate\Http\Response</span><br><span class="line">     */</span><br><span class="line">    public function index()</span><br><span class="line">    &#123;</span><br><span class="line">        return view(&apos;home&apos;)-&gt;withArticles(Article::all());;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>_construct()是默认构造函数，函数体使用middleware(‘auth’)中间件，描述访问这个Controller需要登录验证。index()方法则是在路由中指定的执行方法，返回值是一个视图层对象view，视图的目录位置是模板文件learnlaravel5/resources/views/home.blade.php，view(‘home’)中的home与模板文件的第一个关键字相同，index函数指定了返回的视图文件，并把Article数据通过Eloquent方法取出，使用withArticles方法携带返回到视图页面，此处withArticles标识在页面可以通过articles对象取得所有返回的数据，依次类推如果是withAcls,则在页面上使用acls对象获取返回的数据。home.blade.php示例（php模板语法自行解决）：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">@extends(&apos;layouts.app&apos;)</span><br><span class="line"></span><br><span class="line">@section(&apos;content&apos;)</span><br><span class="line">    &lt;div id=&quot;title&quot; style=&quot;text-align: center;&quot;&gt;</span><br><span class="line">        &lt;h1&gt;Learn Laravel 5&lt;/h1&gt;</span><br><span class="line">        &lt;div style=&quot;padding: 5px; font-size: 16px;&quot;&gt;Learn Laravel 5&lt;/div&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">    &lt;hr&gt;</span><br><span class="line">    &lt;div id=&quot;content&quot;&gt;</span><br><span class="line">        &lt;ul&gt;</span><br><span class="line">            @foreach ($articles as $article)</span><br><span class="line">                &lt;li style=&quot;margin: 50px 0;&quot;&gt;</span><br><span class="line">                    &lt;div class=&quot;title&quot;&gt;</span><br><span class="line">                        &lt;a href=&quot;&#123;&#123; url(&apos;article/&apos;.$article-&gt;id) &#125;&#125;&quot;&gt;</span><br><span class="line">                            &lt;h4&gt;&#123;&#123; $article-&gt;title &#125;&#125;&lt;/h4&gt;</span><br><span class="line">                        &lt;/a&gt;</span><br><span class="line">                    &lt;/div&gt;</span><br><span class="line">                    &lt;div class=&quot;body&quot;&gt;</span><br><span class="line">                        &lt;p&gt;&#123;&#123; $article-&gt;body &#125;&#125;&lt;/p&gt;</span><br><span class="line">                    &lt;/div&gt;</span><br><span class="line">                &lt;/li&gt;</span><br><span class="line">            @endforeach</span><br><span class="line">        &lt;/ul&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">@endsection</span><br></pre></td></tr></table></figure>
-<p>通过浏览器输入<a href="http://localhost:1024/home，就能看到数据加载到页面。" target="_blank" rel="noopener">http://localhost:1024/home，就能看到数据加载到页面。</a><br><img src="/images/home_articles.png" alt=""></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2&gt;&lt;span id=&quot;在浏览器中展示创建的article列表&quot;&gt;在浏览器中展示创建的Article列表&lt;/span&gt;&lt;/h2&gt;&lt;p&gt;在浏览器中展示创建的Article数据，需要使用Http请求Web服务器，Web服务器接收请求并将Article数据在视图页面中展示，即MVC
-    
-    </summary>
-    
-    
-      <category term="PHP" scheme="http://www.forwardlee.com/tags/PHP/"/>
-    
-      <category term="Laravel5" scheme="http://www.forwardlee.com/tags/Laravel5/"/>
     
   </entry>
   
