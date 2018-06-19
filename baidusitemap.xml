@@ -4,6 +4,25 @@
 
     
   <url>
+    <loc>http://www.forwardlee.com/2018/06/19/%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AENginx-LUA%E5%8F%8C%E5%B1%82Ngnix%E6%9E%B6%E6%9E%84/</loc>
+    <lastmod>2018-06-19T11:54:48.235Z</lastmod>
+    <data>
+        <display>
+        <title>基于OpenResty安装配置Nginx+LUA并实现请求分发的双层Nginx架构策略</title>
+        <pubTime>2018-06-19T09:20:51.000Z</pubTime>
+        
+        <tag>Nginx</tag>
+         
+        <tag>LUA</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://www.forwardlee.com/2018/06/14/redis-trib-rb%E5%B7%A5%E5%85%B7%E7%9A%84%E4%BD%BF%E7%94%A8/</loc>
     <lastmod>2018-06-14T03:25:39.808Z</lastmod>
     <data>
@@ -301,13 +320,13 @@
         <title>CentOS 6.8 + MariaDB 10.0 with Galera Cluster+Keepalived高可用解决方案</title>
         <pubTime>2018-05-24T11:40:46.000Z</pubTime>
         
-        <tag>Galera</tag>
-         
-        <tag>CentOS</tag>
-         
         <tag>MariaDB</tag>
          
         <tag>Keepalived</tag>
+         
+        <tag>Galera</tag>
+         
+        <tag>CentOS</tag>
          
          
            
@@ -342,11 +361,11 @@
         <title>CentOS 6.8+MySQL 5.5 with Galera Cluster环境搭建</title>
         <pubTime>2018-05-22T16:13:16.000Z</pubTime>
         
-        <tag>MySQL</tag>
-         
         <tag>Galera</tag>
          
         <tag>CentOS</tag>
+         
+        <tag>MySQL</tag>
          
          
            
@@ -363,11 +382,11 @@
         <title>Keepalived HA +LVS+ Galera Cluster环境</title>
         <pubTime>2018-05-23T08:14:48.000Z</pubTime>
         
-        <tag>MySQL</tag>
+        <tag>Keepalived</tag>
          
         <tag>Galera</tag>
          
-        <tag>Keepalived</tag>
+        <tag>MySQL</tag>
          
          
            
@@ -384,9 +403,9 @@
         <title>Galera Cluster 3 + Mysql wresp 5.6安装配置</title>
         <pubTime>2018-05-24T05:02:55.000Z</pubTime>
         
-        <tag>MySQL</tag>
-         
         <tag>Galera</tag>
+         
+        <tag>MySQL</tag>
          
          
            
@@ -403,9 +422,9 @@
         <title>Docker Galera Cluster环境快速搭建</title>
         <pubTime>2018-05-22T03:12:14.000Z</pubTime>
         
-        <tag>Galera</tag>
-         
         <tag>MariaDB</tag>
+         
+        <tag>Galera</tag>
          
         <tag>Docker</tag>
          

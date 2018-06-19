@@ -108,18 +108,18 @@
 
 
 
-  <meta name="description" content="123456789101112131415161718##先安装依赖库yum install libaio gcc gcc-c++ boost-devel scons check-devel openssl-develln -sf /usr/lib64/libssl.so.10 /usr/lib64/libssl.so.6ln -sf /usr/lib64/libcrypto.so.10 /usr">
-<meta name="keywords" content="Galera,CentOS,MySQL">
+  <meta name="description" content="环境准备台CentOS6.x192.168.1.210192.168.1.211192.168.1.212网络拓扑210和211作为应用层web服务器212作为网络请求分发代理服务器 Step1:安装Linux依赖1yum install -y readline-devel pcre-devel openssl-devel gcc Step2:安装Nginx Openresty1234567891">
+<meta name="keywords" content="Nginx,LUA">
 <meta property="og:type" content="article">
-<meta property="og:title" content="CentOS 6.8+MySQL 5.5 with Galera Cluster环境搭建">
-<meta property="og:url" content="http://www.forwardlee.com/2018/05/23/CentOS-6-8-MySQL-5-5-with-Galera-Cluster环境搭建/index.html">
+<meta property="og:title" content="基于OpenResty安装配置Nginx+LUA并实现请求分发的双层Nginx架构策略">
+<meta property="og:url" content="http://www.forwardlee.com/2018/06/19/安装配置Nginx-LUA双层Ngnix架构/index.html">
 <meta property="og:site_name" content="不忘初心">
-<meta property="og:description" content="123456789101112131415161718##先安装依赖库yum install libaio gcc gcc-c++ boost-devel scons check-devel openssl-develln -sf /usr/lib64/libssl.so.10 /usr/lib64/libssl.so.6ln -sf /usr/lib64/libcrypto.so.10 /usr">
+<meta property="og:description" content="环境准备台CentOS6.x192.168.1.210192.168.1.211192.168.1.212网络拓扑210和211作为应用层web服务器212作为网络请求分发代理服务器 Step1:安装Linux依赖1yum install -y readline-devel pcre-devel openssl-devel gcc Step2:安装Nginx Openresty1234567891">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-05-25T13:11:43.862Z">
+<meta property="og:updated_time" content="2018-06-19T11:54:48.235Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="CentOS 6.8+MySQL 5.5 with Galera Cluster环境搭建">
-<meta name="twitter:description" content="123456789101112131415161718##先安装依赖库yum install libaio gcc gcc-c++ boost-devel scons check-devel openssl-develln -sf /usr/lib64/libssl.so.10 /usr/lib64/libssl.so.6ln -sf /usr/lib64/libcrypto.so.10 /usr">
+<meta name="twitter:title" content="基于OpenResty安装配置Nginx+LUA并实现请求分发的双层Nginx架构策略">
+<meta name="twitter:description" content="环境准备台CentOS6.x192.168.1.210192.168.1.211192.168.1.212网络拓扑210和211作为应用层web服务器212作为网络请求分发代理服务器 Step1:安装Linux依赖1yum install -y readline-devel pcre-devel openssl-devel gcc Step2:安装Nginx Openresty1234567891">
 
 
 
@@ -128,7 +128,7 @@
 
 
 
-  <link rel="canonical" href="http://www.forwardlee.com/2018/05/23/CentOS-6-8-MySQL-5-5-with-Galera-Cluster环境搭建/"/>
+  <link rel="canonical" href="http://www.forwardlee.com/2018/06/19/安装配置Nginx-LUA双层Ngnix架构/"/>
 
 
 
@@ -138,7 +138,7 @@
   };
 </script>
 
-  <title>CentOS 6.8+MySQL 5.5 with Galera Cluster环境搭建 | 不忘初心</title>
+  <title>基于OpenResty安装配置Nginx+LUA并实现请求分发的双层Nginx架构策略 | 不忘初心</title>
   
 
 
@@ -350,7 +350,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2018/05/23/CentOS-6-8-MySQL-5-5-with-Galera-Cluster环境搭建/">
+    <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2018/06/19/安装配置Nginx-LUA双层Ngnix架构/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="ForwardLee">
@@ -367,7 +367,7 @@
 
         
         
-          <h2 class="post-title" itemprop="name headline">CentOS 6.8+MySQL 5.5 with Galera Cluster环境搭建
+          <h2 class="post-title" itemprop="name headline">基于OpenResty安装配置Nginx+LUA并实现请求分发的双层Nginx架构策略
               
             
           </h2>
@@ -392,24 +392,12 @@
                 
               
 
-              <time title="创建时间：2018-05-23 00:13:16" itemprop="dateCreated datePublished" datetime="2018-05-23T00:13:16+08:00">2018-05-23</time>
+              <time title="创建时间：2018-06-19 17:20:51 / 修改时间：19:54:48" itemprop="dateCreated datePublished" datetime="2018-06-19T17:20:51+08:00">2018-06-19</time>
             
 
             
               
 
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2018-05-25 21:11:43" itemprop="dateModified" datetime="2018-05-25T21:11:43+08:00">2018-05-25</time>
               
             
           </span>
@@ -423,8 +411,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2018/05/23/CentOS-6-8-MySQL-5-5-with-Galera-Cluster环境搭建/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count gitment-comments-count" data-xid="/2018/05/23/CentOS-6-8-MySQL-5-5-with-Galera-Cluster环境搭建/" itemprop="commentsCount"></span>
+                <a href="/2018/06/19/安装配置Nginx-LUA双层Ngnix架构/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count gitment-comments-count" data-xid="/2018/06/19/安装配置Nginx-LUA双层Ngnix架构/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -452,32 +440,44 @@
       
 
       
-        <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">##先安装依赖库</span><br><span class="line">yum install libaio gcc gcc-c++ boost-devel scons check-devel openssl-devel</span><br><span class="line">ln -sf /usr/lib64/libssl.so.10 /usr/lib64/libssl.so.6</span><br><span class="line">ln -sf /usr/lib64/libcrypto.so.10 /usr/lib64/libcrypto.so.6</span><br><span class="line">##下载MySQL with wsrep源码包，目前最新版本是5.5.34-25.9</span><br><span class="line">wget https://launchpad.net/codership-mysql/5.5/5.5.34-25.9/+download/mysql-5.5.34_wsrep_25.9-linux-x86_64.tar.gz</span><br><span class="line">tar zxvf mysql-5.5*</span><br><span class="line">mv mysql-5.5.34_wsrep_25.9-linux-x86_64 /usr/local/mysql</span><br><span class="line">cd /usr/local/mysql/</span><br><span class="line">groupadd mysql</span><br><span class="line">useradd -r -g mysql mysql</span><br><span class="line">chown -R mysql:mysql .</span><br><span class="line">./scripts/mysql_install_db --no-defaults --datadir=/opt/mysqldb/ --user=mysql</span><br><span class="line">chown -R root .</span><br><span class="line">chown -R mysql /opt/mysqldb/</span><br><span class="line">echo &quot;export PATH=$PATH:/usr/local/mysql/bin&quot; &gt;&gt; /etc/profile</span><br><span class="line">source /etc/profile</span><br><span class="line">[root@localhost mysql]# vi /etc/my.cnf</span><br></pre></td></tr></table></figure>
-<p>[mysqld]<br>datadir=/opt/mysqldb<br>socket = /tmp/mysql.sock<br>user=mysql</p>
-<p>symbolic-links=0</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">##启动Mysql</span><br><span class="line">mysqld_safe --wsrep_cluster_address=gcomm:// &gt;/dev/null &amp;</span><br><span class="line"></span><br><span class="line">##安装Xtrabackup</span><br><span class="line">yum install perl-DBD-MySQL perl-Time-HiRes nc</span><br><span class="line"></span><br><span class="line">wget https://www.percona.com/downloads/XtraBackup/XtraBackup-2.1.9/RPM/rhel6/x86_64/percona-xtrabackup-2.1.9-744.rhel6.x86_64.rpm</span><br><span class="line"></span><br><span class="line">rpm -ivh percona-xtrabackup-2.1.9-744.rhel6.x86_64.rpm</span><br><span class="line"></span><br><span class="line">##安装Galera复制插件</span><br><span class="line">wget https://launchpad.net/galera/3.x/25.3.5/+download/galera-25.3.5-src.tar.gz</span><br><span class="line"></span><br><span class="line">tar zxvf galera-25.3.5-src.tar.gz</span><br><span class="line"></span><br><span class="line">cd galera-25.3.5-src</span><br><span class="line"></span><br><span class="line">scons</span><br><span class="line"></span><br><span class="line">cp garb/garbd /usr/local/mysql/bin/</span><br><span class="line"></span><br><span class="line">cp libgalera_smm.so /usr/local/mysql/lib/plugin/</span><br></pre></td></tr></table></figure>
-<p>mysql初始化配置</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p /var/lib/mysql</span><br><span class="line">mkdir -p /etc/mysql/conf.d/</span><br><span class="line">chown mysql:mysql /var/lib/mysql</span><br><span class="line">cp /usr/local/mysql/support-files/mysql.server /etc/init.d/mysql</span><br><span class="line">/usr/local/mysql/bin/mysqld_safe --wsrep_cluster_address=gcomm:// &gt;/dev/null &amp;</span><br><span class="line">##创建用于同步的帐号，注意替换掉示例值。</span><br><span class="line">mysql  -e &quot;SET wsrep_on=OFF; GRANT ALL ON *.* TO &apos;galera&apos;@&apos;%&apos; IDENTIFIED BY &apos;galera&apos;&quot;;</span><br><span class="line">##我使用的mysql版本再执行上述授权语句后，%代表任意主机，却不包含localhost，所以要给防伪localhost单独授权。</span><br><span class="line">mysql  -e &quot;SET wsrep_on=OFF; GRANT ALL ON *.* TO &apos;galera&apos;@&apos;localhost&apos; IDENTIFIED BY &apos;galera&apos;&quot;;</span><br><span class="line">##修改root帐号密码，注意替换掉示例值。</span><br><span class="line">mysql -e &quot;SET wsrep_on=OFF;GRANT ALL PRIVILEGES ON * . * TO &apos;root&apos;@&apos;localhost&apos; IDENTIFIED BY &apos;root&apos; WITH GRANT OPTION MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0 ; &quot;</span><br><span class="line"></span><br><span class="line">##查看授权</span><br><span class="line">mysql -uroot -proot;</span><br><span class="line">show grants for galera@&quot;%&quot;;</span><br><span class="line">show grants for galera@&quot;localhost&quot;;</span><br><span class="line"></span><br><span class="line">##关闭MySQL</span><br><span class="line">pkill mysql</span><br></pre></td></tr></table></figure>
-<p>Galera集群配置</p>
-<p>修改my.cnf</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/my.cnf</span><br></pre></td></tr></table></figure>
-<p>my.cnf配置：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">[mysqld]</span><br><span class="line">datadir=/opt/mysqldb</span><br><span class="line">socket = /tmp/mysql.sock</span><br><span class="line">user=mysql</span><br><span class="line"></span><br><span class="line">symbolic-links=0</span><br><span class="line"></span><br><span class="line">######galera conf start########</span><br><span class="line">server-id=101</span><br><span class="line">wsrep_node_name = mysql1</span><br><span class="line">wsrep_provider = /usr/local/mysql/lib/plugin/libgalera_smm.so</span><br><span class="line">wsrep_sst_method = rsync</span><br><span class="line">#使用sst的用户和密码，这里如果开启，需要在mysql上创建该用户，并授予其足够的权限</span><br><span class="line">wsrep_sst_auth=galera:galera</span><br><span class="line"># 配置集群的所有节点</span><br><span class="line">wsrep_cluster_address=gcomm://192.168.1.150:4567,192.168.1.151:4567</span><br><span class="line"># 配置自己的ip:port，每个配置各不相同</span><br><span class="line">wsrep_node_address=192.168.1.150:4567</span><br><span class="line">default_storage_engine=InnoDB</span><br><span class="line">innodb_autoinc_lock_mode=2</span><br><span class="line">innodb_locks_unsafe_for_binlog=1</span><br><span class="line">innodb_flush_log_at_trx_commit=1</span><br><span class="line">innodb_file_per_table=1</span><br><span class="line">binlog_format=ROW</span><br><span class="line">log-bin=mysql-bin</span><br><span class="line">relay-log=mysql-relay-bin</span><br><span class="line">log-slave-updates=1</span><br><span class="line"></span><br><span class="line">#[mysqld_safe]</span><br><span class="line">#log-error=/var/lib/mysql/mysqld.log</span><br><span class="line">#pid-file=/var/lib/mysql/mysqld.pid</span><br></pre></td></tr></table></figure>
-<p>节点mysql1启动</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/local/mysql/bin/mysqld_safe --wsrep_cluster_address=gcomm:// &gt;/dev/null &amp;</span><br></pre></td></tr></table></figure>
-<p>检查启动的端口，应该有3306和4567两个端口</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">netstat -tunlp |grep 4567</span><br><span class="line">netstat -tunlp |grep 3306</span><br></pre></td></tr></table></figure>
-<p>在集群中添加新的节点，并执行启动脚本。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/etc/init.d/mysql start</span><br></pre></td></tr></table></figure>
-<p>PS：复制虚拟机，设置新IP</p>
-<p>在新的虚拟机中修改ifconfig-eth0，设置IP为192.168.1.151，去掉UUID、MAC两个参数。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/sysconfig/network-scripts/ifcfg-eth0</span><br></pre></td></tr></table></figure>
-<p>重建路由</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rm -rf /etc/udev/rules.d/70-persistent-net.rules</span><br></pre></td></tr></table></figure>
-<p>重启虚拟机</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">shutown -r now</span><br></pre></td></tr></table></figure>
-<p>测试网络</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ping 192.168.1.150</span><br></pre></td></tr></table></figure>
+        <h1><span id="环境准备">环境准备</span></h1><p>台CentOS6.x<br>192.168.1.210<br>192.168.1.211<br>192.168.1.212<br>网络拓扑<br>210和211作为应用层web服务器<br>212作为网络请求分发代理服务器</p>
+<h1><span id="step1安装linux依赖">Step1:安装Linux依赖</span></h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install -y readline-devel pcre-devel openssl-devel gcc</span><br></pre></td></tr></table></figure>
+<h1><span id="step2安装nginx-openresty">Step2:安装Nginx Openresty</span></h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">wget http://openresty.org/download/ngx_openresty-1.7.7.2.tar.gz  </span><br><span class="line">tar -xzvf ngx_openresty-1.7.7.2.tar.gz  </span><br><span class="line">cd /usr/servers/ngx_openresty-1.7.7.2/</span><br><span class="line"></span><br><span class="line">cd bundle/LuaJIT-2.1-20150120/  </span><br><span class="line">make clean &amp;&amp; make &amp;&amp; make install  </span><br><span class="line">ln -sf luajit-2.1.0-alpha /usr/local/bin/luajit</span><br><span class="line"></span><br><span class="line">cd bundle  </span><br><span class="line">wget https://github.com/FRiCKLE/ngx_cache_purge/archive/2.3.tar.gz  </span><br><span class="line">tar -xvf 2.3.tar.gz  </span><br><span class="line"></span><br><span class="line">cd bundle  </span><br><span class="line">wget https://github.com/yaoweibin/nginx_upstream_check_module/archive/v0.3.0.tar.gz  </span><br><span class="line">tar -xvf v0.3.0.tar.gz  </span><br><span class="line"></span><br><span class="line">cd /usr/servers/ngx_openresty-1.7.7.2  </span><br><span class="line">./configure --prefix=/usr/servers --with-http_realip_module  --with-pcre  --with-luajit --add-module=./bundle/ngx_cache_purge-2.3/ --add-module=./bundle/nginx_upstream_check_module-0.3.0/ -j2  </span><br><span class="line">make &amp;&amp; make install</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<h1><span id="step3检查安装并启动">Step3:检查安装并启动</span></h1><p>安装完成后有以下目录：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/servers/  </span><br><span class="line">ll</span><br><span class="line"></span><br><span class="line">/usr/servers/luajit</span><br><span class="line">/usr/servers/lualib</span><br><span class="line">/usr/servers/nginx</span><br></pre></td></tr></table></figure>
+<p>检查nginx版本</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/servers/nginx/sbin/nginx -V</span><br></pre></td></tr></table></figure>
+<p>启动nginx:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/servers/nginx/sbin/nginx</span><br></pre></td></tr></table></figure>
+<h1><span id="step4nginx添加lua配置">Step4:Nginx添加LUA配置</span></h1><p>使LUA配置按照工程化目录结构进行配置。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mkdir /usr/hello</span><br><span class="line"></span><br><span class="line">cp -r /usr/servers/lualib /usr/hello/</span><br></pre></td></tr></table></figure>
+<p>打开nginx.conf配置文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /usr/servers/nginx/conf/nginx.conf</span><br></pre></td></tr></table></figure>
+<p>在http部分添加：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">lua_package_path &quot;/usr/hello/lualib/?.lua;;&quot;;  </span><br><span class="line">lua_package_cpath &quot;/usr/hello/lualib/?.so;;&quot;;  </span><br><span class="line">include /usr/hello/hello.conf;</span><br></pre></td></tr></table></figure>
+<p>创建hello的lua配置和脚本</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">vi /usr/hello/hello.conf</span><br><span class="line"></span><br><span class="line">server &#123;  </span><br><span class="line">    listen       80;  </span><br><span class="line">    server_name  _;  </span><br><span class="line">  </span><br><span class="line">    location /hello/test &#123;  </span><br><span class="line">        default_type &apos;text/html&apos;;   </span><br><span class="line">        content_by_lua_file /usr/hello/lua/test.lua;  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>编辑lua脚本:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mkdir /usr/hello/lua</span><br><span class="line"></span><br><span class="line">vi /usr/hello/lua/test.lua</span><br><span class="line"></span><br><span class="line">ngx.say(&quot;hello world&quot;)</span><br></pre></td></tr></table></figure>
+<p>Nginx检查配置是否正确</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@eshop-cache01 hello]# /usr/servers/nginx/sbin/nginx -t  </span><br><span class="line">nginx: the configuration file /usr/servers/nginx/conf/nginx.conf syntax is ok</span><br><span class="line">nginx: configuration file /usr/servers/nginx/conf/nginx.conf test is successful</span><br></pre></td></tr></table></figure>
+<p>Nginx重新加载配置生效</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/servers/nginx/sbin/nginx -s reload</span><br></pre></td></tr></table></figure>
+<h1><span id="step5访问lua配置的location路径">Step5:访问LUA配置的location路径</span></h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl http://192.168.1.210/hello/test</span><br></pre></td></tr></table></figure>
+<p>返回test.lua中脚本输出的“hello world”。</p>
+<h1><span id="step6按照相同的方法部署另外两台机器的nginx">Step6:按照相同的方法部署另外两台机器的Nginx</span></h1><p>略…</p>
+<h1><span id="step7lua脚本实现请求分发">Step7:LUA脚本实现请求分发</span></h1><p>我们作为一个流量分发的nginx，会发送http请求到后端的应用nginx上面去，所以要先引入lua http lib包。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/hello/lualib/resty/  </span><br><span class="line">wget https://raw.githubusercontent.com/pintsized/lua-resty-http/master/lib/resty/http_headers.lua  </span><br><span class="line">wget https://raw.githubusercontent.com/pintsized/lua-resty-http/master/lib/resty/http.lua</span><br></pre></td></tr></table></figure>
+<p>在分发层Nginx写LUA脚本：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">nano /usr/hello/lua/test.lua</span><br><span class="line"></span><br><span class="line">local uri_args = ngx.req.get_uri_args()</span><br><span class="line">local ecourseId = uri_args[&quot;ecourseId&quot;]</span><br><span class="line"></span><br><span class="line">local host = &#123;&quot;192.168.1.210&quot;, &quot;192.168.1.211&quot;&#125;</span><br><span class="line">local hash = ngx.crc32_long(ecourseId)</span><br><span class="line">hash = (hash % 2) + 1</span><br><span class="line">backend = &quot;http://&quot;..host[hash]</span><br><span class="line"></span><br><span class="line">local paras = &quot;&quot;;</span><br><span class="line">local request_args_tab = ngx.req.get_uri_args()</span><br><span class="line">for k, v in pairs(request_args_tab) do</span><br><span class="line">    paras=paras..k..&quot;=&quot;..v..&quot;&amp;&quot;</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line">local requestPath = ngx.var.uri</span><br><span class="line">requestPath = requestPath..&quot;?&quot;..paras</span><br><span class="line"></span><br><span class="line">local http = require(&quot;resty.http&quot;)</span><br><span class="line">local httpc = http.new()</span><br><span class="line"></span><br><span class="line">local resp, err = httpc:request_uri(backend, &#123;</span><br><span class="line">    method = &quot;GET&quot;,</span><br><span class="line">    path = requestPath</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">if not resp then</span><br><span class="line">    ngx.say(&quot;request error :&quot;, err)</span><br><span class="line">    return</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line">ngx.say(resp.body)</span><br><span class="line"></span><br><span class="line">httpc:close()</span><br></pre></td></tr></table></figure>
+<p>Nginx重新加载配置生效</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/servers/nginx/sbin/nginx -s reload</span><br></pre></td></tr></table></figure>
+<h1><span id="测试请求分发">测试请求分发</span></h1><p>在浏览器地址栏输入<br><a href="http://192.168.1.212/hello/test?ecourseId=1" target="_blank" rel="noopener">http://192.168.1.212/hello/test?ecourseId=1</a><br><a href="http://192.168.1.212/hello/test?ecourseId=2" target="_blank" rel="noopener">http://192.168.1.212/hello/test?ecourseId=2</a><br><a href="http://192.168.1.212/hello/test?ecourseId=3" target="_blank" rel="noopener">http://192.168.1.212/hello/test?ecourseId=3</a><br><a href="http://192.168.1.212/hello/test?ecourseId=4" target="_blank" rel="noopener">http://192.168.1.212/hello/test?ecourseId=4</a><br>查看返回的结果，请求被分发到应用层web服务器节点了。根据ecourseId与应用层web服务节点数取模，找到对应的应用层服务器节点。</p>
+<h1><span id="补充lua脚本获取nginx-http请求的相关参数说明">补充：LUA脚本获取Nginx Http请求的相关参数说明</span></h1><p>1.获取当前请求的url相关信息</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">function test()</span><br><span class="line">-- 这个变量等于包含一些客户端请求参数的原始URI，它无法修改，请查看$uri更改或重写URI。</span><br><span class="line">local request_uri = ngx.var.request_uri</span><br><span class="line"> log(tools.gbk_to_u8(&quot;获取当前请求的url==&quot;) .. tools.u8_to_gbk(cjson.encode(request_uri)) )</span><br><span class="line"></span><br><span class="line"> -- HTTP方法（如http，https）。按需使用，例：</span><br><span class="line"> local scheme = ngx.var.scheme server_addr</span><br><span class="line"> log(tools.gbk_to_u8(&quot;获取当前请求的url scheme==&quot;) .. tools.u8_to_gbk(cjson.encode(scheme)) )</span><br><span class="line"></span><br><span class="line"> -- 服务器地址，在完成一次系统调用后可以确定这个值，如果要绕开系统调用，则必须在listen中指定地址并且使用bind参数。</span><br><span class="line"> local server_addr = ngx.var.server_addruri </span><br><span class="line"> log(tools.gbk_to_u8(&quot;获取当前请求的url server_addr==&quot;) .. tools.u8_to_gbk(cjson.encode(server_addr)) )</span><br><span class="line"></span><br><span class="line">-- 请求中的当前URI(不带请求参数，参数位于$args)，可以不同于浏览器传递的$request_uri的值，它可以通过内部重定向，或者使用index指令进行修改。</span><br><span class="line"> local uri = ngx.var.uri </span><br><span class="line"> log(tools.gbk_to_u8(&quot;获取当前请求的url uri==&quot;) .. tools.u8_to_gbk(cjson.encode(uri)) )</span><br><span class="line"></span><br><span class="line"> -- 服务器名称</span><br><span class="line"> local server_name  = ngx.var.server_name  </span><br><span class="line"> log(tools.gbk_to_u8(&quot;获取当前请求的url server_name ==&quot;) .. tools.u8_to_gbk(cjson.encode(server_name )) </span><br><span class="line"></span><br><span class="line"> -- 请求到达服务器的端口号。</span><br><span class="line">local server_port  = ngx.var.server_name  </span><br><span class="line"> log(tools.gbk_to_u8(&quot;获取当前请求的url server_port ==&quot;) .. tools.u8_to_gbk(cjson.encode(server_port )) </span><br><span class="line">end</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">test()</span><br></pre></td></tr></table></figure>
+<p>2.获取发送请求端过来的url相关信息</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">-- 获取远程的IP地址。</span><br><span class="line">local remote_addr  = ngx.var.remote_addr </span><br><span class="line"> log(m_uuid,tools.gbk_to_u8(&quot;获取发送请求过来的远程请求remote_addr ==&quot;) .. tools.u8_to_gbk(cjson.encode(remote_addr )) )</span><br><span class="line"></span><br><span class="line"> -- 获取远程的端口号</span><br><span class="line"> local remote_port  = ngx.var.remote_port  </span><br><span class="line"> log(m_uuid,tools.gbk_to_u8(&quot;获取发送请求过来的远程请求remote_port ==&quot;) .. tools.u8_to_gbk(cjson.encode(remote_port )) )</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -522,11 +522,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Galera/" rel="tag"># Galera</a>
+            <a href="/tags/Nginx/" rel="tag"># Nginx</a>
           
-            <a href="/tags/CentOS/" rel="tag"># CentOS</a>
-          
-            <a href="/tags/MySQL/" rel="tag"># MySQL</a>
+            <a href="/tags/LUA/" rel="tag"># LUA</a>
           
         </div>
       
@@ -539,8 +537,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/05/22/Docker-Galera-Cluster环境快速搭建/" rel="next" title="Docker Galera Cluster环境快速搭建">
-                <i class="fa fa-chevron-left"></i> Docker Galera Cluster环境快速搭建
+              <a href="/2018/06/14/Redis-LRU算法详情/" rel="next" title="Redis LRU算法详情">
+                <i class="fa fa-chevron-left"></i> Redis LRU算法详情
               </a>
             
           </div>
@@ -548,10 +546,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/05/23/Keepalived-HA-LVS-Galera-Cluster环境/" rel="prev" title="Keepalived HA +LVS+ Galera Cluster环境">
-                Keepalived HA +LVS+ Galera Cluster环境 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -607,8 +601,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -747,6 +750,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">1.</span> <span class="nav-text">环境准备</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">2.</span> <span class="nav-text">Step1:安装Linux依赖</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">3.</span> <span class="nav-text">Step2:安装Nginx Openresty</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">4.</span> <span class="nav-text">Step3:检查安装并启动</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">5.</span> <span class="nav-text">Step4:Nginx添加LUA配置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">6.</span> <span class="nav-text">Step5:访问LUA配置的location路径</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">7.</span> <span class="nav-text">Step6:按照相同的方法部署另外两台机器的Nginx</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">8.</span> <span class="nav-text">Step7:LUA脚本实现请求分发</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">9.</span> <span class="nav-text">测试请求分发</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">10.</span> <span class="nav-text">补充：LUA脚本获取Nginx Http请求的相关参数说明</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -932,7 +951,7 @@
       <script type="text/javascript">
       function renderGitment(){
         var gitment = new Gitmint({
-            id: 'page_s_blog_2018-05-23 12:13:16',
+            id: 'page_s_blog_2018-06-19 05:20:51',
             owner: 'forworldlee',
             repo: 'forworldlee.github.io',
             
