@@ -349,6 +349,154 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2018/05/29/Redis主从复制原理/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ForwardLee">
+      <meta itemprop="description" content="总结学习方法，实践技术技能。">
+      <meta itemprop="image" content="/images/head.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="不忘初心">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/05/29/Redis主从复制原理/" itemprop="url">
+                  Redis主从复制原理
+                </a>
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-05-29 14:37:15 / 修改时间：17:57:31" itemprop="dateCreated datePublished" datetime="2018-05-29T14:37:15+08:00">2018-05-29</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="主从复制原理"><a href="#主从复制原理" class="headerlink" title="主从复制原理"></a>主从复制原理</h1><p> <img src="/2018/05/29/Redis主从复制原理/Redis主从复制原理.jpg" alt="Redis主从复制原理"><br><strong> PS:</strong></p>
+<p> full resynchronization:新的slave节点连接master同步复制数据，是一个完整的数据同步过程，叫做full resynchronization操作。</p>
+<p> backlog：master在进行主从复制时，先在本机内存生成backlog，并且把要每次复制给slave的数据保存到backlog一份，目的是要记录数据同步的位置标识offset，以便于全量复制失败后，能够再次进行断点续传的增量复制。backlog的大小为1M。</p>
+<p> master run id：salve用来区分master节点是新数据同步还是已有数据同步，如果slave发现mater的run id发生了变化，那么slava就会进行全量数据复制。<br>在slave执行命令，查看master的run id：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; info server</span><br><span class="line"># Server</span><br><span class="line">redis_version:3.2.8</span><br><span class="line">redis_git_sha1:00000000</span><br><span class="line">redis_git_dirty:0</span><br><span class="line">redis_build_id:5da7c5438a3ad5de</span><br><span class="line">redis_mode:standalone</span><br><span class="line">os:Linux 2.6.32-431.el6.i686 i686</span><br><span class="line">arch_bits:32</span><br><span class="line">multiplexing_api:epoll</span><br><span class="line">gcc_version:4.4.7</span><br><span class="line">process_id:2119</span><br><span class="line">run_id:5b80bdc81f1624e2ee403c5ccfa0a542e99fbb3e</span><br><span class="line">tcp_port:6379</span><br><span class="line">uptime_in_seconds:62</span><br><span class="line">uptime_in_days:0</span><br><span class="line">hz:10</span><br><span class="line">lru_clock:562478</span><br><span class="line">executable:/usr/local/bin/redis-server</span><br><span class="line">config_file:/etc/redis/6379.conf</span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/05/29/Redis主从复制原理/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2018/05/28/Redis数据灾备和恢复过程中踩到的雷/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1876,168 +2024,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2018/05/16/为未来而学/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="ForwardLee">
-      <meta itemprop="description" content="总结学习方法，实践技术技能。">
-      <meta itemprop="image" content="/images/head.jpeg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="不忘初心">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/05/16/为未来而学/" itemprop="url">
-                  为未来而学
-                </a>
-              
-            
-          </h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2018-05-16 19:15:00 / 修改时间：19:24:35" itemprop="dateCreated datePublished" datetime="2018-05-16T19:15:00+08:00">2018-05-16</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">如果一个人只满足于完成别人所要求的事情，那么，他只能是个奴隶，只有当他超越了这个限度，才会成为一个自由人。</span><br><span class="line"></span><br><span class="line">——哈佛学习格言</span><br></pre></td></tr></table></figure>
-<p><strong>有关学习的两个困境</strong></p>
-<p><strong>一、学习是一场竞赛，我们凭什么才可以胜出？</strong></p>
-<p>大城市里面人们为了能够上一所“好的”小学，要选择购置学区房；</p>
-<p>大城市里面为了能够将来上好的中学，还要报各种课外班，什么奥数，英语，绘画，书法，钢琴，足球，篮球······；</p>
-<p>大城市里面孩子们每天不是在上学就是在上课外班，家长不是在送孩子去上学的路上就是在送孩子去课外班的路上。</p>
-<p>这一切正常吗，我们是选择了随大流还是经过了深思熟虑的思考？这样的学习方式和节奏是最有效的吗？这场学习的竞赛普通的家庭有竞争优势吗？哪些能力在我们未来会让我们更有竞争优势呢？哪些方面的学习对我们一生更加重要呢？</p>
-<p>不知道这些问题，朋友们有没有问过自己，有没有过深入的思考，有没有给自己一个答案。</p>
-<p>与此相反的是，小城市、农村、郊区的孩子们多数情况是玩玩玩，大好的青春真的就在玩耍中渡过啦，想必长大后会后悔吧。毕竟，人生中有许多事情是需要时间的积累的，而时间是不可以购买的，时间是一去不复返的，错过真的很难弥补上。阅读，就属于这样的事情。</p>
-<p>现在，城市与郊区的教育，重点学校与普通学校之间教育的差距越来越大，这种差距一方面体现在对教育的认知上，另一方面体现在优质的教育资源和用钱堆出来的课外兴趣班、优培班。</p>
-<p>好在，我们还有一种方法，能够缩小这种无法改变的学习资源和环境差距。是什么样的方法呢？</p>
-<p>俗话说，要用正确的方法做正确的事情。这一点最关键。我们要从学习的最根本出发，去探寻学习的本质，去掌握学习的方法，去洞察未来，这就是我们需要做的最正确的事情，它保证我们走在一条正确的道路上。而做这些事情，好的学校和富裕的家庭条件都不是必须的条件，需要的是我们的态度和行动。</p>
-<p><strong>二、学习是为了生活，生活是一辈子的事情，我们是否有终身学习的准备？</strong></p>
-<p>先不说，终身学习，就是学校里的学习，我们都无法很好地完成。这是为什么呢？</p>
-<p>说不爱学习的人，实际是没有发现好的学习方式、引人入胜的学习资源、让人体会到收获和成就感的学习成果。甚至，从更根本上来说，是没有找到或发现学习的意义。</p>
-<p>其实，人天生就是学习的好手，不仅具有好奇心，而且也爱学习。</p>
-<p>学习中往往会：</p>
-<p>因为不知道自己不知道，而没有思考；</p>
-<p>因为不知道学习目标是什么，不知道为什么而学，而没有动力；</p>
-<p>因为不知道学习方法，而无法采取行动；</p>
-<p>因为不知道学习需要经历的过程，而无法坚持。</p>
-<p>在这里，你将看清楚“学习”的样子，看清楚“学习的过程”，掌握“学习”的方法，知道并体会到“学习”带来的各种机会和可能性。</p>
-<p>从此，你会亲手为自己打开一扇通往未来的希望之门，你会走在通往未来的道路上，而且还站在巨人的肩膀上。慢慢地，你会发现你已经不是原来的你了，你能看的更远，也能看的更加清晰。终身学习也因此成为了你生活中形影不离的朋友！<br><img src="/images/erweima.png" alt="二维码"></p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2089,7 +2075,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">31</span>
+                    <span class="site-state-item-count">32</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -2140,7 +2126,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">18</span>
+                      
+                    
+                    <span class="site-state-item-count">19</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
