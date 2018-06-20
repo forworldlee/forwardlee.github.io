@@ -108,18 +108,18 @@
 
 
 
-  <meta name="description" content="接续《基于OpenResty安装配置Nginx+LUA并实现请求分发的双层Nginx架构策略》 应用架构设计Nginx请求分发层+Nginx应用层（nginx cache）+业务数据两级缓存服务接口（ehcache+redis） Step1:应用服务器Nginx安装resty静态化模板应用服务器要从缓存数据中获取数据并渲染到静态化模板中，所以在应用层Nginx安装模板包。 12345cd /usr">
+  <meta name="description" content="接续《基于OpenResty安装配置Nginx+LUA并实现请求分发的双层Nginx架构策略》 应用架构设计Nginx请求分发层+Nginx应用层（nginx cache）+业务数据两级缓存服务接口（ehcache+redis）">
 <meta property="og:type" content="article">
 <meta property="og:title" content="基于Nginx双层架构和数据缓存服务层组成的数据三级缓存策略">
 <meta property="og:url" content="http://www.forwardlee.com/2018/06/20/Nginx请求分发层和应用层双层架构模式下的应用层数据静态化策略/index.html">
 <meta property="og:site_name" content="不忘初心">
-<meta property="og:description" content="接续《基于OpenResty安装配置Nginx+LUA并实现请求分发的双层Nginx架构策略》 应用架构设计Nginx请求分发层+Nginx应用层（nginx cache）+业务数据两级缓存服务接口（ehcache+redis） Step1:应用服务器Nginx安装resty静态化模板应用服务器要从缓存数据中获取数据并渲染到静态化模板中，所以在应用层Nginx安装模板包。 12345cd /usr">
+<meta property="og:description" content="接续《基于OpenResty安装配置Nginx+LUA并实现请求分发的双层Nginx架构策略》 应用架构设计Nginx请求分发层+Nginx应用层（nginx cache）+业务数据两级缓存服务接口（ehcache+redis）">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://www.forwardlee.com/2018/06/20/Nginx请求分发层和应用层双层架构模式下的应用层数据静态化策略/1.png">
-<meta property="og:updated_time" content="2018-06-20T02:31:06.040Z">
+<meta property="og:updated_time" content="2018-06-20T02:48:36.423Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="基于Nginx双层架构和数据缓存服务层组成的数据三级缓存策略">
-<meta name="twitter:description" content="接续《基于OpenResty安装配置Nginx+LUA并实现请求分发的双层Nginx架构策略》 应用架构设计Nginx请求分发层+Nginx应用层（nginx cache）+业务数据两级缓存服务接口（ehcache+redis） Step1:应用服务器Nginx安装resty静态化模板应用服务器要从缓存数据中获取数据并渲染到静态化模板中，所以在应用层Nginx安装模板包。 12345cd /usr">
+<meta name="twitter:description" content="接续《基于OpenResty安装配置Nginx+LUA并实现请求分发的双层Nginx架构策略》 应用架构设计Nginx请求分发层+Nginx应用层（nginx cache）+业务数据两级缓存服务接口（ehcache+redis）">
 <meta name="twitter:image" content="http://www.forwardlee.com/2018/06/20/Nginx请求分发层和应用层双层架构模式下的应用层数据静态化策略/1.png">
 
 
@@ -393,7 +393,7 @@
                 
               
 
-              <time title="创建时间：2018-06-20 09:01:28 / 修改时间：10:31:06" itemprop="dateCreated datePublished" datetime="2018-06-20T09:01:28+08:00">2018-06-20</time>
+              <time title="创建时间：2018-06-20 09:01:28 / 修改时间：10:48:36" itemprop="dateCreated datePublished" datetime="2018-06-20T09:01:28+08:00">2018-06-20</time>
             
 
             
@@ -443,6 +443,7 @@
       
         <p>接续《<a href="http://www.forwardlee.com/2018/06/19/%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AENginx-LUA%E5%8F%8C%E5%B1%82Ngnix%E6%9E%B6%E6%9E%84/">基于OpenResty安装配置Nginx+LUA并实现请求分发的双层Nginx架构策略</a>》</p>
 <h1><span id="应用架构设计">应用架构设计</span></h1><p>Nginx请求分发层+Nginx应用层（nginx cache）+业务数据两级缓存服务接口（ehcache+redis）<br><img src="/2018/06/20/Nginx请求分发层和应用层双层架构模式下的应用层数据静态化策略/1.png" alt="架构设计"></p>
+<a id="more"></a>
 <h1><span id="step1应用服务器nginx安装resty静态化模板">Step1:应用服务器Nginx安装resty静态化模板</span></h1><p>应用服务器要从缓存数据中获取数据并渲染到静态化模板中，所以在应用层Nginx安装模板包。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/hello/lualib/resty/</span><br><span class="line">wget https://raw.githubusercontent.com/bungle/lua-resty-template/master/lib/resty/template.lua</span><br><span class="line">mkdir /usr/hello/lualib/resty/html</span><br><span class="line">cd /usr/hello/lualib/resty/html</span><br><span class="line">wget https://raw.githubusercontent.com/bungle/lua-resty-template/master/lib/resty/template/html.lua</span><br></pre></td></tr></table></figure>
 <h1><span id="step2模板配置">Step2：模板配置</span></h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/hello/</span><br><span class="line">mkdir templates</span><br><span class="line"></span><br><span class="line">vi hello.conf</span><br><span class="line">##在server配置中增加以下两行配置</span><br><span class="line">set $template_location &quot;/templates&quot;;  </span><br><span class="line">set $template_root &quot;/usr/hello/templates&quot;;</span><br><span class="line"></span><br><span class="line">cd /usr/hello/templates</span><br><span class="line"></span><br><span class="line">vi ecourse.html</span><br><span class="line"></span><br><span class="line">##放入以下内容</span><br><span class="line">ecourse id: &#123;* ecourseId *&#125;&lt;/br&gt;   </span><br><span class="line">ecourse name: &#123;* ecourseName *&#125;&lt;/br&gt;</span><br><span class="line">ecourse price: &#123;* ecoursePrice *&#125;&lt;/br&gt;</span><br><span class="line">ecourse author name: &#123;* authorName *&#125;&lt;/br&gt;</span><br><span class="line">ecourse author type: &#123;* authorType *&#125;&lt;/br&gt;</span><br><span class="line">ecourse author addr: &#123;* authorAddr *&#125;&lt;/br&gt; </span><br><span class="line">ecourse author sex: &#123;* authorSex *&#125;&lt;/br&gt;</span><br><span class="line">ecourse author level: &#123;* authorLevel *&#125;&lt;/br&gt;</span><br></pre></td></tr></table></figure>
