@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.forwardlee.com/"/>
-  <updated>2018-06-19T11:54:48.235Z</updated>
+  <updated>2018-06-20T02:31:06.040Z</updated>
   <id>http://www.forwardlee.com/</id>
   
   <author>
@@ -16,11 +16,40 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>基于Nginx双层架构和数据缓存服务层组成的数据三级缓存策略</title>
+    <link href="http://www.forwardlee.com/2018/06/20/Nginx%E8%AF%B7%E6%B1%82%E5%88%86%E5%8F%91%E5%B1%82%E5%92%8C%E5%BA%94%E7%94%A8%E5%B1%82%E5%8F%8C%E5%B1%82%E6%9E%B6%E6%9E%84%E6%A8%A1%E5%BC%8F%E4%B8%8B%E7%9A%84%E5%BA%94%E7%94%A8%E5%B1%82%E6%95%B0%E6%8D%AE%E9%9D%99%E6%80%81%E5%8C%96%E7%AD%96%E7%95%A5/"/>
+    <id>http://www.forwardlee.com/2018/06/20/Nginx请求分发层和应用层双层架构模式下的应用层数据静态化策略/</id>
+    <published>2018-06-20T01:01:28.000Z</published>
+    <updated>2018-06-20T02:31:06.040Z</updated>
+    
+    <content type="html"><![CDATA[<p>接续《<a href="http://www.forwardlee.com/2018/06/19/%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AENginx-LUA%E5%8F%8C%E5%B1%82Ngnix%E6%9E%B6%E6%9E%84/">基于OpenResty安装配置Nginx+LUA并实现请求分发的双层Nginx架构策略</a>》</p>
+<h1><span id="应用架构设计">应用架构设计</span></h1><p>Nginx请求分发层+Nginx应用层（nginx cache）+业务数据两级缓存服务接口（ehcache+redis）<br><img src="/2018/06/20/Nginx请求分发层和应用层双层架构模式下的应用层数据静态化策略/1.png" alt="架构设计"></p>
+<h1><span id="step1应用服务器nginx安装resty静态化模板">Step1:应用服务器Nginx安装resty静态化模板</span></h1><p>应用服务器要从缓存数据中获取数据并渲染到静态化模板中，所以在应用层Nginx安装模板包。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/hello/lualib/resty/</span><br><span class="line">wget https://raw.githubusercontent.com/bungle/lua-resty-template/master/lib/resty/template.lua</span><br><span class="line">mkdir /usr/hello/lualib/resty/html</span><br><span class="line">cd /usr/hello/lualib/resty/html</span><br><span class="line">wget https://raw.githubusercontent.com/bungle/lua-resty-template/master/lib/resty/template/html.lua</span><br></pre></td></tr></table></figure>
+<h1><span id="step2模板配置">Step2：模板配置</span></h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/hello/</span><br><span class="line">mkdir templates</span><br><span class="line"></span><br><span class="line">vi hello.conf</span><br><span class="line">##在server配置中增加以下两行配置</span><br><span class="line">set $template_location &quot;/templates&quot;;  </span><br><span class="line">set $template_root &quot;/usr/hello/templates&quot;;</span><br><span class="line"></span><br><span class="line">cd /usr/hello/templates</span><br><span class="line"></span><br><span class="line">vi ecourse.html</span><br><span class="line"></span><br><span class="line">##放入以下内容</span><br><span class="line">ecourse id: &#123;* ecourseId *&#125;&lt;/br&gt;   </span><br><span class="line">ecourse name: &#123;* ecourseName *&#125;&lt;/br&gt;</span><br><span class="line">ecourse price: &#123;* ecoursePrice *&#125;&lt;/br&gt;</span><br><span class="line">ecourse author name: &#123;* authorName *&#125;&lt;/br&gt;</span><br><span class="line">ecourse author type: &#123;* authorType *&#125;&lt;/br&gt;</span><br><span class="line">ecourse author addr: &#123;* authorAddr *&#125;&lt;/br&gt; </span><br><span class="line">ecourse author sex: &#123;* authorSex *&#125;&lt;/br&gt;</span><br><span class="line">ecourse author level: &#123;* authorLevel *&#125;&lt;/br&gt;</span><br></pre></td></tr></table></figure>
+<p>配置Nginx本地缓存的大小。Nginx会在缓存数据达到设置的大小后，进行LRU算法清理掉无效数据。还可以设置缓存数据过期时间，到期或者达到缓存设置的大小都会进行LRU清理缓存。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">vi /usr/servers/nginx/conf/nginx.conf</span><br><span class="line"></span><br><span class="line">##在http中增加以下配置，my_cache是自定义的cache name</span><br><span class="line">lua_shared_dict my_cache 128m;</span><br></pre></td></tr></table></figure>
+<h1><span id="step3应用层nginx数据静态化过程lua脚本">Step3:应用层Nginx数据静态化过程LUA脚本</span></h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/hello/</span><br><span class="line">vi hello.conf</span><br><span class="line">##增加一个新的location配置</span><br><span class="line"></span><br><span class="line"> location /ecourse/info &#123;</span><br><span class="line">        default_type &apos;text/html&apos;;</span><br><span class="line">        content_by_lua_file /usr/local/common/lua_scripts/hello/lua/ecourse.lua;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>录入ecourse.lua脚本内容</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">local uri_args = ngx.req.get_uri_args()</span><br><span class="line">local ecourseId = uri_args[&quot;ecourseId&quot;]</span><br><span class="line">### eccache就是在hello.conf中定义的cache name</span><br><span class="line">local cache_ngx = ngx.shared.eccache</span><br><span class="line"></span><br><span class="line">local ecourseCacheKey = &quot;ecourse_info_&quot;..ecourseId</span><br><span class="line"></span><br><span class="line">local ecourseCache = cache_ngx:get(ecourseCacheKey)</span><br><span class="line"></span><br><span class="line">if ecourseCache == &quot;&quot; or ecourseCache == nil then</span><br><span class="line">	local http = require(&quot;resty.http&quot;)</span><br><span class="line">	local httpc = http.new()</span><br><span class="line"></span><br><span class="line">	local resp, err = httpc:request_uri(&quot;http://192.168.1.103:8080&quot;,&#123;</span><br><span class="line">  		method = &quot;GET&quot;,</span><br><span class="line">  		path = &quot;/getEcourseInfo?ecourseId=&quot;..ecourseId</span><br><span class="line">	&#125;)</span><br><span class="line"></span><br><span class="line">     ecourseCache = resp.body</span><br><span class="line">	cache_ngx:set(ecourseCacheKey, ecourseCache, 10 * 60)</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line">local cjson = require(&quot;cjson&quot;)</span><br><span class="line">local ecourseCacheJSON = cjson.decode(ecourseCache)</span><br><span class="line"></span><br><span class="line">local context = &#123;</span><br><span class="line">	ecourseId = ecourseCacheJSON.ecourseId,</span><br><span class="line">	ecourseName = ecourseCacheJSON.ecourseName,</span><br><span class="line">	ecoursePrice = ecourseCacheJSON.ecoursePrice,</span><br><span class="line">	authorName = ecourseCacheJSON.authorName,</span><br><span class="line">	authorType = ecourseCacheJSON.authorType,</span><br><span class="line">	authorAddr = ecourseCacheJSON.authorAddr,</span><br><span class="line">	authorSex = ecourseCacheJSON.authorSex,</span><br><span class="line">	authorLevel = ecourseCacheJSON.authorLevel,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">local template = require(&quot;resty.template&quot;)</span><br><span class="line">template.render(&quot;ecoure.html&quot;, context)</span><br></pre></td></tr></table></figure>
+<h1><span id="nginx配置重新加载">Nginx配置重新加载</span></h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/servers/nginx/sbin/nginx -s reload</span><br></pre></td></tr></table></figure>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;接续《&lt;a href=&quot;http://www.forwardlee.com/2018/06/19/%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AENginx-LUA%E5%8F%8C%E5%B1%82Ngnix%E6%9E%B6%E6%9E%84/&quot;
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
     <title>基于OpenResty安装配置Nginx+LUA并实现请求分发的双层Nginx架构策略</title>
     <link href="http://www.forwardlee.com/2018/06/19/%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AENginx-LUA%E5%8F%8C%E5%B1%82Ngnix%E6%9E%B6%E6%9E%84/"/>
     <id>http://www.forwardlee.com/2018/06/19/安装配置Nginx-LUA双层Ngnix架构/</id>
     <published>2018-06-19T09:20:51.000Z</published>
-    <updated>2018-06-19T11:54:48.235Z</updated>
+    <updated>2018-06-20T01:04:27.919Z</updated>
     
     <content type="html"><![CDATA[<h1><span id="环境准备">环境准备</span></h1><p>台CentOS6.x<br>192.168.1.210<br>192.168.1.211<br>192.168.1.212<br>网络拓扑<br>210和211作为应用层web服务器<br>212作为网络请求分发代理服务器</p>
 <h1><span id="step1安装linux依赖">Step1:安装Linux依赖</span></h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install -y readline-devel pcre-devel openssl-devel gcc</span><br></pre></td></tr></table></figure>
@@ -48,14 +77,16 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/servers/nginx/sbin/nginx -s reload</span><br></pre></td></tr></table></figure>
 <h1><span id="step5访问lua配置的location路径">Step5:访问LUA配置的location路径</span></h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl http://192.168.1.210/hello/test</span><br></pre></td></tr></table></figure>
 <p>返回test.lua中脚本输出的“hello world”。</p>
-<h1><span id="step6按照相同的方法部署另外两台机器的nginx">Step6:按照相同的方法部署另外两台机器的Nginx</span></h1><p>略…</p>
-<h1><span id="step7lua脚本实现请求分发">Step7:LUA脚本实现请求分发</span></h1><p>我们作为一个流量分发的nginx，会发送http请求到后端的应用nginx上面去，所以要先引入lua http lib包。</p>
+<h1><span id="step6分发层nginx安装lua脚本实现请求分发">Step6:分发层Nginx安装LUA脚本实现请求分发</span></h1><p>我们作为一个流量分发的nginx，会发送http请求到后端的应用nginx上面去，所以要先引入lua http lib包。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/hello/lualib/resty/  </span><br><span class="line">wget https://raw.githubusercontent.com/pintsized/lua-resty-http/master/lib/resty/http_headers.lua  </span><br><span class="line">wget https://raw.githubusercontent.com/pintsized/lua-resty-http/master/lib/resty/http.lua</span><br></pre></td></tr></table></figure>
 <p>在分发层Nginx写LUA脚本：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">nano /usr/hello/lua/test.lua</span><br><span class="line"></span><br><span class="line">local uri_args = ngx.req.get_uri_args()</span><br><span class="line">local ecourseId = uri_args[&quot;ecourseId&quot;]</span><br><span class="line"></span><br><span class="line">local host = &#123;&quot;192.168.1.210&quot;, &quot;192.168.1.211&quot;&#125;</span><br><span class="line">local hash = ngx.crc32_long(ecourseId)</span><br><span class="line">hash = (hash % 2) + 1</span><br><span class="line">backend = &quot;http://&quot;..host[hash]</span><br><span class="line"></span><br><span class="line">local paras = &quot;&quot;;</span><br><span class="line">local request_args_tab = ngx.req.get_uri_args()</span><br><span class="line">for k, v in pairs(request_args_tab) do</span><br><span class="line">    paras=paras..k..&quot;=&quot;..v..&quot;&amp;&quot;</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line">local requestPath = ngx.var.uri</span><br><span class="line">requestPath = requestPath..&quot;?&quot;..paras</span><br><span class="line"></span><br><span class="line">local http = require(&quot;resty.http&quot;)</span><br><span class="line">local httpc = http.new()</span><br><span class="line"></span><br><span class="line">local resp, err = httpc:request_uri(backend, &#123;</span><br><span class="line">    method = &quot;GET&quot;,</span><br><span class="line">    path = requestPath</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">if not resp then</span><br><span class="line">    ngx.say(&quot;request error :&quot;, err)</span><br><span class="line">    return</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line">ngx.say(resp.body)</span><br><span class="line"></span><br><span class="line">httpc:close()</span><br></pre></td></tr></table></figure>
 <p>Nginx重新加载配置生效</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/servers/nginx/sbin/nginx -s reload</span><br></pre></td></tr></table></figure>
-<h1><span id="测试请求分发">测试请求分发</span></h1><p>在浏览器地址栏输入<br><a href="http://192.168.1.212/hello/test?ecourseId=1" target="_blank" rel="noopener">http://192.168.1.212/hello/test?ecourseId=1</a><br><a href="http://192.168.1.212/hello/test?ecourseId=2" target="_blank" rel="noopener">http://192.168.1.212/hello/test?ecourseId=2</a><br><a href="http://192.168.1.212/hello/test?ecourseId=3" target="_blank" rel="noopener">http://192.168.1.212/hello/test?ecourseId=3</a><br><a href="http://192.168.1.212/hello/test?ecourseId=4" target="_blank" rel="noopener">http://192.168.1.212/hello/test?ecourseId=4</a><br>查看返回的结果，请求被分发到应用层web服务器节点了。根据ecourseId与应用层web服务节点数取模，找到对应的应用层服务器节点。</p>
+<p>测试请求分发,在浏览器地址栏输入</p>
+<p><a href="http://192.168.1.212/hello/test?ecourseId=1" target="_blank" rel="noopener">http://192.168.1.212/hello/test?ecourseId=1</a><br><a href="http://192.168.1.212/hello/test?ecourseId=2" target="_blank" rel="noopener">http://192.168.1.212/hello/test?ecourseId=2</a><br><a href="http://192.168.1.212/hello/test?ecourseId=3" target="_blank" rel="noopener">http://192.168.1.212/hello/test?ecourseId=3</a><br><a href="http://192.168.1.212/hello/test?ecourseId=4" target="_blank" rel="noopener">http://192.168.1.212/hello/test?ecourseId=4</a><br>查看返回的结果，请求被分发到应用层web服务器节点了。根据ecourseId与应用层web服务节点数取模，找到对应的应用层服务器节点。</p>
+<h1><span id="step7按照相同的方法部署另外两台机器的nginx">Step7:按照相同的方法部署另外两台机器的Nginx</span></h1><p>安装过程，略…<br>应用层Nginx添加http请求功能包即可。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/hello/lualib/resty/  </span><br><span class="line">wget https://raw.githubusercontent.com/pintsized/lua-resty-http/master/lib/resty/http_headers.lua  </span><br><span class="line">wget https://raw.githubusercontent.com/pintsized/lua-resty-http/master/lib/resty/http.lua</span><br></pre></td></tr></table></figure>
 <h1><span id="补充lua脚本获取nginx-http请求的相关参数说明">补充：LUA脚本获取Nginx Http请求的相关参数说明</span></h1><p>1.获取当前请求的url相关信息</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">function test()</span><br><span class="line">-- 这个变量等于包含一些客户端请求参数的原始URI，它无法修改，请查看$uri更改或重写URI。</span><br><span class="line">local request_uri = ngx.var.request_uri</span><br><span class="line"> log(tools.gbk_to_u8(&quot;获取当前请求的url==&quot;) .. tools.u8_to_gbk(cjson.encode(request_uri)) )</span><br><span class="line"></span><br><span class="line"> -- HTTP方法（如http，https）。按需使用，例：</span><br><span class="line"> local scheme = ngx.var.scheme server_addr</span><br><span class="line"> log(tools.gbk_to_u8(&quot;获取当前请求的url scheme==&quot;) .. tools.u8_to_gbk(cjson.encode(scheme)) )</span><br><span class="line"></span><br><span class="line"> -- 服务器地址，在完成一次系统调用后可以确定这个值，如果要绕开系统调用，则必须在listen中指定地址并且使用bind参数。</span><br><span class="line"> local server_addr = ngx.var.server_addruri </span><br><span class="line"> log(tools.gbk_to_u8(&quot;获取当前请求的url server_addr==&quot;) .. tools.u8_to_gbk(cjson.encode(server_addr)) )</span><br><span class="line"></span><br><span class="line">-- 请求中的当前URI(不带请求参数，参数位于$args)，可以不同于浏览器传递的$request_uri的值，它可以通过内部重定向，或者使用index指令进行修改。</span><br><span class="line"> local uri = ngx.var.uri </span><br><span class="line"> log(tools.gbk_to_u8(&quot;获取当前请求的url uri==&quot;) .. tools.u8_to_gbk(cjson.encode(uri)) )</span><br><span class="line"></span><br><span class="line"> -- 服务器名称</span><br><span class="line"> local server_name  = ngx.var.server_name  </span><br><span class="line"> log(tools.gbk_to_u8(&quot;获取当前请求的url server_name ==&quot;) .. tools.u8_to_gbk(cjson.encode(server_name )) </span><br><span class="line"></span><br><span class="line"> -- 请求到达服务器的端口号。</span><br><span class="line">local server_port  = ngx.var.server_name  </span><br><span class="line"> log(tools.gbk_to_u8(&quot;获取当前请求的url server_port ==&quot;) .. tools.u8_to_gbk(cjson.encode(server_port )) </span><br><span class="line">end</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">test()</span><br></pre></td></tr></table></figure>
 <p>2.获取发送请求端过来的url相关信息</p>
@@ -702,13 +733,13 @@
     </summary>
     
     
-      <category term="MariaDB" scheme="http://www.forwardlee.com/tags/MariaDB/"/>
-    
-      <category term="Keepalived" scheme="http://www.forwardlee.com/tags/Keepalived/"/>
-    
       <category term="Galera" scheme="http://www.forwardlee.com/tags/Galera/"/>
     
       <category term="CentOS" scheme="http://www.forwardlee.com/tags/CentOS/"/>
+    
+      <category term="MariaDB" scheme="http://www.forwardlee.com/tags/MariaDB/"/>
+    
+      <category term="Keepalived" scheme="http://www.forwardlee.com/tags/Keepalived/"/>
     
   </entry>
   
@@ -730,9 +761,9 @@
     </summary>
     
     
-      <category term="Galera" scheme="http://www.forwardlee.com/tags/Galera/"/>
-    
       <category term="MySQL" scheme="http://www.forwardlee.com/tags/MySQL/"/>
+    
+      <category term="Galera" scheme="http://www.forwardlee.com/tags/Galera/"/>
     
   </entry>
   
@@ -779,11 +810,11 @@
     </summary>
     
     
-      <category term="Keepalived" scheme="http://www.forwardlee.com/tags/Keepalived/"/>
+      <category term="MySQL" scheme="http://www.forwardlee.com/tags/MySQL/"/>
     
       <category term="Galera" scheme="http://www.forwardlee.com/tags/Galera/"/>
     
-      <category term="MySQL" scheme="http://www.forwardlee.com/tags/MySQL/"/>
+      <category term="Keepalived" scheme="http://www.forwardlee.com/tags/Keepalived/"/>
     
   </entry>
   
@@ -829,11 +860,11 @@
     </summary>
     
     
+      <category term="MySQL" scheme="http://www.forwardlee.com/tags/MySQL/"/>
+    
       <category term="Galera" scheme="http://www.forwardlee.com/tags/Galera/"/>
     
       <category term="CentOS" scheme="http://www.forwardlee.com/tags/CentOS/"/>
-    
-      <category term="MySQL" scheme="http://www.forwardlee.com/tags/MySQL/"/>
     
   </entry>
   
@@ -875,9 +906,9 @@
     </summary>
     
     
-      <category term="MariaDB" scheme="http://www.forwardlee.com/tags/MariaDB/"/>
-    
       <category term="Galera" scheme="http://www.forwardlee.com/tags/Galera/"/>
+    
+      <category term="MariaDB" scheme="http://www.forwardlee.com/tags/MariaDB/"/>
     
       <category term="Docker" scheme="http://www.forwardlee.com/tags/Docker/"/>
     
@@ -1000,49 +1031,6 @@
     
     
       <category term="MySQL" scheme="http://www.forwardlee.com/tags/MySQL/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>为未来而学</title>
-    <link href="http://www.forwardlee.com/2018/05/16/%E4%B8%BA%E6%9C%AA%E6%9D%A5%E8%80%8C%E5%AD%A6/"/>
-    <id>http://www.forwardlee.com/2018/05/16/为未来而学/</id>
-    <published>2018-05-16T11:15:00.000Z</published>
-    <updated>2018-05-16T11:24:35.333Z</updated>
-    
-    <content type="html"><![CDATA[<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">如果一个人只满足于完成别人所要求的事情，那么，他只能是个奴隶，只有当他超越了这个限度，才会成为一个自由人。</span><br><span class="line"></span><br><span class="line">——哈佛学习格言</span><br></pre></td></tr></table></figure>
-<p><strong>有关学习的两个困境</strong></p>
-<p><strong>一、学习是一场竞赛，我们凭什么才可以胜出？</strong></p>
-<p>大城市里面人们为了能够上一所“好的”小学，要选择购置学区房；</p>
-<p>大城市里面为了能够将来上好的中学，还要报各种课外班，什么奥数，英语，绘画，书法，钢琴，足球，篮球······；</p>
-<p>大城市里面孩子们每天不是在上学就是在上课外班，家长不是在送孩子去上学的路上就是在送孩子去课外班的路上。</p>
-<p>这一切正常吗，我们是选择了随大流还是经过了深思熟虑的思考？这样的学习方式和节奏是最有效的吗？这场学习的竞赛普通的家庭有竞争优势吗？哪些能力在我们未来会让我们更有竞争优势呢？哪些方面的学习对我们一生更加重要呢？</p>
-<p>不知道这些问题，朋友们有没有问过自己，有没有过深入的思考，有没有给自己一个答案。</p>
-<p>与此相反的是，小城市、农村、郊区的孩子们多数情况是玩玩玩，大好的青春真的就在玩耍中渡过啦，想必长大后会后悔吧。毕竟，人生中有许多事情是需要时间的积累的，而时间是不可以购买的，时间是一去不复返的，错过真的很难弥补上。阅读，就属于这样的事情。</p>
-<p>现在，城市与郊区的教育，重点学校与普通学校之间教育的差距越来越大，这种差距一方面体现在对教育的认知上，另一方面体现在优质的教育资源和用钱堆出来的课外兴趣班、优培班。</p>
-<p>好在，我们还有一种方法，能够缩小这种无法改变的学习资源和环境差距。是什么样的方法呢？</p>
-<p>俗话说，要用正确的方法做正确的事情。这一点最关键。我们要从学习的最根本出发，去探寻学习的本质，去掌握学习的方法，去洞察未来，这就是我们需要做的最正确的事情，它保证我们走在一条正确的道路上。而做这些事情，好的学校和富裕的家庭条件都不是必须的条件，需要的是我们的态度和行动。</p>
-<p><strong>二、学习是为了生活，生活是一辈子的事情，我们是否有终身学习的准备？</strong></p>
-<p>先不说，终身学习，就是学校里的学习，我们都无法很好地完成。这是为什么呢？</p>
-<p>说不爱学习的人，实际是没有发现好的学习方式、引人入胜的学习资源、让人体会到收获和成就感的学习成果。甚至，从更根本上来说，是没有找到或发现学习的意义。</p>
-<p>其实，人天生就是学习的好手，不仅具有好奇心，而且也爱学习。</p>
-<p>学习中往往会：</p>
-<p>因为不知道自己不知道，而没有思考；</p>
-<p>因为不知道学习目标是什么，不知道为什么而学，而没有动力；</p>
-<p>因为不知道学习方法，而无法采取行动；</p>
-<p>因为不知道学习需要经历的过程，而无法坚持。</p>
-<p>在这里，你将看清楚“学习”的样子，看清楚“学习的过程”，掌握“学习”的方法，知道并体会到“学习”带来的各种机会和可能性。</p>
-<p>从此，你会亲手为自己打开一扇通往未来的希望之门，你会走在通往未来的道路上，而且还站在巨人的肩膀上。慢慢地，你会发现你已经不是原来的你了，你能看的更远，也能看的更加清晰。终身学习也因此成为了你生活中形影不离的朋友！<br><img src="/images/erweima.png" alt="二维码"></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class
-    
-    </summary>
-    
-    
-      <category term="学习力" scheme="http://www.forwardlee.com/tags/%E5%AD%A6%E4%B9%A0%E5%8A%9B/"/>
     
   </entry>
   

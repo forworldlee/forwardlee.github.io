@@ -4,15 +4,13 @@
 
     
   <url>
-    <loc>http://www.forwardlee.com/2015/12/03/Github%E4%BB%93%E5%BA%93%E5%88%9B%E5%BB%BA%E4%B8%8E%E7%AE%A1%E7%90%86/</loc>
-    <lastmod>2018-06-20T00:41:43.571Z</lastmod>
+    <loc>http://www.forwardlee.com/2018/06/20/Nginx%E8%AF%B7%E6%B1%82%E5%88%86%E5%8F%91%E5%B1%82%E5%92%8C%E5%BA%94%E7%94%A8%E5%B1%82%E5%8F%8C%E5%B1%82%E6%9E%B6%E6%9E%84%E6%A8%A1%E5%BC%8F%E4%B8%8B%E7%9A%84%E5%BA%94%E7%94%A8%E5%B1%82%E6%95%B0%E6%8D%AE%E9%9D%99%E6%80%81%E5%8C%96%E7%AD%96%E7%95%A5/</loc>
+    <lastmod>2018-06-20T02:31:06.040Z</lastmod>
     <data>
         <display>
-        <title>Github仓库创建与管理</title>
-        <pubTime>2015-12-03T12:04:15.000Z</pubTime>
+        <title>基于Nginx双层架构和数据缓存服务层组成的数据三级缓存策略</title>
+        <pubTime>2018-06-20T01:01:28.000Z</pubTime>
         
-        <tag>Github</tag>
-         
          
            
         </display>
@@ -22,7 +20,7 @@
     
   <url>
     <loc>http://www.forwardlee.com/2018/06/19/%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AENginx-LUA%E5%8F%8C%E5%B1%82Ngnix%E6%9E%B6%E6%9E%84/</loc>
-    <lastmod>2018-06-19T11:54:48.235Z</lastmod>
+    <lastmod>2018-06-20T01:04:27.919Z</lastmod>
     <data>
         <display>
         <title>基于OpenResty安装配置Nginx+LUA并实现请求分发的双层Nginx架构策略</title>
@@ -31,6 +29,23 @@
         <tag>Nginx</tag>
          
         <tag>LUA</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.forwardlee.com/2015/12/03/Github%E4%BB%93%E5%BA%93%E5%88%9B%E5%BB%BA%E4%B8%8E%E7%AE%A1%E7%90%86/</loc>
+    <lastmod>2018-06-20T00:41:43.571Z</lastmod>
+    <data>
+        <display>
+        <title>Github仓库创建与管理</title>
+        <pubTime>2015-12-03T12:04:15.000Z</pubTime>
+        
+        <tag>Github</tag>
          
          
            
@@ -337,13 +352,13 @@
         <title>CentOS 6.8 + MariaDB 10.0 with Galera Cluster+Keepalived高可用解决方案</title>
         <pubTime>2018-05-24T11:40:46.000Z</pubTime>
         
-        <tag>MariaDB</tag>
-         
-        <tag>Keepalived</tag>
-         
         <tag>Galera</tag>
          
         <tag>CentOS</tag>
+         
+        <tag>MariaDB</tag>
+         
+        <tag>Keepalived</tag>
          
          
            
@@ -378,11 +393,11 @@
         <title>CentOS 6.8+MySQL 5.5 with Galera Cluster环境搭建</title>
         <pubTime>2018-05-22T16:13:16.000Z</pubTime>
         
+        <tag>MySQL</tag>
+         
         <tag>Galera</tag>
          
         <tag>CentOS</tag>
-         
-        <tag>MySQL</tag>
          
          
            
@@ -399,11 +414,11 @@
         <title>Keepalived HA +LVS+ Galera Cluster环境</title>
         <pubTime>2018-05-23T08:14:48.000Z</pubTime>
         
-        <tag>Keepalived</tag>
+        <tag>MySQL</tag>
          
         <tag>Galera</tag>
          
-        <tag>MySQL</tag>
+        <tag>Keepalived</tag>
          
          
            
@@ -420,9 +435,9 @@
         <title>Galera Cluster 3 + Mysql wresp 5.6安装配置</title>
         <pubTime>2018-05-24T05:02:55.000Z</pubTime>
         
-        <tag>Galera</tag>
-         
         <tag>MySQL</tag>
+         
+        <tag>Galera</tag>
          
          
            
@@ -439,9 +454,9 @@
         <title>Docker Galera Cluster环境快速搭建</title>
         <pubTime>2018-05-22T03:12:14.000Z</pubTime>
         
-        <tag>MariaDB</tag>
-         
         <tag>Galera</tag>
+         
+        <tag>MariaDB</tag>
          
         <tag>Docker</tag>
          
