@@ -349,6 +349,173 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2018/06/27/CentOS7安装Docker-CE/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ForwardLee">
+      <meta itemprop="description" content="总结学习方法，实践技术技能。">
+      <meta itemprop="image" content="/images/head.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="不忘初心">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/06/27/CentOS7安装Docker-CE/" itemprop="url">
+                  CentOS7安装Docker-CE
+                </a>
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-06-27 16:26:53 / 修改时间：16:32:05" itemprop="dateCreated datePublished" datetime="2018-06-27T16:26:53+08:00">2018-06-27</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>转【CentOS安装Docker CE<a href="https://jkzhao.github.io/2017/08/28/CentOS%E5%AE%89%E8%A3%85Docker-CE/" target="_blank" rel="noopener">CentOS安装Docker CE</a>】</p>
+<h1><span id="环境要求">环境要求</span></h1><p>To install Docker CE, you need the 64-bit version of CentOS 7.<br>The centos-extras repository must be enabled. This repository is enabled by default, but if you have disabled it, you need to re-enable it.</p>
+<h1><span id="卸载安装的所有docker组件">卸载安装的所有Docker组件</span></h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@spark32 lib]# systemctl stop docker.service</span><br><span class="line">[root@spark32 lib]# yum remove docker docker-common docker-selinux docker-engine container-selinux</span><br><span class="line">[root@spark32 lib]# rm -rf docker/</span><br></pre></td></tr></table></figure>
+<h1><span id="通过仓库安装docker-ce">通过仓库安装Docker CE</span></h1><p>1.安装依赖包</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@spark32 ~]# yum install -y yum-utils device-mapper-persistent-data lvm2</span><br></pre></td></tr></table></figure>
+<p>2.下载docker yum源</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@spark32 ~]# yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo</span><br></pre></td></tr></table></figure>
+<p>3.更新软件缓存</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@spark32 ~]# yum makecache fast</span><br></pre></td></tr></table></figure>
+<p>4.安装Docker CE</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@spark32 ~]# yum install docker-ce -y</span><br></pre></td></tr></table></figure>
+<p>5.启动docker</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@spark32 ~]# systemctl start docker.service</span><br></pre></td></tr></table></figure>
+<p>6.查看docker版本信息</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[root@spark32 ~]# docker info</span><br><span class="line">Containers: 0</span><br><span class="line"> Running: 0</span><br><span class="line"> Paused: 0</span><br><span class="line"> Stopped: 0</span><br><span class="line">Images: 0</span><br><span class="line">Server Version: 17.06.1-ce</span><br><span class="line">Storage Driver: overlay</span><br><span class="line"> Backing Filesystem: extfs</span><br><span class="line"> Supports d_type: true</span><br><span class="line">Logging Driver: json-file</span><br><span class="line">Cgroup Driver: cgroupfs</span><br></pre></td></tr></table></figure>
+<p><strong>【注意】:在生产环境中，可能需要使用某一个特定版本的Docker，而不是使用最新的版本，我们可以先列出版本，然后安装指定版本：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@spark32 ~]# yum list docker-ce.x86_64  --showduplicates | sort -r</span><br><span class="line">[root@spark32 ~]# yum install docker-ce-&lt;VERSION&gt;</span><br></pre></td></tr></table></figure>
+<h1><span id="配置镜像加速">配置镜像加速</span></h1><p>国内访问 Docker Hub 有时会遇到困难，此时可以配置镜像加速器。国内很多云服务商都提供了加速器服务，例如：</p>
+<ul>
+<li>阿里云加速器</li>
+<li>DaoCloud 加速器</li>
+<li>灵雀云加速器</li>
+</ul>
+<p>以阿里云加速器为例<br>1.首先进入阿里云docker库首页<br>注册用户并登录，点击右上角“管理中心”。如果第一次，会提示“您还没有开通服务”，点击“确定”，然后会出现弹窗“初始化设置”，设置docker登录时使用的密码。</p>
+<p>2.点击左侧菜单“Docker Hub镜像站点”，可以看到“您的专属加速器地址：<a href="https://6101v8g5.mirror.aliyuncs.com”，我们需要将其配置到Docker" target="_blank" rel="noopener">https://6101v8g5.mirror.aliyuncs.com”，我们需要将其配置到Docker</a> 引擎。</p>
+<p>3.修改daemon配置文件/etc/docker/daemon.json来使用加速器：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@spark32 ~]# vim /etc/docker/daemon.json</span><br><span class="line">&#123;</span><br><span class="line">  &quot;registry-mirrors&quot;: [&quot;https://6101v8g5.mirror.aliyuncs.com&quot;]</span><br><span class="line">&#125;</span><br><span class="line">[root@spark32 ~]# systemctl daemon-reload</span><br><span class="line">[root@spark32 ~]# systemctl restart docker</span><br></pre></td></tr></table></figure>
+<h1><span id="卸载docker-ce">卸载Docker CE</span></h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@spark32 ~]# yum remove docker-ce</span><br><span class="line">[root@spark32 ~]# rm -rf /var/lib/docker</span><br></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2018/06/20/Nginx请求分发层和应用层双层架构模式下的应用层数据静态化策略/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1663,160 +1830,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2018/05/31/使用Sentinel（哨兵）实现Redis主从切换的机制原理/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="ForwardLee">
-      <meta itemprop="description" content="总结学习方法，实践技术技能。">
-      <meta itemprop="image" content="/images/head.jpeg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="不忘初心">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/05/31/使用Sentinel（哨兵）实现Redis主从切换的机制原理/" itemprop="url">
-                  使用Sentinel（哨兵）实现Redis主从切换的机制原理
-                </a>
-              
-            
-          </h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2018-05-31 15:08:18 / 修改时间：20:13:55" itemprop="dateCreated datePublished" datetime="2018-05-31T15:08:18+08:00">2018-05-31</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>哨兵-Sentinel，用于监控和管理Redis集群的高可用中间件。</p>
-<h1 id="哨兵配置和启动"><a href="#哨兵配置和启动" class="headerlink" title="哨兵配置和启动"></a>哨兵配置和启动</h1><p>创建需要的目录</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mkdir -pv /etc/sentinel</span><br><span class="line">mkdir -pv /var/sentinel/5000</span><br><span class="line">mkdir -pv /var/log/sentinel/5000/</span><br><span class="line"></span><br><span class="line">cp /usr/local/common/redis-3.2.8/sentinel.conf /etc/sentinel/5000.conf</span><br></pre></td></tr></table></figure>
-<p>5000.conf哨兵配置,可以配置多份，监控多个redis。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">#守护进程启动</span><br><span class="line">daemonize yes</span><br><span class="line">#哨兵日志</span><br><span class="line">logfile /var/log/sentinel/5000</span><br><span class="line">#哨兵绑定本机IP</span><br><span class="line">bind 192.168.1.212 </span><br><span class="line">#哨兵服务端口号</span><br><span class="line">port 5002</span><br><span class="line">#sentinel工作空间</span><br><span class="line">dir /var/sentinel/5000/</span><br><span class="line">#哨兵监控的master配置信息 master_redis_name master_redis_ip master_redis_port quorum</span><br><span class="line">sentinel monitor mymaster 192.168.1.210 6379 2</span><br><span class="line">#哨兵给master发送ping指令的超时时间，用来确定master的主观宕机sdown</span><br><span class="line">sentinel down-after-milliseconds mymaster 5000 </span><br><span class="line">#哨兵执行slave切换成master的失败超时，新的哨兵接替执行</span><br><span class="line">sentinel failover-timeout mymaster 60000</span><br><span class="line">#slave切换成master后，设置n个slave节点同时连接新master进行数据复制</span><br><span class="line">sentinel parallel-syncs mymaster 1</span><br></pre></td></tr></table></figure>
-<p>哨兵启动</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">redis-sentinel /etc/sentinel/5000.conf</span><br><span class="line"></span><br><span class="line">2083:X 27 May 07:29:50.702 * Increased maximum number of open files to 10032 (it was originally set to 1024).</span><br><span class="line">                _._                                                  </span><br><span class="line">           _.-``__ &apos;&apos;-._                                             </span><br><span class="line">      _.-``    `.  `_.  &apos;&apos;-._           Redis 3.2.8 (00000000/0) 32 bit</span><br><span class="line">  .-`` .-```.  ```\/    _.,_ &apos;&apos;-._                                   </span><br><span class="line"> (    &apos;      ,       .-`  | `,    )     Running in sentinel mode</span><br><span class="line"> |`-._`-...-` __...-.``-._|&apos;` _.-&apos;|     Port: 5000</span><br><span class="line"> |    `-._   `._    /     _.-&apos;    |     PID: 2083</span><br><span class="line">  `-._    `-._  `-./  _.-&apos;    _.-&apos;                                   </span><br><span class="line"> |`-._`-._    `-.__.-&apos;    _.-&apos;_.-&apos;|                                  </span><br><span class="line"> |    `-._`-._        _.-&apos;_.-&apos;    |           http://redis.io        </span><br><span class="line">  `-._    `-._`-.__.-&apos;_.-&apos;    _.-&apos;                                   </span><br><span class="line"> |`-._`-._    `-.__.-&apos;    _.-&apos;_.-&apos;|                                  </span><br><span class="line"> |    `-._`-._        _.-&apos;_.-&apos;    |                                  </span><br><span class="line">  `-._    `-._`-.__.-&apos;_.-&apos;    _.-&apos;                                   </span><br><span class="line">      `-._    `-.__.-&apos;    _.-&apos;                                       </span><br><span class="line">          `-._        _.-&apos;                                           </span><br><span class="line">              `-.__.-&apos;                                               </span><br><span class="line"></span><br><span class="line">2083:X 27 May 07:29:50.703 # WARNING: The TCP backlog setting of 511 cannot be enforced because /proc/sys/net/core/somaxconn is set to the lower value of 128.</span><br><span class="line">2083:X 27 May 07:29:50.703 # Sentinel ID is 79c3f195844be0b84babec19b2fa8a84cc07190d</span><br><span class="line">2083:X 27 May 07:29:50.703 # +monitor master mymaster 192.168.1.210 6379 quorum 2</span><br><span class="line">2083:X 27 May 07:29:50.704 * +slave slave 192.168.1.211:6379 192.168.1.211 6379 @ mymaster 192.168.1.210 6379</span><br><span class="line">2083:X 27 May 07:29:50.714 * +slave slave 192.168.1.212:6379 192.168.1.212 6379 @ mymaster 192.168.1.210 6379</span><br><span class="line">2083:X 27 May 07:30:22.643 * +sentinel sentinel 6e8c9dbc97a385acbbb2cd640e63b0370d1a5c31 192.168.1.211 5000 @ mymaster 192.168.1.210 6379</span><br><span class="line">2083:X 27 May 07:30:43.491 * +sentinel sentinel b273c5b89b90f01ca5b90bd167a8092dedfae69a 192.168.1.212 5000 @ mymaster 192.168.1.210 6379</span><br><span class="line">2083:X 27 May 07:30:51.041 * +fix-slave-config slave 192.168.1.211:6379 192.168.1.211 6379 @ mymaster 192.168.1.210 6379</span><br></pre></td></tr></table></figure>
-<p>连接并查看哨兵信息</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">redis-cli -h 192.168.1.210 -p 5000</span><br><span class="line">192.168.1.210:5000&gt; sentinel master mymaster</span><br><span class="line"> 1) &quot;name&quot;</span><br><span class="line"> 2) &quot;mymaster&quot;</span><br><span class="line"> 3) &quot;ip&quot;</span><br><span class="line"> 4) &quot;192.168.1.210&quot;</span><br><span class="line"> 5) &quot;port&quot;</span><br><span class="line"> 6) &quot;6379&quot;</span><br><span class="line"> 7) &quot;runid&quot;</span><br><span class="line"> 8) &quot;8e990a05ba6ab1e915870dffc9184b689e960c7d&quot;</span><br><span class="line"> 9) &quot;flags&quot;</span><br><span class="line">10) &quot;master&quot;</span><br><span class="line">11) &quot;link-pending-commands&quot;</span><br><span class="line">12) &quot;0&quot;</span><br><span class="line">13) &quot;link-refcount&quot;</span><br><span class="line">14) &quot;1&quot;</span><br><span class="line">15) &quot;last-ping-sent&quot;</span><br><span class="line">16) &quot;0&quot;</span><br><span class="line">17) &quot;last-ok-ping-reply&quot;</span><br><span class="line">18) &quot;394&quot;</span><br><span class="line">19) &quot;last-ping-reply&quot;</span><br><span class="line">20) &quot;394&quot;</span><br><span class="line">21) &quot;down-after-milliseconds&quot;</span><br><span class="line">22) &quot;5000&quot;</span><br><span class="line">23) &quot;info-refresh&quot;</span><br><span class="line">24) &quot;159&quot;</span><br><span class="line">25) &quot;role-reported&quot;</span><br><span class="line">26) &quot;master&quot;</span><br><span class="line">27) &quot;role-reported-time&quot;</span><br><span class="line">28) &quot;381542&quot;</span><br><span class="line">29) &quot;config-epoch&quot;</span><br><span class="line">30) &quot;0&quot;</span><br><span class="line">31) &quot;num-slaves&quot;</span><br><span class="line">32) &quot;2&quot;</span><br><span class="line">33) &quot;num-other-sentinels&quot;</span><br><span class="line">34) &quot;2&quot;</span><br><span class="line">35) &quot;quorum&quot;</span><br><span class="line">36) &quot;2&quot;</span><br><span class="line">37) &quot;failover-timeout&quot;</span><br><span class="line">38) &quot;60000&quot;</span><br><span class="line">39) &quot;parallel-syncs&quot;</span><br><span class="line">40) &quot;1&quot;</span><br></pre></td></tr></table></figure>
-<p>其他命令</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">#查看master下的slave信息</span><br><span class="line">sentinel slaves mymaster</span><br><span class="line"></span><br><span class="line">#mymaster下所有的哨兵</span><br><span class="line">sentinel sentinels mymaster</span><br><span class="line"></span><br><span class="line">#当前哨兵所指向的master地址和端口</span><br><span class="line">sentinel get-master-addr-by-name mymaster</span><br></pre></td></tr></table></figure>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/05/31/使用Sentinel（哨兵）实现Redis主从切换的机制原理/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1868,7 +1881,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">33</span>
+                    <span class="site-state-item-count">34</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
