@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.forwardlee.com/"/>
-  <updated>2018-06-27T09:00:19.337Z</updated>
+  <updated>2018-06-29T03:53:34.272Z</updated>
   <id>http://www.forwardlee.com/</id>
   
   <author>
@@ -14,6 +14,1215 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Springboot/Springcloud技术栈</title>
+    <link href="http://www.forwardlee.com/2018/06/29/Springboot-Springcloud%E6%8A%80%E6%9C%AF%E6%A0%88/"/>
+    <id>http://www.forwardlee.com/2018/06/29/Springboot-Springcloud技术栈/</id>
+    <published>2018-06-29T03:51:00.000Z</published>
+    <updated>2018-06-29T03:53:34.272Z</updated>
+    
+    <content type="html"><![CDATA[<h1><span id="spring-cloud">Spring Cloud</span></h1><h2><span id="预备preparation">预备（Preparation））</span></h2><h3><span id="技术体系">技术体系</span></h3><ul>
+<li>架构  <ul>
+<li>面向服务架构（SOA）  </li>
+<li>微服务（MSA）  <ul>
+<li>测试驱动开发（TDD)  </li>
+<li>领域驱动设计（DDD）  </li>
+</ul>
+</li>
+<li>事件驱动架构（EDA）  </li>
+</ul>
+</li>
+<li>技术  <ul>
+<li>Java 8 基础  </li>
+<li>Spring Framework 4.x  </li>
+<li>Spring Boot 1.x  </li>
+</ul>
+</li>
+</ul>
+<h3><span id="环境依赖">环境依赖</span></h3><ul>
+<li>Spring Cloud  <ul>
+<li>Dalston.SR3  </li>
+</ul>
+</li>
+<li>Spring Boot  <ul>
+<li>1.5.x  </li>
+</ul>
+</li>
+<li>Spring Framework  <ul>
+<li>4.3.x  </li>
+</ul>
+</li>
+<li>Maven  <ul>
+<li>3.5.0  </li>
+</ul>
+</li>
+<li>Java  <ul>
+<li><blockquote>
+<p>= 8  </p>
+</blockquote>
+</li>
+</ul>
+</li>
+</ul>
+<h2><span id="原生云应用cloud-native-applications">原生云应用（Cloud Native Applications）</span></h2><h3><span id="知识储备">知识储备</span></h3><ul>
+<li><p>12-Factor 应用<br>  链接: <a href="https://12factor.net/" target="_blank" rel="noopener">12factor.net/</a>  </p>
+<ul>
+<li>Codebase  </li>
+<li>Dependencies  </li>
+<li>Config  </li>
+<li>Backing services  </li>
+<li>Build, release, run  </li>
+<li>Processes  </li>
+<li>Port binding  </li>
+<li>Concurrency  </li>
+<li>Disposability  </li>
+<li>Dev/prod parity  </li>
+<li>Logs  </li>
+<li>Admin processes  </li>
+</ul>
+</li>
+<li>Spring Framework  <ul>
+<li>ApplicationContext  </li>
+</ul>
+</li>
+<li>Spring Boot  <ul>
+<li>SpringApplication  </li>
+<li>SpringApplicationBuilder  </li>
+</ul>
+</li>
+</ul>
+<h3><span id="bootstrap-上下文">Bootstrap 上下文</span></h3><ul>
+<li>Bootstrap Application Context  </li>
+<li>理解 Application Context 层次性  </li>
+</ul>
+<h3><span id="端点endpoints">端点（Endpoints）</span></h3><ul>
+<li>上下文重启  <ul>
+<li>/restart  </li>
+</ul>
+</li>
+<li>生命周期回调  <ul>
+<li>/pause  </li>
+<li>/resume  </li>
+</ul>
+</li>
+</ul>
+<h2><span id="分布式配置configuration">分布式配置（Configuration）</span></h2><h3><span id="技术回顾">技术回顾</span></h3><ul>
+<li>Spring Framework  <ul>
+<li>Environment  </li>
+<li>PropertySources  <ul>
+<li>PropertySource  </li>
+</ul>
+</li>
+<li>@PropertySources  <ul>
+<li>@PropertySource  </li>
+</ul>
+</li>
+<li>@Profile  </li>
+</ul>
+</li>
+<li>Spring Boot  <ul>
+<li>application.properties  </li>
+<li>事件（Event）  <ul>
+<li>ApplicationEnvironmentPreparedEvent  </li>
+<li>ApplicationPreparedEvent  </li>
+</ul>
+</li>
+<li>监听器（Listener）  <ul>
+<li>ConfigFileApplicationListener  </li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Java 加密扩展（JCE）  <ul>
+<li>JCE 8  </li>
+</ul>
+</li>
+</ul>
+<h3><span id="spring-cloud-配置客户端">Spring Cloud 配置客户端</span></h3><ul>
+<li>配置文件  <ul>
+<li>bootstrap.yml  </li>
+<li>bootstrap.properties  </li>
+</ul>
+</li>
+<li>Bootstrap 配置属性（Properties）  <ul>
+<li>调整 Bootstrap 配置文件路径  </li>
+<li>覆盖远程配置属性  </li>
+<li>自定义 Bootstrap 配置  </li>
+<li>自定义 Bootstrap 配置属性源  </li>
+</ul>
+</li>
+<li>安全  </li>
+</ul>
+<h3><span id="spring-cloud-服务器">Spring Cloud 服务器</span></h3><ul>
+<li>@EnableConfigServer  </li>
+<li>Environment 仓储  </li>
+<li>分布式配置实现  <ul>
+<li>Git 实现  <ul>
+<li>认证（Authentication）  </li>
+</ul>
+</li>
+<li>文件系统实现  </li>
+<li>自定义实现  <ul>
+<li>Zookeeper  </li>
+</ul>
+</li>
+</ul>
+</li>
+<li>健康指标（Health Indicator）  </li>
+<li>加密和解密（Encryption and Decryption）  </li>
+<li>秘钥管理（Key Management）  <ul>
+<li>创建Key  </li>
+</ul>
+</li>
+<li>@RefreshScope Bean  <ul>
+<li>@RefreshScope 使用场景  </li>
+</ul>
+</li>
+<li>端点（Endpoints）  <ul>
+<li>Environment 端点  <ul>
+<li>/env  </li>
+</ul>
+</li>
+<li>@RefreshScope 端点  <ul>
+<li>/refresh  </li>
+</ul>
+</li>
+<li>上下文重启  <ul>
+<li>/restart  </li>
+</ul>
+</li>
+<li>生命周期回调  <ul>
+<li>/pause  </li>
+<li>/resume  </li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2><span id="服务发现注册discoveryregistry">服务发现/注册（Discovery/Registry）</span></h2><h3><span id="核心理念">核心理念</span></h3><ul>
+<li>服务发现（Discovery）  <ul>
+<li>WebService  <ul>
+<li>UDDI  </li>
+</ul>
+</li>
+<li>REST  <ul>
+<li>HATEOAS  </li>
+</ul>
+</li>
+<li>Messaging  <ul>
+<li>JMS  </li>
+</ul>
+</li>
+<li>Java  <ul>
+<li>JNDI  </li>
+<li>JINI  <ul>
+<li>Apache River  </li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>服务注册（Registry）  <ul>
+<li>SOA  <ul>
+<li>服务提供方（Service Registry）  </li>
+<li>服务代理（Service Broker）  </li>
+<li>服务消费者（Service Consumer）  </li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>高可用（High Availability）<br>  链接: <a href="https://en.wikipedia.org/wiki/High_availability" target="_blank" rel="noopener">en.wikipedia.org/wiki/High_availability</a>  </p>
+<ul>
+<li>原则（Principles）  <ul>
+<li>消除单点失败  </li>
+<li>可靠性交迭  </li>
+<li>故障探测  </li>
+</ul>
+</li>
+<li>可用性比率计算  </li>
+<li>系统设计  </li>
+</ul>
+</li>
+</ul>
+<h3><span id="服务发现discovery">服务发现（Discovery）</span></h3><ul>
+<li>客户端  <ul>
+<li>Netflix Eureka  <ul>
+<li>引入  <ul>
+<li>spring-cloud-starter-eureka  </li>
+</ul>
+</li>
+<li>API  <ul>
+<li>EurekaClient  </li>
+<li>ServiceInstance  </li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Spring Cloud Commons  <ul>
+<li>API  <ul>
+<li>@EnableDiscoveryClient  </li>
+<li>DiscoveryClient  </li>
+<li>ServiceInstance  </li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3><span id="服务注册registry">服务注册（Registry）</span></h3><ul>
+<li><p>客户端  </p>
+<ul>
+<li><p>Netflix Eureka  </p>
+<ul>
+<li>激活  <ul>
+<li>@EnableEurekaClient  </li>
+</ul>
+</li>
+<li><p>区域化（zones）<br>  链接: <a href="http://cloud.spring.io/spring-cloud-static/Dalston.SR3/#_zones" target="_blank" rel="noopener">cloud.spring.io/spring-cloud-static/Dalston.SR3/#_zones</a>  </p>
+</li>
+<li><p>安全（Secure）<br>  链接: <a href="http://cloud.spring.io/spring-cloud-static/Dalston.SR3/#_registering_a_secure_application" target="_blank" rel="noopener">cloud.spring.io/spring-cloud-static/Dalston.SR3/#_registering_a_secure_application</a>  </p>
+</li>
+<li><p>健康检查（Health Checks）  </p>
+<ul>
+<li>健康指标（Health Indicator）  </li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>服务端  <ul>
+<li>Netflix Eureka  <ul>
+<li>激活  <ul>
+<li>@EnableEurekaServer  </li>
+</ul>
+</li>
+<li>高可用  </li>
+<li>区域化  <ul>
+<li>Zones  </li>
+<li>Regions  </li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2><span id="负载均衡load-balance">负载均衡（Load Balance）</span></h2><h3><span id="核心理念">核心理念</span></h3><ul>
+<li>客户端（Client）  <ul>
+<li>Round-robin DNS  </li>
+</ul>
+</li>
+<li>服务端（Server）  </li>
+<li>调度算法  <ul>
+<li>先来先服务（First Come First Served）  </li>
+<li>最早截止时间优先（Earliest deadline first）  </li>
+<li>最短保留时间优先（Shortest remaining time first）  </li>
+<li>固定优先级（Fixed Priority）  </li>
+<li>轮训（Round-Robin）  </li>
+<li>多级别队列（Multilevel Queue）  </li>
+</ul>
+</li>
+<li>特性（Features）  <ul>
+<li>非对称负载（Asymmetric load）  </li>
+<li>SSL 卸载和加速  </li>
+<li>分布式拒绝服务攻击保护  </li>
+<li>HTTP 压缩  </li>
+<li>TCP 卸载  </li>
+<li>TCP 缓冲  </li>
+<li>直接服务返回  </li>
+<li>健康检查  </li>
+<li>优先级队列  </li>
+<li>内容意识切换  </li>
+<li>客户端认证  </li>
+<li>编程式流量操作  </li>
+<li>防火墙  </li>
+<li>入侵防御系统  </li>
+</ul>
+</li>
+</ul>
+<h3><span id="客户端">客户端</span></h3><ul>
+<li>Netflix Ribbon  <ul>
+<li>激活  <ul>
+<li>@RibbonClient  </li>
+</ul>
+</li>
+<li>负载均衡器  <ul>
+<li>ILoadBalancer  <ul>
+<li>AbstractLoadBalancer  <ul>
+<li>BaseLoadBalancer  <ul>
+<li>DynamicServerListLoadBalancer  </li>
+<li>ZoneAwareLoadBalancer  </li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>负载均衡客户端  <ul>
+<li>LoadBalancerClient  </li>
+</ul>
+</li>
+<li>自动装配  <ul>
+<li>LoadBalancerAutoConfiguration  </li>
+</ul>
+</li>
+<li>源码分析  <ul>
+<li>RestTemplate 自定义器  <ul>
+<li>RestTemplateCustomizer  </li>
+</ul>
+</li>
+<li>RestTemplate 请求拦截器  <ul>
+<li>LoadBalancerInterceptor  </li>
+</ul>
+</li>
+<li>标记注解  <ul>
+<li>@LoadBalanced  </li>
+</ul>
+</li>
+<li>实际请求客户端  <ul>
+<li>LoadBalancerClient  </li>
+<li>RibbonLoadBalancerClient  </li>
+</ul>
+</li>
+<li>负载均衡上下文  <ul>
+<li>LoadBalancerContext  </li>
+<li>RibbonLoadBalancerContext  </li>
+</ul>
+</li>
+<li>负载均衡器  <ul>
+<li>ILoadBalancer  </li>
+<li>BaseLoadBalancer  </li>
+<li>DynamicServerListLoadBalancer  </li>
+<li>ZoneAwareLoadBalancer  </li>
+<li>NoOpLoadBalancer  </li>
+</ul>
+</li>
+<li>负载均衡规则  <ul>
+<li>核心规则接口  <ul>
+<li>IRule  </li>
+</ul>
+</li>
+<li>随机规则  <ul>
+<li>RandomRule  </li>
+</ul>
+</li>
+<li>最可用规则  <ul>
+<li>BestAvailableRule  </li>
+</ul>
+</li>
+<li>轮训规则  <ul>
+<li>默认实现  <ul>
+<li>RoundRobinRule  </li>
+</ul>
+</li>
+<li>重试实现  <ul>
+<li>RetryRule  </li>
+</ul>
+</li>
+<li>客户端配置  <ul>
+<li>ClientConfigEnabledRoundRobinRule  </li>
+</ul>
+</li>
+</ul>
+</li>
+<li>可用性过滤规则  <ul>
+<li>AvailabilityFilteringRule  </li>
+</ul>
+</li>
+<li>RT权重规则  <ul>
+<li>WeightedResponseTimeRule  </li>
+</ul>
+</li>
+<li>规避区域规则  <ul>
+<li>ZoneAvoidanceRule  </li>
+</ul>
+</li>
+</ul>
+</li>
+<li>PING 策略  <ul>
+<li>核心策略接口  <ul>
+<li>IPingStrategy  </li>
+</ul>
+</li>
+<li>PING 接口  <ul>
+<li>IPing  </li>
+<li>实现  <ul>
+<li>NoOpPing  </li>
+<li>DummyPing  </li>
+<li>PingConstant  </li>
+<li>PingUrl  </li>
+</ul>
+</li>
+<li>Discovery Client 实现  <ul>
+<li>NIWSDiscoveryPing  </li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Spring Framework  <ul>
+<li>REST 客户端  <ul>
+<li>模板类  <ul>
+<li>RestTemplate  </li>
+</ul>
+</li>
+<li>客户端请求拦截器  <ul>
+<li>ClientHttpRequestInterceptor  </li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2><span id="服务短路circuit-breakers">服务短路（Circuit Breakers）</span></h2><h3><span id="核心理念">核心理念</span></h3><ul>
+<li>名词由来  <ul>
+<li>Martin Fowler  <ul>
+<li>短路器模式  </li>
+</ul>
+</li>
+</ul>
+</li>
+<li>更早由来  <ul>
+<li>容错（Fault tolerance）  </li>
+</ul>
+</li>
+<li>目的  <ul>
+<li>系统整体性保护  </li>
+</ul>
+</li>
+<li>近义词  <ul>
+<li>熔断保护  </li>
+<li>容错保护  </li>
+<li>优雅降级  </li>
+</ul>
+</li>
+<li>设计哲学  <ul>
+<li>取舍之道  </li>
+</ul>
+</li>
+<li>触发条件  <ul>
+<li>错误类型  <ul>
+<li>超时（Timeout）  </li>
+<li>异常（Exception）  </li>
+</ul>
+</li>
+<li>性能类型  <ul>
+<li>响应时间（RT）  </li>
+</ul>
+</li>
+</ul>
+</li>
+<li>处理手段  <ul>
+<li>内容处理  <ul>
+<li>空内容  </li>
+<li>容错内容  </li>
+</ul>
+</li>
+<li>异常处理  <ul>
+<li>程序异常  </li>
+<li>状态码  </li>
+</ul>
+</li>
+</ul>
+</li>
+<li>实现方式  <ul>
+<li>客户端  </li>
+<li>服务端  </li>
+</ul>
+</li>
+</ul>
+<h3><span id="服务端">服务端</span></h3><ul>
+<li>Spring Cloud Hystrix  <ul>
+<li>依赖  <ul>
+<li>spring-cloud-starter-hystrix  </li>
+</ul>
+</li>
+<li>激活  <ul>
+<li>@EnableCircuitBreaker  </li>
+</ul>
+</li>
+<li>命令  <ul>
+<li>@HystrixCommand  <ul>
+<li>应变方法  <ul>
+<li>fallbackMethod  </li>
+</ul>
+</li>
+<li>命令分组  <ul>
+<li>groupKey  </li>
+</ul>
+</li>
+<li>命令关联 Key  <ul>
+<li>commandKey  </li>
+</ul>
+</li>
+<li>线程池关联 Key  <ul>
+<li>threadPoolKey  </li>
+</ul>
+</li>
+<li>属性  <ul>
+<li>HystrixProperty  </li>
+<li>通用属性  <ul>
+<li>commandProperties  </li>
+</ul>
+</li>
+<li>线程池属性  <ul>
+<li>threadPoolProperties  </li>
+</ul>
+</li>
+</ul>
+</li>
+<li>忽略异常集合  <ul>
+<li>ignoreExceptions  </li>
+</ul>
+</li>
+<li>可观察执行模式  <ul>
+<li>ObservableExecutionMode  </li>
+</ul>
+</li>
+</ul>
+</li>
+<li>@HystrixCollapser  </li>
+</ul>
+</li>
+<li>超时  </li>
+<li>指标  <ul>
+<li>健康指标（Health Indicator）  <ul>
+<li>/health -&gt; hystrix  </li>
+</ul>
+</li>
+<li>数据指标（Metrics）  <ul>
+<li>/hystrix.stream  </li>
+</ul>
+</li>
+</ul>
+</li>
+<li>生产特性（Production-Ready Features）  <ul>
+<li>Turbine  <ul>
+<li>使用场景  <ul>
+<li>指标聚合  </li>
+</ul>
+</li>
+<li>端口  <ul>
+<li>/turbine.stream  </li>
+</ul>
+</li>
+<li>配置  <ul>
+<li>turbine.aggregator.clusterConfig  </li>
+</ul>
+</li>
+<li>激活  <ul>
+<li>@EnableTurbine  </li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Turbine Stream  <ul>
+<li>依赖  <ul>
+<li>spring-cloud-netflix-hystrix-stream  </li>
+<li>spring-cloud-starter-stream-*  </li>
+</ul>
+</li>
+<li>激活  <ul>
+<li>@EnableTurbineStream  </li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Spring Cloud Hystrix Dashboard  <ul>
+<li>依赖  <ul>
+<li>spring-cloud-starter-hystrix-dashboard  </li>
+</ul>
+</li>
+<li>激活  <ul>
+<li>@EnableHystrixDashboard  </li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>源码分析  <ul>
+<li>Spring Cloud Hystrix  <ul>
+<li>TODO  </li>
+</ul>
+</li>
+<li>Netflix Hystrix  <ul>
+<li>TODO  </li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2><span id="服务调用service-call">服务调用（Service Call）</span></h2><h3><span id="核心理念">核心理念</span></h3><ul>
+<li>远程过程调用（RPC）  <ul>
+<li>核心概念  <ul>
+<li>接口定义语言（IDL）  </li>
+<li>根存（Stubs）  </li>
+</ul>
+</li>
+<li>通讯协议  <ul>
+<li>二进制协议  <ul>
+<li>CORBA  </li>
+<li>RMI  <ul>
+<li>EJB  </li>
+</ul>
+</li>
+<li>Hession  </li>
+<li>Thrift  </li>
+</ul>
+</li>
+<li>本文协议  <ul>
+<li>XML-RPC  </li>
+<li>WebService  </li>
+<li>REST  </li>
+<li>AJAX  </li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3><span id="客户端">客户端</span></h3><ul>
+<li>Feign  <ul>
+<li>灵感来源  <ul>
+<li>Retrofit  </li>
+<li>JAX-RS  </li>
+<li>WebSocket  </li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Spring Cloud Feign  <ul>
+<li>依赖  <ul>
+<li>spring-cloud-starter-feign  </li>
+</ul>
+</li>
+<li>激活  <ul>
+<li>@EnableFeignClients  </li>
+</ul>
+</li>
+<li>接口声明  <ul>
+<li>@FeignClient  </li>
+</ul>
+</li>
+<li>支持  <ul>
+<li>Hystrix  <ul>
+<li>配置  </li>
+</ul>
+</li>
+<li>Ribbon  <ul>
+<li>配置  </li>
+</ul>
+</li>
+</ul>
+</li>
+<li>源码分析  <ul>
+<li>上下文  <ul>
+<li>FeignContext  </li>
+</ul>
+</li>
+<li>注解参数处理器  <ul>
+<li>AnnotatedParameterProcessor  <ul>
+<li>请求头  <ul>
+<li>RequestHeaderParameterProcessor  </li>
+</ul>
+</li>
+<li>请求参数  <ul>
+<li>RequestParamParameterProcessor  </li>
+</ul>
+</li>
+<li>路径变量  <ul>
+<li>PathVariableParameterProcessor  </li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Hystrix 支持  <ul>
+<li>命令  <ul>
+<li>FallbackCommand  </li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Ribbon 支持  <ul>
+<li>负载均衡  <ul>
+<li>负载均衡器  <ul>
+<li>FeignLoadBalancer  </li>
+</ul>
+</li>
+<li>工厂  <ul>
+<li>CachingSpringLoadBalancerFactory  </li>
+</ul>
+</li>
+<li>客户端  <ul>
+<li>LoadBalancerFeignClient  </li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>加码器（Encoder）  <ul>
+<li>字符类型  <ul>
+<li>SpringEncoder  </li>
+</ul>
+</li>
+</ul>
+</li>
+<li>解码器（Decoder）  <ul>
+<li>字符类型  <ul>
+<li>StringDecoder  </li>
+</ul>
+</li>
+<li>Spring MVC ResponseEntity  <ul>
+<li>ResponseEntityDecoder  </li>
+</ul>
+</li>
+</ul>
+</li>
+<li>请求拦截器  <ul>
+<li>RequestInterceptor  <ul>
+<li>GZIP 处理  <ul>
+<li>Accept-Encoding 请求头  <ul>
+<li>FeignAcceptGzipEncodingInterceptor  </li>
+</ul>
+</li>
+<li>Content-Encoding 请求头  <ul>
+<li>FeignContentGzipEncodingInterceptor  </li>
+</ul>
+</li>
+</ul>
+</li>
+<li>BASIC 认证  <ul>
+<li>BasicAuthRequestInterceptor  </li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>通用装配  <ul>
+<li>FeignClientsConfiguration  </li>
+</ul>
+</li>
+<li>自动装配  <ul>
+<li>默认  <ul>
+<li>FeignAutoConfiguration  </li>
+</ul>
+</li>
+<li>GZIP 处理  <ul>
+<li>Accept-Encoding 请求头  <ul>
+<li>FeignAcceptGzipEncodingAutoConfiguration  </li>
+</ul>
+</li>
+<li>Content-Encoding 请求头  <ul>
+<li>FeignContentGzipEncodingAutoConfiguration  </li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Ribbon  <ul>
+<li>FeignRibbonClientAutoConfiguration  </li>
+</ul>
+</li>
+</ul>
+</li>
+<li>注册  <ul>
+<li>处理对象  <ul>
+<li>FeignClientsRegistrar  </li>
+</ul>
+</li>
+<li>注解  <ul>
+<li>候选注解  <ul>
+<li>@FeignClient  </li>
+</ul>
+</li>
+<li>激活  <ul>
+<li>@EnableFeignClients  </li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2><span id="服务网关gateway">服务网关（Gateway）</span></h2><h3><span id="核心理念">核心理念</span></h3><ul>
+<li>使用场景  <ul>
+<li>Web 网关  <ul>
+<li>REST API 网关  </li>
+<li>WebService 网关  </li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>服务能力  </p>
+<ul>
+<li>监控（Monitoring）  </li>
+<li>测试（Testing）  <ul>
+<li>压力测试（Stress Testing）  </li>
+<li>A/B 测试（A/B Testing）  </li>
+</ul>
+</li>
+<li><p>动态路由（Dynamic Routing）  </p>
+<ul>
+<li><p>路由规则  </p>
+<ul>
+<li>域名匹配  <ul>
+<li><a href="http://user.acme.com" target="_blank" rel="noopener">http://user.acme.com</a>  </li>
+</ul>
+</li>
+<li>IP匹配  <ul>
+<li><a href="http://192.168.1.2" target="_blank" rel="noopener">http://192.168.1.2</a> -&gt; user  </li>
+</ul>
+</li>
+<li><p>路径匹配  </p>
+<ul>
+<li><a href="http://www.acme.com/user" target="_blank" rel="noopener">http://www.acme.com/user</a><br>  链接: <a href="http://www.acme.com/user" target="_blank" rel="noopener">acme.com/user</a>  </li>
+</ul>
+</li>
+<li><p>协议匹配  </p>
+<ul>
+<li><a href="ftp://www.acme.com" target="_blank" rel="noopener">ftp://www.acme.com</a><br>  链接: <a href="ftp://wwwacme.com" target="_blank" rel="noopener">wwwacme.com</a>  </li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>服务整合（Service Migration）  </p>
+</li>
+<li>负荷减配（Load Shedding）  </li>
+<li>安全（Security）  <ul>
+<li>认证（Authentication）  </li>
+</ul>
+</li>
+<li>静态资源处理（Static Resources handling）  </li>
+<li>活跃流量管理（Active traffic management）  </li>
+</ul>
+</li>
+<li>依赖  <ul>
+<li>服务来源  <ul>
+<li>服务发现  </li>
+<li>服务注册  </li>
+</ul>
+</li>
+<li>服务通讯  <ul>
+<li>协议  <ul>
+<li>二进制  </li>
+<li>本文协议  </li>
+</ul>
+</li>
+<li>方式  <ul>
+<li>同步（Sync）  </li>
+<li>异步（Async）  </li>
+</ul>
+</li>
+</ul>
+</li>
+<li>服务接口  <ul>
+<li>弱约束  <ul>
+<li>XML  </li>
+<li>JSON  </li>
+<li>HTML  </li>
+</ul>
+</li>
+<li>强约束  <ul>
+<li>接口定义语言（IDL）  </li>
+<li>RMI  </li>
+<li>Hession  </li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>架构  <ul>
+<li>SOA  </li>
+<li>微服务  </li>
+<li>事件驱动架构  </li>
+</ul>
+</li>
+<li>类型  <ul>
+<li>服务  <ul>
+<li>ESB  </li>
+<li>EJB  </li>
+</ul>
+</li>
+<li>Web  <ul>
+<li>上游（Upstream）  <ul>
+<li>Apache  </li>
+<li>Nginx  </li>
+<li>其他反向代理服务器  </li>
+</ul>
+</li>
+<li>下游（Downstream）  <ul>
+<li>Java Web Server  <ul>
+<li>Java Servlet  </li>
+<li>Tomcat Valve  </li>
+</ul>
+</li>
+<li>PHP Web Server  </li>
+<li>.NET Web Server  </li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3><span id="服务端">服务端</span></h3><ul>
+<li>Spring Cloud Zuul  <ul>
+<li>用途  <ul>
+<li>监控（Monitoring）  </li>
+<li>压力测试（Stress Testing）  </li>
+<li>动态路由（Dynamic Routing）  </li>
+<li>服务整合（Service Migration）  </li>
+<li>负荷减配（Load Shedding）  </li>
+<li>安全（Security）  <ul>
+<li>认证（Authentication）  </li>
+</ul>
+</li>
+<li>静态请求处理（Static Response handling）  </li>
+<li>活跃流量管理（Active traffic management）  </li>
+</ul>
+</li>
+<li>依赖  <ul>
+<li>spring-cloud-starter-zuul  </li>
+</ul>
+</li>
+<li>激活  <ul>
+<li>@EnableZuulProxy  </li>
+<li>合并注解  <ul>
+<li>@EnableSidecar  <ul>
+<li>spring-cloud-netflix-sidecar  </li>
+</ul>
+</li>
+<li>@SpringCloudApplication  </li>
+</ul>
+</li>
+</ul>
+</li>
+<li>整合  <ul>
+<li>Eureka  </li>
+<li>Hystrix  <ul>
+<li>ZuulFallbackProvider  </li>
+</ul>
+</li>
+</ul>
+</li>
+<li>生命周期  <ul>
+<li>初始化  <ul>
+<li>ServletInitializer  <ul>
+<li>ZuulFilterInitializer  </li>
+</ul>
+</li>
+</ul>
+</li>
+<li>处理  <ul>
+<li>ZuulServlet  <ul>
+<li>ZuulRunner  <ul>
+<li>ZuulFilter  </li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>销毁  <ul>
+<li>移除 ZuulFilter  <ul>
+<li>清楚 FilterLoader 缓存  </li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>路由  <ul>
+<li>规则  </li>
+<li>配置  </li>
+<li>过程  </li>
+</ul>
+</li>
+<li>Metrics  <ul>
+<li>Spectator  <ul>
+<li>spring-cloud-starter-spectator  </li>
+</ul>
+</li>
+<li>Servo  </li>
+<li>Atlas  </li>
+</ul>
+</li>
+<li>源码分析  <ul>
+<li>通用  <ul>
+<li>路由处理  <ul>
+<li>代理运行器  <ul>
+<li>ZuulRunner  </li>
+</ul>
+</li>
+<li>实际执行器  <ul>
+<li>ZuulFilter  <ul>
+<li>执行顺序控制  <ul>
+<li>filterOrder()  </li>
+</ul>
+</li>
+<li>类型控制  <ul>
+<li>filterType()  </li>
+<li>设计权限  <ul>
+<li>字符类型描述类型  </li>
+</ul>
+</li>
+</ul>
+</li>
+<li>是否应该执行  <ul>
+<li>shouldFilter()  </li>
+</ul>
+</li>
+<li>执行  <ul>
+<li>run()  </li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>类型  <ul>
+<li>路由预处理  <ul>
+<li>pre  </li>
+</ul>
+</li>
+<li>路由  <ul>
+<li>route  </li>
+</ul>
+</li>
+<li>路由后处理  <ul>
+<li>post  </li>
+</ul>
+</li>
+<li>错误  <ul>
+<li>error  </li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Zuul  <ul>
+<li>ZuulFilter 加载器  <ul>
+<li>FilterLoader  <ul>
+<li>加载ZuulFilter Java/Groovy 源文件  </li>
+</ul>
+</li>
+</ul>
+</li>
+<li>ZuulFilter 仓储  <ul>
+<li>FilterRegistry  </li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Spring Cloud Zuul  <ul>
+<li>路由处理  <ul>
+<li>前端总控制器  <ul>
+<li>Servlet  <ul>
+<li>ZuulServlet  </li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>装配  <ul>
+<li>手动（@EnableZuulProxy）  <ul>
+<li>配置 Bean（@Configuration）  <ul>
+<li>ZuulConfiguration  </li>
+</ul>
+</li>
+<li>配置属性 Bean（@ConfigurationProperties）  <ul>
+<li>ZuulProperties  </li>
+</ul>
+</li>
+<li>路由定位器  <ul>
+<li>RouteLocator  </li>
+</ul>
+</li>
+<li>前端总控制器  <ul>
+<li>ZuulServlet  </li>
+</ul>
+</li>
+<li>ZuulFilter 内置实现 Bean  <ul>
+<li>DispatcherServlet 探测  <ul>
+<li>ServletDetectionFilter  </li>
+</ul>
+</li>
+<li>Form 表单数据  <ul>
+<li>FormBodyWrapperFilter  </li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>设计模式  <ul>
+<li>J2EE 设计模式  <ul>
+<li>前端控制器模式  </li>
+</ul>
+</li>
+<li>GoF 23  <ul>
+<li>责任链模式  </li>
+<li>代理模式  </li>
+<li>策略模式  </li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2><span id="消息驱动整合message-driven-integration">消息驱动整合（Message-Driven Integration）</span></h2><h3><span id="核心理念">核心理念</span></h3><h2><span id="消息总线message-bus">消息总线（Message Bus）</span></h2><h3><span id="核心理念">核心理念</span></h3><h2><span id="分布式跟踪distributed-tracing">分布式跟踪（Distributed Tracing）</span></h2><h3><span id="核心理念">核心理念</span></h3>]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1&gt;&lt;span id=&quot;spring-cloud&quot;&gt;Spring Cloud&lt;/span&gt;&lt;/h1&gt;&lt;h2&gt;&lt;span id=&quot;预备preparation&quot;&gt;预备（Preparation））&lt;/span&gt;&lt;/h2&gt;&lt;h3&gt;&lt;span id=&quot;技术体系&quot;&gt;技术体系&lt;/span&gt;
+    
+    </summary>
+    
+    
+      <category term="Springboot" scheme="http://www.forwardlee.com/tags/Springboot/"/>
+    
+      <category term="Springcloud" scheme="http://www.forwardlee.com/tags/Springcloud/"/>
+    
+      <category term="微服务" scheme="http://www.forwardlee.com/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/"/>
+    
+  </entry>
   
   <entry>
     <title>CentOS7安装Docker-CE</title>
@@ -989,72 +2198,6 @@
       <category term="MariaDB" scheme="http://www.forwardlee.com/tags/MariaDB/"/>
     
       <category term="Docker" scheme="http://www.forwardlee.com/tags/Docker/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>MySql分区操作（三）</title>
-    <link href="http://www.forwardlee.com/2018/05/17/MySql%E5%88%86%E5%8C%BA%E6%93%8D%E4%BD%9C%EF%BC%88%E4%B8%89%EF%BC%89/"/>
-    <id>http://www.forwardlee.com/2018/05/17/MySql分区操作（三）/</id>
-    <published>2018-05-17T02:51:51.000Z</published>
-    <updated>2018-05-25T13:05:33.344Z</updated>
-    
-    <content type="html"><![CDATA[<p><strong>子分区操作</strong><br>常用RANGE和HASH复合分区实现子分区</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE myblog.tbl_users_2 (</span><br><span class="line">  `pkid` INT NOT NULL ,</span><br><span class="line">  `username` VARCHAR(255) NOT NULL,</span><br><span class="line">  `password` VARCHAR(255) NOT NULL,</span><br><span class="line">  `email` VARCHAR(255) NULL,</span><br><span class="line">  `sex` CHAR(1) NULL,</span><br><span class="line">  `create_time` DATE NULL)</span><br><span class="line">ENGINE = InnoDB</span><br><span class="line">DEFAULT CHARACTER SET = utf8 </span><br><span class="line">PARTITION BY RANGE(YEAR(create_time))</span><br><span class="line">SUBPARTITION BY HASH(TO_DAYS(create_time))</span><br><span class="line">SUBPARTITIONS 2</span><br><span class="line">(</span><br><span class="line">PARTITION p0 VALUES LESS THAN (2010),</span><br><span class="line">PARTITION p1 VALUES LESS THAN (2017),</span><br><span class="line">PARTITION p2 VALUES LESS THAN (MAXVALUE)</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">INSERT INTO TBL_USERS_2 VALUES (1,&apos;1&apos;,&apos;1&apos;,&apos;1&apos;,1,&apos;2009-08-08&apos;);</span><br><span class="line">INSERT INTO TBL_USERS_2 VALUES (2,&apos;1&apos;,&apos;1&apos;,&apos;1&apos;,1,&apos;2016-08-07&apos;);</span><br><span class="line">INSERT INTO TBL_USERS_2 VALUES (3,&apos;1&apos;,&apos;1&apos;,&apos;1&apos;,1,&apos;2018-08-08&apos;);</span><br></pre></td></tr></table></figure>
-<p><strong>查看产生的分区</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">EXPLAIN PARTITIONS SELECT *                    FROM tbl_users_2 \G;</span><br><span class="line">*************************** 1. row ***************************</span><br><span class="line">           id: 1</span><br><span class="line">  select_type: SIMPLE</span><br><span class="line">        table: tbl_users_2</span><br><span class="line">   partitions: p0_p0sp0,p0_p0sp1,p1_p1sp0,p1_p1sp1,p2_p2sp0,p2_p2sp1</span><br><span class="line">         type: ALL</span><br><span class="line">possible_keys: NULL</span><br><span class="line">          key: NULL</span><br><span class="line">      key_len: NULL</span><br><span class="line">          ref: NULL</span><br><span class="line">         rows: 3</span><br><span class="line">     filtered: 100.00</span><br><span class="line">        Extra: NULL</span><br><span class="line">1 row in set, 2 warnings (0.00 sec)</span><br><span class="line"></span><br><span class="line">ERROR: </span><br><span class="line">No query specified</span><br></pre></td></tr></table></figure>
-<p><strong>查看其中一条数据所在分区</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">EXPLAIN PARTITIONS SELECT *                    FROM tbl_users_2 where create_time = &apos;2017-08-07&apos;\G;</span><br><span class="line">*************************** 1. row ***************************</span><br><span class="line">           id: 1</span><br><span class="line">  select_type: SIMPLE</span><br><span class="line">        table: tbl_users_2</span><br><span class="line">   partitions: p2_p2sp1</span><br><span class="line">         type: ALL</span><br><span class="line">possible_keys: NULL</span><br><span class="line">          key: NULL</span><br><span class="line">      key_len: NULL</span><br><span class="line">          ref: NULL</span><br><span class="line">         rows: 1</span><br><span class="line">     filtered: 100.00</span><br><span class="line">        Extra: Using where</span><br><span class="line">1 row in set, 2 warnings (0.00 sec)</span><br></pre></td></tr></table></figure>
-<p><strong>分区字段特殊性</strong></p>
-<p>按字段分区的字段不能为NULL，所以在建表时需要指定分区字段为NOT NULL。</p>
-<p><strong>分区管理</strong></p>
-<p>删除分区和分区上的数据 </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">alter table tbl_user drop partiton p0;</span><br></pre></td></tr></table></figure>
-<p>增加分区<br>对于RANGE分区，只能添加比已经存在的分区范围更大的值。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">alter table tbl_user add partition ( partition p0 values less than (100));</span><br></pre></td></tr></table></figure></p>
-<p>对于LIST分区，只能添加不存在与分区列表中的值。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">alter table tbl_user add partition ( partition p0 values in (100,101,102));</span><br></pre></td></tr></table></figure>
-<p>也就是说，100，101，102不在已定义的LIST分区内。</p>
-<p><strong>不丢失数据修改分区</strong><br> 如果原来的分区是这样的：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">create table tbl_user(</span><br><span class="line"> pkid int not null,</span><br><span class="line"> name varchar(255)</span><br><span class="line"> )</span><br><span class="line"> partition by range(pkid) partitions 3(</span><br><span class="line"> partition p0 values less than(100),</span><br><span class="line"> partition p1 values less than(200),</span><br><span class="line"> partition p2 values  less than(300)</span><br><span class="line"> );</span><br></pre></td></tr></table></figure>
-<p>==修改(拆分)分区：==</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">alter table tbl_user reorganize partition p0 into</span><br><span class="line"> ( partition s0 values less than(50),</span><br><span class="line"> partition s1 values less than(100)</span><br><span class="line"> );</span><br></pre></td></tr></table></figure>
-<p>相当于原来的分区是这样创建的：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">create table tbl_user(</span><br><span class="line"> pkid int not null,</span><br><span class="line"> name varchar(255)</span><br><span class="line"> )</span><br><span class="line"> partition by range(pkid) partitions 4(</span><br><span class="line"> partition s0 values less than(50),</span><br><span class="line"> partition s1 values less than(100),</span><br><span class="line"> partition p1 values less than(200),</span><br><span class="line"> partition p2 values  less than(300)</span><br><span class="line"> );</span><br></pre></td></tr></table></figure>
-<p>LIST分区修改（拆分）同理。<br>==修改(合并)分区：==</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">alter table tbl_user reorganize partition s0,s1 into</span><br><span class="line"> ( partition p0 values less than(100)</span><br><span class="line"> );</span><br></pre></td></tr></table></figure>
-<p>删除分区，不删除数据</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">alter table tbl_user remove partitioning</span><br></pre></td></tr></table></figure>
-<p><strong>HASH和KEY分区管理</strong></p>
-<p>在没有数据的时候进行修改分区操作是可以的，如果在数据存在后再减少和增加分区，数据分布就不均匀了。</p>
-<p>减少n个分区</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">alter table tbl_user coalesce partition 2;</span><br></pre></td></tr></table></figure>
-<p>增加n个分区</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">alter table tbl_user add partition 2;</span><br></pre></td></tr></table></figure>
-<p><strong>其他分区管理语句</strong></p>
-<p>重建分区</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">alter table tbl_user rebuild partition p0,p1,p2,p3;</span><br></pre></td></tr></table></figure>
-<p>优化分区(包括分析、检查、修补分区）</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">alter table tbl_user optimize partition p0,p1,p2,p3;</span><br></pre></td></tr></table></figure>
-<p>分析分区</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">alter table tbl_user analyze partiton p0,p1,p2,p3;</span><br></pre></td></tr></table></figure>
-<p>检查分区</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">alter table tbl_user check partition p0,p1,p2,p3;</span><br></pre></td></tr></table></figure>
-<p>修补分区</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">alter table tbl_user repair partition p0,p1,p2,p3;</span><br></pre></td></tr></table></figure>
-<p><strong>其他细节</strong></p>
-<p><em>分区数最大不超过1024个，实际应用中分区数不超过150个；<br>如果有唯一索引或者主键，分区列必须包含所有的唯一索引或者主键；<br>不支持外键；<br>不支持全区索引；<br>常用日期进行分区；<br>临时表不能被分区；<br>单条数据查询分区管理意义不大，除非指定数据所在分区；<br>计算分区成本，因为每次插入数据都会进行分区计算，分区函数不能过于复杂；<br>分区字段不能为NULL；</em></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;&lt;strong&gt;子分区操作&lt;/strong&gt;&lt;br&gt;常用RANGE和HASH复合分区实现子分区&lt;/p&gt;
-&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;
-    
-    </summary>
-    
-    
-      <category term="MySQL" scheme="http://www.forwardlee.com/tags/MySQL/"/>
     
   </entry>
   
