@@ -349,6 +349,151 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2018/06/01/RedisCluster配置和部署/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ForwardLee">
+      <meta itemprop="description" content="总结学习方法，实践技术技能。">
+      <meta itemprop="image" content="/images/head.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="不忘初心">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/06/01/RedisCluster配置和部署/" itemprop="url">
+                  RedisCluster配置和部署--创建多master多slave高可用集群环境
+                </a>
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-06-01 10:37:51 / 修改时间：18:04:40" itemprop="dateCreated datePublished" datetime="2018-06-01T10:37:51+08:00">2018-06-01</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>Redis的主从配置的主要作用是实现读写分离，并且可以通过配置一主多从来实现Redis横向扩展，保证Redis读取数据的QPS能够达到10W+。<strong>如果应用的Redis写数据量QPS只需要几万，而读数据要几十万或上百万QPS，那么Redis Sentinel集群就可以满足业务需求，一主多从，而且可以实现自动Master主备切换，实现高可用。</strong>当写数据的QPS需要几十万或者上百万QPS，或者写数据量达到1T以上的场景，Sentinel的一主多从就不能满足业务需求，此时需要更多的Master来支撑写操作。</p>
+<p>Redis Cluster实现多主多从的集群架构，并且能够进行自动故障节点转移和恢复，并支持多Master节点写入，能够支撑更大数据量的写操作。虽然Redis Cluster实现了读写分离的主从结构，但是Redis的客户端Jedis操作对读写分离支持不够完善，需要对Jedis进行扩展才能支持读写分离。而且Redis Cluster本身slave节点不能直接读取数据，需要先执行readonly命令，再读取数据。所以<strong>Redis Cluster的重点在实现Master节点的横向扩展支撑更大数据量，能够通过Master节点实现读写操作，Slave节点的作用主要用是数据热备和在Master节点故障时的主备自动切换，保证Redis Cluster的高可用。</strong></p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/06/01/RedisCluster配置和部署/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2018/05/31/Sentinels哨兵管理/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1769,178 +1914,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2018/05/22/Docker-Galera-Cluster环境快速搭建/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="ForwardLee">
-      <meta itemprop="description" content="总结学习方法，实践技术技能。">
-      <meta itemprop="image" content="/images/head.jpeg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="不忘初心">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/05/22/Docker-Galera-Cluster环境快速搭建/" itemprop="url">
-                  Docker Galera Cluster环境快速搭建
-                </a>
-              
-            
-          </h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2018-05-22 11:12:14" itemprop="dateCreated datePublished" datetime="2018-05-22T11:12:14+08:00">2018-05-22</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2018-05-25 21:09:51" itemprop="dateModified" datetime="2018-05-25T21:09:51+08:00">2018-05-25</time>
-              
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>使用Docker快速创建MariaDB（与MySql同源） Galera集群环境</p>
-<p>Docker开发环境：MacOS High Sieera 10.13.2 (17C88)<br>MariaDB Galera Cluster容器环境：CentOS 7.3 + MariaDB 10.1.23</p>
-<p>1.执行Docker拉取镜像</p>
-<p><code>docker pull mjstealey/mariadb-galera:10.1</code></p>
-<p>2.下载测试脚本</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/mjstealey/mariadb-galera.git</span><br><span class="line"></span><br><span class="line">cd mariadb-galera/</span><br></pre></td></tr></table></figure>
-<p>下载好的代码中包括创建docker容器的脚本和测试脚本。</p>
-<p>3.创建集群节点并执行测试语句</p>
-<p><code>./three-node-test.sh</code></p>
-<p>命令执行过程中会创建三个节点，并且执行测试sql查看集群节点数据同步是否正确。测试通过后，可以使用后续命令分别操作三个节点的数据库。</p>
-<p>4.查看已经运行的节点进程</p>
-<p><code>docker container ls</code></p>
-<p>输出结果</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">CONTAINER ID        IMAGE                           COMMAND                  CREATED              STATUS              PORTS                                                                                                NAMES</span><br><span class="line">0a06b6789c1c        mjstealey/mariadb-galera:10.1   &quot;/docker-entrypoint.…&quot;   58 seconds ago       Up 59 seconds       0.0.0.0:32791-&gt;3306/tcp, 0.0.0.0:32790-&gt;4444/tcp, 0.0.0.0:32789-&gt;4567/tcp, 0.0.0.0:32788-&gt;4568/tcp   galera-node-3</span><br><span class="line">c4e5eb6d2ba1        mjstealey/mariadb-galera:10.1   &quot;/docker-entrypoint.…&quot;   About a minute ago   Up About a minute   0.0.0.0:32787-&gt;3306/tcp, 0.0.0.0:32786-&gt;4444/tcp, 0.0.0.0:32785-&gt;4567/tcp, 0.0.0.0:32784-&gt;4568/tcp   galera-node-2</span><br><span class="line">bf53b99d540c        mjstealey/mariadb-galera:10.1   &quot;/docker-entrypoint.…&quot;   About a minute ago   Up About a minute   0.0.0.0:32783-&gt;3306/tcp, 0.0.0.0:32782-&gt;4444/tcp, 0.0.0.0:32781-&gt;4567/tcp, 0.0.0.0:32780-&gt;4568/tcp   galera-node-1</span><br></pre></td></tr></table></figure>
-<p>5.单独进入节点操作数据库<br><code>docker exec -it bf53b99d540c mysql -uroot -ptemppassword</code></p>
-<p>MariaDB数据库的root用户密码是Docker在创建容器的时候配置的，可以从Dockerfile中找到配置，直接从镜像中拉取的容器镜像，是已经配置好的。如果本地执行Docker容器创建，那么可以修改Dockerfile中的相关配置。</p>
-<p>命令中bf53b99d540c是指容器进程的CONTAINER ID的值。</p>
-<p>参数解释<br>-i 可交互<br>-t 分配终端</p>
-<p>命令执行完会进入MariaDB的命令行交互窗口。</p>
-<p>6.在任一一个节点操作数据库，数据都会在其他节点同步（接近同步）更新。<br>==Galera规则要求创建的表必须要有主键，没有主键也要指定自增列。==</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">create table tbl_user</span><br><span class="line">(</span><br><span class="line">	pkid int auto_increment primary key,</span><br><span class="line">	username varchar(255) not null</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1992,7 +1965,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">35</span>
+                    <span class="site-state-item-count">36</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -2051,7 +2024,11 @@
                     
                       
                     
-                    <span class="site-state-item-count">22</span>
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">24</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>

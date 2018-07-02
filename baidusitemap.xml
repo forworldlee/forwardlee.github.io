@@ -4,6 +4,25 @@
 
     
   <url>
+    <loc>http://www.forwardlee.com/2018/07/02/Nexus%E7%A7%81%E6%9C%8D%E6%90%AD%E5%BB%BA/</loc>
+    <lastmod>2018-07-02T10:17:17.263Z</lastmod>
+    <data>
+        <display>
+        <title>Nexus私服搭建</title>
+        <pubTime>2018-07-02T09:21:57.000Z</pubTime>
+        
+        <tag>Nexus</tag>
+         
+        <tag>Maven</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://www.forwardlee.com/2018/06/29/Springboot-Springcloud%E6%8A%80%E6%9C%AF%E6%A0%88/</loc>
     <lastmod>2018-06-29T10:06:19.942Z</lastmod>
     <data>
@@ -390,13 +409,13 @@
         <title>CentOS 6.8 + MariaDB 10.0 with Galera Cluster+Keepalived高可用解决方案</title>
         <pubTime>2018-05-24T11:40:46.000Z</pubTime>
         
-        <tag>Galera</tag>
-         
-        <tag>CentOS</tag>
-         
         <tag>MariaDB</tag>
          
         <tag>Keepalived</tag>
+         
+        <tag>Galera</tag>
+         
+        <tag>CentOS</tag>
          
          
            
@@ -431,11 +450,11 @@
         <title>CentOS 6.8+MySQL 5.5 with Galera Cluster环境搭建</title>
         <pubTime>2018-05-22T16:13:16.000Z</pubTime>
         
-        <tag>MySQL</tag>
-         
         <tag>Galera</tag>
          
         <tag>CentOS</tag>
+         
+        <tag>MySQL</tag>
          
          
            
@@ -452,11 +471,11 @@
         <title>Keepalived HA +LVS+ Galera Cluster环境</title>
         <pubTime>2018-05-23T08:14:48.000Z</pubTime>
         
-        <tag>MySQL</tag>
+        <tag>Keepalived</tag>
          
         <tag>Galera</tag>
          
-        <tag>Keepalived</tag>
+        <tag>MySQL</tag>
          
          
            
@@ -473,9 +492,9 @@
         <title>Galera Cluster 3 + Mysql wresp 5.6安装配置</title>
         <pubTime>2018-05-24T05:02:55.000Z</pubTime>
         
-        <tag>MySQL</tag>
-         
         <tag>Galera</tag>
+         
+        <tag>MySQL</tag>
          
          
            
@@ -492,9 +511,9 @@
         <title>Docker Galera Cluster环境快速搭建</title>
         <pubTime>2018-05-22T03:12:14.000Z</pubTime>
         
-        <tag>Galera</tag>
-         
         <tag>MariaDB</tag>
+         
+        <tag>Galera</tag>
          
         <tag>Docker</tag>
          
