@@ -349,6 +349,196 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2018/07/04/Docker常用命令/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ForwardLee">
+      <meta itemprop="description" content="总结学习方法，实践技术技能。">
+      <meta itemprop="image" content="/images/head.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="不忘初心">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/07/04/Docker常用命令/" itemprop="url">
+                  Docker常用命令
+                </a>
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-07-04 11:10:56 / 修改时间：11:31:45" itemprop="dateCreated datePublished" datetime="2018-07-04T11:10:56+08:00">2018-07-04</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <table>
+<thead>
+<tr>
+<th style="text-align:center">操作</th>
+<th style="text-align:center">命令</th>
+<th style="text-align:center">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">运行</td>
+<td style="text-align:center">docker run –name container-name -d image-name eg:docker run –name myredis –d redis</td>
+<td style="text-align:center">–name:自定义容器名 -d:后台运行 image-name:指定镜像模板</td>
+</tr>
+<tr>
+<td style="text-align:center">列表</td>
+<td style="text-align:center">docker ps(查看运行中的容器);</td>
+<td style="text-align:center">加上-a;可以查看所有容器</td>
+</tr>
+<tr>
+<td style="text-align:center">停止</td>
+<td style="text-align:center">docker stop container-name或者container-id</td>
+<td style="text-align:center">停止当前你运行的容器</td>
+</tr>
+<tr>
+<td style="text-align:center">启动</td>
+<td style="text-align:center">docker start container-name或者container-id</td>
+<td style="text-align:center">启动容器</td>
+</tr>
+<tr>
+<td style="text-align:center">删除</td>
+<td style="text-align:center">docker rm container-id</td>
+<td style="text-align:center">删除指定容器</td>
+</tr>
+<tr>
+<td style="text-align:center">端口映射</td>
+<td style="text-align:center">-p 6379:6379  eg:docker run -d -p 6379:6379 –name myredis docker.io/redis</td>
+<td style="text-align:center">-p: 主机端口(映射到)容器内部的端口</td>
+</tr>
+<tr>
+<td style="text-align:center">容器日志</td>
+<td style="text-align:center">docker logs container-name或者container-id</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">更多命令</td>
+<td style="text-align:center"><a href="https://docs.docker.com/engine/reference/commandline/docker/" target="_blank" rel="noopener">https://docs.docker.com/engine/reference/commandline/docker/</a></td>
+<td style="text-align:center"></td>
+</tr>
+</tbody>
+</table>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2018/07/02/Nexus私服搭建/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -395,7 +585,7 @@
                 
               
 
-              <time title="创建时间：2018-07-02 17:21:57 / 修改时间：18:34:14" itemprop="dateCreated datePublished" datetime="2018-07-02T17:21:57+08:00">2018-07-02</time>
+              <time title="创建时间：2018-07-02 17:21:57 / 修改时间：18:34:37" itemprop="dateCreated datePublished" datetime="2018-07-02T17:21:57+08:00">2018-07-02</time>
             
 
             
@@ -1743,153 +1933,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2018/06/01/Redis-Cluster维护/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="ForwardLee">
-      <meta itemprop="description" content="总结学习方法，实践技术技能。">
-      <meta itemprop="image" content="/images/head.jpeg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="不忘初心">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/06/01/Redis-Cluster维护/" itemprop="url">
-                  Redis Cluster维护
-                </a>
-              
-            
-          </h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2018-06-01 16:49:11 / 修改时间：18:08:18" itemprop="dateCreated datePublished" datetime="2018-06-01T16:49:11+08:00">2018-06-01</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="增加Redis-Cluster-Master节点"><a href="#增加Redis-Cluster-Master节点" class="headerlink" title="增加Redis Cluster Master节点"></a>增加Redis Cluster Master节点</h1><p>在安装了Redis Cluster集群环境机器上执行增加节点命令。<br>redis-trib.rb add-node NEW_NODE ANY_NODE_OF_CLUSTER</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">redis-trib.rb add-node 192.168.1.212:7007 192.168.1.212:7005</span><br><span class="line"></span><br><span class="line">[root@eshop-cache01 init.d]# redis-trib.rb add-node 192.168.1.212:7007 192.168.1.211:7003</span><br><span class="line">&gt;&gt;&gt; Adding node 192.168.1.212:7007 to cluster 192.168.1.211:7003</span><br><span class="line">&gt;&gt;&gt; Performing Cluster Check (using node 192.168.1.211:7003)</span><br><span class="line">M: 434f96e83bea38adeb97a5df293da3b008f76768 192.168.1.211:7003</span><br><span class="line">   slots:5461-10922 (5462 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">S: 279addebc5ef0f0d7beef81d86201e3f8874fbd7 192.168.1.210:7001</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates 389568b7d660edfb016521d2c06aa898733a28c0</span><br><span class="line">S: d2e15ab71bbe2cca6cce19a5bacd92944368d230 192.168.1.210:7002</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates 434f96e83bea38adeb97a5df293da3b008f76768</span><br><span class="line">S: 70ae536a26cd28807a41b2009755f613d9691322 192.168.1.212:7006</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates b843b0530233e861dc674f1d78856a0de1f5c438</span><br><span class="line">M: b843b0530233e861dc674f1d78856a0de1f5c438 192.168.1.212:7005</span><br><span class="line">   slots:10923-16383 (5461 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">M: 389568b7d660edfb016521d2c06aa898733a28c0 192.168.1.211:7004</span><br><span class="line">   slots:0-5460 (5461 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">[OK] All nodes agree about slots configuration.</span><br><span class="line">&gt;&gt;&gt; Check for open slots...</span><br><span class="line">&gt;&gt;&gt; Check slots coverage...</span><br><span class="line">[OK] All 16384 slots covered.</span><br><span class="line">&gt;&gt;&gt; Send CLUSTER MEET to node 192.168.1.212:7007 to make it join the cluster.</span><br><span class="line">[OK] New node added correctly.</span><br></pre></td></tr></table></figure>
-<p>再次查看集群状态</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">redis-trib.rb check 192.168.1.211:7003</span><br><span class="line"></span><br><span class="line">[root@eshop-cache01 init.d]# redis-trib.rb  check 192.168.1.212:7007</span><br><span class="line">&gt;&gt;&gt; Performing Cluster Check (using node 192.168.1.212:7007)</span><br><span class="line">M: db864e7965225405f65f36c1cd0a0bb32f2df6ce 192.168.1.212:7007</span><br><span class="line">   slots: (0 slots) master</span><br><span class="line">   0 additional replica(s)</span><br><span class="line">M: 434f96e83bea38adeb97a5df293da3b008f76768 192.168.1.211:7003</span><br><span class="line">   slots:5461-10922 (5462 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">M: 389568b7d660edfb016521d2c06aa898733a28c0 192.168.1.211:7004</span><br><span class="line">   slots:0-5460 (5461 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">S: 279addebc5ef0f0d7beef81d86201e3f8874fbd7 192.168.1.210:7001</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates 389568b7d660edfb016521d2c06aa898733a28c0</span><br><span class="line">M: b843b0530233e861dc674f1d78856a0de1f5c438 192.168.1.212:7005</span><br><span class="line">   slots:10923-16383 (5461 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">S: 70ae536a26cd28807a41b2009755f613d9691322 192.168.1.212:7006</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates b843b0530233e861dc674f1d78856a0de1f5c438</span><br><span class="line">S: d2e15ab71bbe2cca6cce19a5bacd92944368d230 192.168.1.210:7002</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates 434f96e83bea38adeb97a5df293da3b008f76768</span><br><span class="line">[OK] All nodes agree about slots configuration.</span><br><span class="line">&gt;&gt;&gt; Check for open slots...</span><br><span class="line">&gt;&gt;&gt; Check slots coverage...</span><br><span class="line">[OK] All 16384 slots covered.</span><br></pre></td></tr></table></figure>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/06/01/Redis-Cluster维护/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1941,7 +1984,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">36</span>
+                    <span class="site-state-item-count">37</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
