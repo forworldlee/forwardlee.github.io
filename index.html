@@ -349,6 +349,180 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2018/07/15/HashSet、HashMap、ArrayList线程不安全与对策/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ForwardLee">
+      <meta itemprop="description" content="总结学习方法，实践技术技能。">
+      <meta itemprop="image" content="/images/head.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="不忘初心">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/07/15/HashSet、HashMap、ArrayList线程不安全与对策/" itemprop="url">
+                  HashSet、HashMap 、ArrayList线程不安全与对策
+                </a>
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-07-15 11:34:52" itemprop="dateCreated datePublished" datetime="2018-07-15T11:34:52+08:00">2018-07-15</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-07-17 19:26:26" itemprop="dateModified" datetime="2018-07-17T19:26:26+08:00">2018-07-17</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1><span id="测试用例">测试用例</span></h1><p>设定2000个请求，分多次并发请求往容器内添加元素，使用信号量Semaphore控制并发量的大小，查看集合中元素数量是否等于2000，等于2000表示容器是并发线程安全的，小于2000表示容器是并发线程不安全的。</p>
+<h1><span id="普通容器的线程不安全示例">普通容器的线程不安全示例</span></h1><h2><span id="hashset线程不安全示例">HashSet线程不安全示例</span></h2><h3><span id="代码">代码</span></h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testHashSet</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> threadSize = <span class="number">2000</span>;</span><br><span class="line">    HashSet set = <span class="keyword">new</span> HashSet&lt;&gt;();</span><br><span class="line">    ExecutorService service = Executors.newFixedThreadPool(threadSize);</span><br><span class="line">    <span class="keyword">final</span> Semaphore semaphore = <span class="keyword">new</span> Semaphore(<span class="number">500</span>);<span class="comment">//500的信号量相当于500个并发</span></span><br><span class="line">    <span class="keyword">final</span> CountDownLatch countDownLatch = <span class="keyword">new</span> CountDownLatch(<span class="number">4</span>);<span class="comment">//4次请求</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; threadSize; i++) &#123;</span><br><span class="line">        service.submit(()-&gt;&#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                semaphore.acquire();</span><br><span class="line">                set.add(Thread.currentThread().getId());</span><br><span class="line">                semaphore.release();</span><br><span class="line">                countDownLatch.countDown();</span><br><span class="line">            &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    countDownLatch.await();<span class="comment">//主线程等待，直到countDownLatch被减到0，主线程再继续执行。</span></span><br><span class="line">    service.shutdown();</span><br><span class="line">    log.info(<span class="string">"集合大小：&#123;&#125;"</span>,set.size());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3><span id="执行结果">执行结果</span></h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">12:26:39.881 [main] INFO com.hledu.project1.front.concurrent.CollectionsConcurrent - 集合大小：1998</span><br></pre></td></tr></table></figure>
+<h2><span id="hashmap线程不安全示例">HashMap线程不安全示例</span></h2><h3><span id="代码">代码</span></h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testHashMap</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> threadSize = <span class="number">2000</span>;</span><br><span class="line">    HashMap&lt;Object, Object&gt; map = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">    ExecutorService service = Executors.newFixedThreadPool(threadSize);</span><br><span class="line">    <span class="keyword">final</span> Semaphore semaphore = <span class="keyword">new</span> Semaphore(<span class="number">1000</span>);<span class="comment">//1000的信号量相当于1000个并发</span></span><br><span class="line">    <span class="keyword">final</span> CountDownLatch countDownLatch = <span class="keyword">new</span> CountDownLatch(<span class="number">2</span>);<span class="comment">//2次请求</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; threadSize; i++) &#123;</span><br><span class="line">        service.submit(()-&gt;&#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                semaphore.acquire();</span><br><span class="line">                map.put(Thread.currentThread().getId(), Thread.currentThread().getId());</span><br><span class="line">                semaphore.release();</span><br><span class="line">                countDownLatch.countDown();</span><br><span class="line">            &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    countDownLatch.await();<span class="comment">//主线程等待，直到countDownLatch被减到0，主线程再继续执行。</span></span><br><span class="line">    service.shutdown();</span><br><span class="line">    log.info(<span class="string">"集合大小：&#123;&#125;"</span>,map.size());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3><span id="执行结果">执行结果</span></h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">12:35:48.188 [main] INFO com.hledu.project1.front.concurrent.CollectionsConcurrent - 集合大小：1999</span><br></pre></td></tr></table></figure>
+<h2><span id="arraylist线程不安全示例">ArrayList线程不安全示例</span></h2><h3><span id="代码">代码</span></h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testArrayList</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">       <span class="keyword">int</span> threadSize = <span class="number">2000</span>;</span><br><span class="line">       ArrayList&lt;Object&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">       ExecutorService service = Executors.newFixedThreadPool(threadSize);</span><br><span class="line">       <span class="keyword">final</span> Semaphore semaphore = <span class="keyword">new</span> Semaphore(<span class="number">500</span>);<span class="comment">//500的信号量相当于500个并发</span></span><br><span class="line">       <span class="keyword">final</span> CountDownLatch countDownLatch = <span class="keyword">new</span> CountDownLatch(<span class="number">4</span>);<span class="comment">//4次请求</span></span><br><span class="line">       <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; threadSize; i++) &#123;</span><br><span class="line">           service.submit(()-&gt;&#123;</span><br><span class="line">               <span class="keyword">try</span> &#123;</span><br><span class="line">                   semaphore.acquire();</span><br><span class="line">                   list.add(Thread.currentThread().getId());</span><br><span class="line">                   semaphore.release();</span><br><span class="line">                   countDownLatch.countDown();</span><br><span class="line">               &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                   e.printStackTrace();</span><br><span class="line">               &#125;</span><br><span class="line">           &#125;);</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       countDownLatch.await();<span class="comment">//主线程等待，直到countDownLatch被减到0，主线程再继续执行。</span></span><br><span class="line">       service.shutdown();</span><br><span class="line">       log.info(<span class="string">"集合大小：&#123;&#125;"</span>,list.size());</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<h3><span id="执行结果">执行结果</span></h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">12:44:06.468 [main] INFO com.hledu.project1.front.concurrent.CollectionsConcurrent - 集合大小：1999</span><br></pre></td></tr></table></figure>
+<h1><span id="同步容器的线程安全解决方案">同步容器的线程安全解决方案</span></h1><h2><span id="hashset转换为同步容器的方法">HashSet转换为同步容器的方法</span></h2><h3><span id="代码">代码</span></h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testSyncSet</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> threadSize = <span class="number">2000</span>;</span><br><span class="line">        Set set = Collections.synchronizedSet(<span class="keyword">new</span> HashSet());</span><br><span class="line">        ExecutorService service = Executors.newFixedThreadPool(threadSize);</span><br><span class="line">        <span class="keyword">final</span> Semaphore semaphore = <span class="keyword">new</span> Semaphore(<span class="number">500</span>);<span class="comment">//500的信号量相当于500个并发</span></span><br><span class="line">        <span class="keyword">final</span> CountDownLatch countDownLatch = <span class="keyword">new</span> CountDownLatch(<span class="number">4</span>);<span class="comment">//4次请求</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; threadSize; i++) &#123;</span><br><span class="line">            service.submit(()-&gt;&#123;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    semaphore.acquire();</span><br><span class="line">                    set.add(Thread.currentThread().getId());</span><br><span class="line">                    semaphore.release();</span><br><span class="line">                    countDownLatch.countDown();</span><br><span class="line">                &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        countDownLatch.await();<span class="comment">//主线程等待，直到countDownLatch被减到0，主线程再继续执行。</span></span><br><span class="line">        service.shutdown();</span><br><span class="line">        log.info(<span class="string">"集合大小：&#123;&#125;"</span>,set.size());</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h3><span id="执行结果">执行结果</span></h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">10:30:20.787 [main] INFO com.hledu.project1.front.concurrent.CollectionsConcurrent - 集合大小：2000</span><br></pre></td></tr></table></figure>
+<h2><span id="hashmap转换为同步容器的方法">HashMap转换为同步容器的方法</span></h2><h3><span id="代码1">代码1</span></h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//HashTable的key-value都不能为null</span></span><br><span class="line"><span class="meta">@Test</span></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testHashTable</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">       <span class="keyword">int</span> threadSize = <span class="number">2000</span>;</span><br><span class="line">       Map&lt;Object, Object&gt; map = <span class="keyword">new</span> Hashtable&lt;&gt;();</span><br><span class="line">       ExecutorService service = Executors.newFixedThreadPool(threadSize);</span><br><span class="line">       <span class="keyword">final</span> Semaphore semaphore = <span class="keyword">new</span> Semaphore(<span class="number">1000</span>);<span class="comment">//1000的信号量相当于1000个并发</span></span><br><span class="line">       <span class="keyword">final</span> CountDownLatch countDownLatch = <span class="keyword">new</span> CountDownLatch(<span class="number">2</span>);<span class="comment">//2次请求</span></span><br><span class="line">       <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; threadSize; i++) &#123;</span><br><span class="line">           service.submit(()-&gt;&#123;</span><br><span class="line">               <span class="keyword">try</span> &#123;</span><br><span class="line">                   semaphore.acquire();</span><br><span class="line">                   map.put(Thread.currentThread().getId(), Thread.currentThread().getId());</span><br><span class="line">                   semaphore.release();</span><br><span class="line">                   countDownLatch.countDown();</span><br><span class="line">               &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                   e.printStackTrace();</span><br><span class="line">               &#125;</span><br><span class="line">           &#125;);</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       countDownLatch.await();<span class="comment">//主线程等待，直到countDownLatch被减到0，主线程再继续执行。</span></span><br><span class="line">       service.shutdown();</span><br><span class="line">       log.info(<span class="string">"集合大小：&#123;&#125;"</span>,map.size());</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<h3><span id="代码2">代码2</span></h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testSyncMap</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">       <span class="keyword">int</span> threadSize = <span class="number">2000</span>;</span><br><span class="line">       Map&lt;Object, Object&gt; map = Collections.synchronizedMap(<span class="keyword">new</span> HashMap&lt;&gt;());</span><br><span class="line">       ExecutorService service = Executors.newFixedThreadPool(threadSize);</span><br><span class="line">       Semaphore semaphore = <span class="keyword">new</span> Semaphore(<span class="number">1000</span>);<span class="comment">//1000的信号量相当于1000个并发</span></span><br><span class="line">       CountDownLatch countDownLatch = <span class="keyword">new</span> CountDownLatch(<span class="number">2</span>);<span class="comment">//2次请求</span></span><br><span class="line">       <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; threadSize; i++) &#123;</span><br><span class="line">           service.submit(()-&gt;&#123;</span><br><span class="line">               <span class="keyword">try</span> &#123;</span><br><span class="line">                   semaphore.acquire();</span><br><span class="line">                   map.put(Thread.currentThread().getId(), Thread.currentThread().getId());</span><br><span class="line">                   semaphore.release();</span><br><span class="line">                   countDownLatch.countDown();</span><br><span class="line">               &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                   e.printStackTrace();</span><br><span class="line">               &#125;</span><br><span class="line">           &#125;);</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       countDownLatch.await();<span class="comment">//主线程等待，直到countDownLatch被减到0，主线程再继续执行。</span></span><br><span class="line">       service.shutdown();</span><br><span class="line">       log.info(<span class="string">"集合大小：&#123;&#125;"</span>,map.size());</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<h3><span id="执行结果">执行结果</span></h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">10:44:48.401 [main] INFO com.hledu.project1.front.concurrent.CollectionsConcurrent - 集合大小：2000</span><br></pre></td></tr></table></figure>
+<h2><span id="arraylist转换为同步容器的方法">ArrayList转换为同步容器的方法</span></h2><h3><span id="代码1">代码1</span></h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testVector</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">       <span class="keyword">int</span> threadSize = <span class="number">2000</span>;</span><br><span class="line">       List&lt;Object&gt; list = <span class="keyword">new</span> Vector&lt;&gt;();</span><br><span class="line">       ExecutorService service = Executors.newFixedThreadPool(threadSize);</span><br><span class="line">       Semaphore semaphore = <span class="keyword">new</span> Semaphore(<span class="number">500</span>);<span class="comment">//500的信号量相当于500个并发</span></span><br><span class="line">       CountDownLatch countDownLatch = <span class="keyword">new</span> CountDownLatch(<span class="number">4</span>);<span class="comment">//4次请求</span></span><br><span class="line">       <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; threadSize; i++) &#123;</span><br><span class="line">           service.submit(()-&gt;&#123;</span><br><span class="line">               <span class="keyword">try</span> &#123;</span><br><span class="line">                   semaphore.acquire();</span><br><span class="line">                   list.add(Thread.currentThread().getId());</span><br><span class="line">                   semaphore.release();</span><br><span class="line">                   countDownLatch.countDown();</span><br><span class="line">               &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                   e.printStackTrace();</span><br><span class="line">               &#125;</span><br><span class="line">           &#125;);</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       countDownLatch.await();<span class="comment">//主线程等待，直到countDownLatch被减到0，主线程再继续执行。</span></span><br><span class="line">       log.info(<span class="string">"集合大小：&#123;&#125;"</span>,list.size());</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<h3><span id="代码2">代码2</span></h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testStack</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> threadSize = <span class="number">2000</span>;</span><br><span class="line">        List&lt;Object&gt; list = <span class="keyword">new</span> Stack&lt;&gt;();</span><br><span class="line">        ExecutorService service = Executors.newFixedThreadPool(threadSize);</span><br><span class="line">        <span class="keyword">final</span> Semaphore semaphore = <span class="keyword">new</span> Semaphore(<span class="number">500</span>);<span class="comment">//500的信号量相当于500个并发</span></span><br><span class="line">        <span class="keyword">final</span> CountDownLatch countDownLatch = <span class="keyword">new</span> CountDownLatch(<span class="number">4</span>);<span class="comment">//4次请求</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; threadSize; i++) &#123;</span><br><span class="line">            service.submit(()-&gt;&#123;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    semaphore.acquire();</span><br><span class="line">                    list.add(Thread.currentThread().getId());</span><br><span class="line">                    semaphore.release();</span><br><span class="line">                    countDownLatch.countDown();</span><br><span class="line">                &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        countDownLatch.await();<span class="comment">//主线程等待，直到countDownLatch被减到0，主线程再继续执行。</span></span><br><span class="line">        service.shutdown();</span><br><span class="line">        log.info(<span class="string">"集合大小：&#123;&#125;"</span>,list.size());</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h3><span id="代码3">代码3</span></h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testSyncList</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> threadSize = <span class="number">2000</span>;</span><br><span class="line">        List&lt;Object&gt; list = Collections.synchronizedList(<span class="keyword">new</span> ArrayList&lt;&gt;());</span><br><span class="line">        ExecutorService service = Executors.newFixedThreadPool(threadSize);</span><br><span class="line">        <span class="keyword">final</span> Semaphore semaphore = <span class="keyword">new</span> Semaphore(<span class="number">500</span>);<span class="comment">//500的信号量相当于500个并发</span></span><br><span class="line">        <span class="keyword">final</span> CountDownLatch countDownLatch = <span class="keyword">new</span> CountDownLatch(<span class="number">4</span>);<span class="comment">//4次请求</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; threadSize; i++) &#123;</span><br><span class="line">            service.submit(()-&gt;&#123;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    semaphore.acquire();</span><br><span class="line">                    list.add(Thread.currentThread().getId());</span><br><span class="line">                    semaphore.release();</span><br><span class="line">                    countDownLatch.countDown();</span><br><span class="line">                &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        countDownLatch.await();<span class="comment">//主线程等待，直到countDownLatch被减到0，主线程再继续执行。</span></span><br><span class="line">        service.shutdown();</span><br><span class="line">        log.info(<span class="string">"集合大小：&#123;&#125;"</span>,list.size());</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h3><span id="执行结果">执行结果</span></h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">17:38:25.404 [main] INFO com.hledu.project1.front.concurrent.CollectionsConcurrent - 集合大小：2000</span><br></pre></td></tr></table></figure>
+<h1><span id="同步容器实现线程安全的缺点">同步容器实现线程安全的缺点</span></h1><p>同步容器底层使用synchronized关键字修饰实现线程安全，但是synchronized实现线程安全会大大降低代码的执行性能，所以建议使用J.U.C的并发容器来解决高并发带来的线程不安全问题。</p>
+<h1><span id="并发容器的线程安全解决方案">并发容器的线程安全解决方案</span></h1><h2><span id="copyonwrite容器的线程安全解决方案">CopyOnWrite容器的线程安全解决方案</span></h2><p>CopyOnWrite容器在并发操作时首先会对数据进行拷贝，然后对数据进行CompareAndSet操作，当数据量比较大时，Copy和Set操作就会明显降低代码的性能。不推荐使用。</p>
+<h3><span id="代码">代码</span></h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testCopyOnWriteArraySet</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> threadSize = <span class="number">2000</span>;</span><br><span class="line">        Set set = <span class="keyword">new</span> CopyOnWriteArraySet&lt;&gt;();</span><br><span class="line">        ExecutorService service = Executors.newFixedThreadPool(threadSize);</span><br><span class="line">        <span class="keyword">final</span> Semaphore semaphore = <span class="keyword">new</span> Semaphore(<span class="number">500</span>);<span class="comment">//500的信号量相当于500个并发</span></span><br><span class="line">        <span class="keyword">final</span> CountDownLatch countDownLatch = <span class="keyword">new</span> CountDownLatch(<span class="number">4</span>);<span class="comment">//4次请求</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; threadSize; i++) &#123;</span><br><span class="line">            <span class="keyword">final</span> <span class="keyword">int</span> count = i;</span><br><span class="line">            service.submit(()-&gt;&#123;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    semaphore.acquire();</span><br><span class="line">                    set.add(count);</span><br><span class="line">                    semaphore.release();</span><br><span class="line">                    countDownLatch.countDown();</span><br><span class="line">                &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        countDownLatch.await();<span class="comment">//主线程等待，直到countDownLatch被减到0，主线程再继续执行。</span></span><br><span class="line">        service.shutdown();</span><br><span class="line">        log.info(<span class="string">"集合大小：&#123;&#125;"</span>,set.size());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Test</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testCopyOnWriteArrayList</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> threadSize = <span class="number">2000</span>;</span><br><span class="line">        List set = <span class="keyword">new</span> CopyOnWriteArrayList&lt;&gt;();</span><br><span class="line">        ExecutorService service = Executors.newFixedThreadPool(threadSize);</span><br><span class="line">        <span class="keyword">final</span> Semaphore semaphore = <span class="keyword">new</span> Semaphore(<span class="number">500</span>);<span class="comment">//500的信号量相当于500个并发</span></span><br><span class="line">        <span class="keyword">final</span> CountDownLatch countDownLatch = <span class="keyword">new</span> CountDownLatch(<span class="number">4</span>);<span class="comment">//4次请求</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; threadSize; i++) &#123;</span><br><span class="line">            <span class="keyword">final</span> <span class="keyword">int</span> count = i;</span><br><span class="line">            service.submit(()-&gt;&#123;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    semaphore.acquire();</span><br><span class="line">                    set.add(count);</span><br><span class="line">                    semaphore.release();</span><br><span class="line">                    countDownLatch.countDown();</span><br><span class="line">                &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        countDownLatch.await();<span class="comment">//主线程等待，直到countDownLatch被减到0，主线程再继续执行。</span></span><br><span class="line">        service.shutdown();</span><br><span class="line">        log.info(<span class="string">"集合大小：&#123;&#125;"</span>,set.size());</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h3><span id="执行结果">执行结果</span></h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">18:09:39.398 [main] INFO com.hledu.project1.front.concurrent.CollectionsConcurrent - 集合大小：2000</span><br></pre></td></tr></table></figure>
+<h2><span id="concurrent容器的线程安全解决方案">Concurrent容器的线程安全解决方案</span></h2><p>线程安全，支持高并发场景的线程安全，推荐使用。</p>
+<h3><span id="代码">代码</span></h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//元素不能为null,支持元素排序</span></span><br><span class="line">   <span class="meta">@Test</span></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testConcurrentSkipListSet</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">       <span class="keyword">int</span> threadSize = <span class="number">2000</span>;</span><br><span class="line">       Set set = <span class="keyword">new</span> ConcurrentSkipListSet();</span><br><span class="line">       ExecutorService service = Executors.newFixedThreadPool(threadSize);</span><br><span class="line">       <span class="keyword">final</span> Semaphore semaphore = <span class="keyword">new</span> Semaphore(<span class="number">500</span>);<span class="comment">//500的信号量相当于500个并发</span></span><br><span class="line">       <span class="keyword">final</span> CountDownLatch countDownLatch = <span class="keyword">new</span> CountDownLatch(<span class="number">4</span>);<span class="comment">//4次请求</span></span><br><span class="line">       <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; threadSize; i++) &#123;</span><br><span class="line">           <span class="keyword">final</span> <span class="keyword">int</span> count = i;</span><br><span class="line">           service.submit(()-&gt;&#123;</span><br><span class="line">               <span class="keyword">try</span> &#123;</span><br><span class="line">                   semaphore.acquire();</span><br><span class="line">                   set.add(count);</span><br><span class="line">                   semaphore.release();</span><br><span class="line">                   countDownLatch.countDown();</span><br><span class="line">               &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                   e.printStackTrace();</span><br><span class="line">               &#125;</span><br><span class="line">           &#125;);</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       countDownLatch.await();<span class="comment">//主线程等待，直到countDownLatch被减到0，主线程再继续执行。</span></span><br><span class="line">       service.shutdown();</span><br><span class="line">       log.info(<span class="string">"集合大小：&#123;&#125;"</span>,set.size());</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="comment">//适合高并发场景，但不支持元素排序</span></span><br><span class="line">   <span class="meta">@Test</span></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testConcurrentMap</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">       <span class="keyword">int</span> threadSize = <span class="number">2000</span>;</span><br><span class="line">       Map&lt;Object, Object&gt; map = <span class="keyword">new</span> ConcurrentHashMap&lt;&gt;();</span><br><span class="line">       ExecutorService service = Executors.newFixedThreadPool(threadSize);</span><br><span class="line">       <span class="keyword">final</span> Semaphore semaphore = <span class="keyword">new</span> Semaphore(<span class="number">1000</span>);<span class="comment">//1000的信号量相当于1000个并发</span></span><br><span class="line">       <span class="keyword">final</span> CountDownLatch countDownLatch = <span class="keyword">new</span> CountDownLatch(<span class="number">2</span>);<span class="comment">//2次请求</span></span><br><span class="line">       <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; threadSize; i++) &#123;</span><br><span class="line">           <span class="keyword">final</span> <span class="keyword">int</span> count = i;</span><br><span class="line">           service.submit(()-&gt;&#123;</span><br><span class="line">               <span class="keyword">try</span> &#123;</span><br><span class="line">                   semaphore.acquire();</span><br><span class="line">                   map.put(count, count);</span><br><span class="line">                   semaphore.release();</span><br><span class="line">                   countDownLatch.countDown();</span><br><span class="line">               &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                   e.printStackTrace();</span><br><span class="line">               &#125;</span><br><span class="line">           &#125;);</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       countDownLatch.await();<span class="comment">//主线程等待，直到countDownLatch被减到0，主线程再继续执行。</span></span><br><span class="line">       service.shutdown();</span><br><span class="line">       log.info(<span class="string">"集合大小：&#123;&#125;"</span>,map.size());</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="comment">//性能相较于ConcurrentHashMap有所降低，支持元素排序，不能存放null，并发量越大，性能优势越明显</span></span><br><span class="line">   <span class="meta">@Test</span></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testConcurrentSkipListMap</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">       <span class="keyword">int</span> threadSize = <span class="number">2000</span>;</span><br><span class="line">       Map&lt;Object, Object&gt; map = <span class="keyword">new</span> ConcurrentSkipListMap&lt;&gt;();</span><br><span class="line">       ExecutorService service = Executors.newFixedThreadPool(threadSize);</span><br><span class="line">       <span class="keyword">final</span> Semaphore semaphore = <span class="keyword">new</span> Semaphore(<span class="number">1000</span>);<span class="comment">//1000的信号量相当于1000个并发</span></span><br><span class="line">       <span class="keyword">final</span> CountDownLatch countDownLatch = <span class="keyword">new</span> CountDownLatch(<span class="number">2</span>);<span class="comment">//2次请求</span></span><br><span class="line">       <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; threadSize; i++) &#123;</span><br><span class="line">           <span class="keyword">final</span> <span class="keyword">int</span> count = i;</span><br><span class="line">           service.submit(()-&gt;&#123;</span><br><span class="line">               <span class="keyword">try</span> &#123;</span><br><span class="line">                   semaphore.acquire();</span><br><span class="line">                   map.put(count, count);</span><br><span class="line">                   semaphore.release();</span><br><span class="line">                   countDownLatch.countDown();</span><br><span class="line">               &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                   e.printStackTrace();</span><br><span class="line">               &#125;</span><br><span class="line">           &#125;);</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       countDownLatch.await();<span class="comment">//主线程等待，直到countDownLatch被减到0，主线程再继续执行。</span></span><br><span class="line">       service.shutdown();</span><br><span class="line">       log.info(<span class="string">"集合大小：&#123;&#125;"</span>,map.size());</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<h3><span id="执行结果">执行结果</span></h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">18:15:47.529 [main] INFO com.hledu.project1.front.concurrent.CollectionsConcurrent - 集合大小：2000</span><br></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2018/07/04/Docker常用命令/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1786,153 +1960,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2018/06/06/Redis生产环境常见问题及优化/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="ForwardLee">
-      <meta itemprop="description" content="总结学习方法，实践技术技能。">
-      <meta itemprop="image" content="/images/head.jpeg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="不忘初心">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/06/06/Redis生产环境常见问题及优化/" itemprop="url">
-                  Redis生产环境常见问题及优化
-                </a>
-              
-            
-          </h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2018-06-06 14:33:39 / 修改时间：17:20:09" itemprop="dateCreated datePublished" datetime="2018-06-06T14:33:39+08:00">2018-06-06</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="fork导致的Redis延时增大"><a href="#fork导致的Redis延时增大" class="headerlink" title="fork导致的Redis延时增大"></a>fork导致的Redis延时增大</h1><p>Redis在进行RDB和AOF持久化时，为了使主进程继续提供读写服务，Redis就会fork一个子进程进行RDB和AOF持久化，子进程会拷贝Redis主进程的全量数据，此时Redis会阻塞执行读写服务，如果Redis中存储的数据量过大，那么在拷贝时耗时会增大，因为阻塞导致Redis的响应速度从几毫秒延迟到几百或者达到1秒。</p>
-<p><strong>解决方案：</strong>单个Redis实例分配的内存空间不要大于10G，降低fork给Redis带来的延迟影响</p>
-<h1 id="一主多从导致的复制风暴问题"><a href="#一主多从导致的复制风暴问题" class="headerlink" title="一主多从导致的复制风暴问题"></a>一主多从导致的复制风暴问题</h1><p>如果一个Master带有n多个Slava，可能会出现Slave在某一个时间节点，同时对Master进行复制，那么就会导致网络带宽被复制数据占满，导致Redis服务不可用。</p>
-<p><strong>解决方案：</strong>把围绕一个Master创建n个Slave的网络拓扑结构进行优化，减少1个Master的Slave节点。Redis集群只支持一层Slave，如果要使用更多的Slave节点，那么就不能使用集群，而使用Redis的主从复制能力进行纵向扩展，给Slave节点创建Slave节点，使Redis节点成树形结构。</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/06/06/Redis生产环境常见问题及优化/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1984,7 +2011,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">37</span>
+                    <span class="site-state-item-count">38</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -2047,7 +2074,11 @@
                     
                       
                     
-                    <span class="site-state-item-count">24</span>
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">26</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
