@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.forwardlee.com/"/>
-  <updated>2018-07-20T12:19:41.707Z</updated>
+  <updated>2018-07-23T10:02:02.722Z</updated>
   <id>http://www.forwardlee.com/</id>
   
   <author>
@@ -14,6 +14,49 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>图解hystrix请求限流、降级条件和请求调用过程原理</title>
+    <link href="http://www.forwardlee.com/2018/07/23/%E5%9B%BE%E8%A7%A3hystrix%E8%AF%B7%E6%B1%82%E9%99%8D%E7%BA%A7%E6%9D%A1%E4%BB%B6%E5%92%8C%E8%AF%B7%E6%B1%82%E8%B0%83%E7%94%A8%E8%BF%87%E7%A8%8B%E5%8E%9F%E7%90%86/"/>
+    <id>http://www.forwardlee.com/2018/07/23/图解hystrix请求降级条件和请求调用过程原理/</id>
+    <published>2018-07-23T01:43:40.000Z</published>
+    <updated>2018-07-23T10:02:02.722Z</updated>
+    
+    <content type="html"><![CDATA[<h1><span id="hystrix原理图">Hystrix原理图</span></h1><p><img src="/2018/07/23/图解hystrix请求降级条件和请求调用过程原理/hystrix降级原理和调用过程.png" alt=""></p>
+<h1><span id="hystrix应用场景">Hystrix应用场景</span></h1><ul>
+<li>资源隔离：你如果有很多个依赖服务，高可用性，先做资源隔离，任何一个依赖服务的故障不会导致你的服务的资源耗尽，不会崩溃</li>
+<li>请求缓存：对于一个request context内的多个相同command，使用request cache，提升性能</li>
+<li>熔断：基于短路器，采集各种异常事件，报错，超时，reject，短路，熔断，一定时间范围内就不允许访问了，直接降级，自动恢复的机制</li>
+<li>降级：报错，超时，reject，熔断，降级，服务提供容错的机制</li>
+<li>限流：在你的服务里面，通过线程池，或者信号量，限制对某个后端的服务或资源的访问量，避免从你的服务这里过去太多的流量，打死某个资源</li>
+<li>超时：避免某个依赖服务性能过差，导致大量的线程hang住去调用那个服务，会导致你的服务本身性能也比较差</li>
+</ul>
+<h1><span id="hystrix-circuit-breaker配置">Hystrix Circuit Breaker配置</span></h1><h2><span id="1circuitbreakerenabled">（1）circuitBreaker.enabled</span></h2><p>控制短路器是否允许工作，包括跟踪依赖服务调用的健康状况，以及对异常情况过多时是否允许触发短路，默认是true</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HystrixCommandProperties.Setter().withCircuitBreakerEnabled(<span class="keyword">boolean</span> value)</span><br></pre></td></tr></table></figure>
+<h2><span id="2circuitbreakerrequestvolumethreshold">（2）circuitBreaker.requestVolumeThreshold</span></h2><p>设置一个rolling window，滑动窗口中，最少要有多少个请求时，才触发开启短路</p>
+<p>举例来说，如果设置为20（默认值），那么在一个10秒的滑动窗口内，如果只有19个请求，即使这19个请求都是异常的，也是不会触发开启短路器的</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HystrixCommandProperties.Setter().withCircuitBreakerRequestVolumeThreshold(<span class="keyword">int</span> value)</span><br></pre></td></tr></table></figure>
+<h2><span id="3circuitbreakersleepwindowinmilliseconds">（3）circuitBreaker.sleepWindowInMilliseconds</span></h2><p>设置在短路之后，需要在多长时间内直接reject请求，然后在这段时间之后，再重新导holf-open状态，尝试允许请求通过以及自动恢复，默认值是5000毫秒</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HystrixCommandProperties.Setter().withCircuitBreakerSleepWindowInMilliseconds(<span class="keyword">int</span> value)</span><br></pre></td></tr></table></figure>
+<h2><span id="4circuitbreakererrorthresholdpercentage">（4）circuitBreaker.errorThresholdPercentage</span></h2><p>设置异常请求量的百分比，当异常请求达到这个百分比时，就触发打开短路器，默认是50，也就是50%</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HystrixCommandProperties.Setter().withCircuitBreakerErrorThresholdPercentage(<span class="keyword">int</span> value)</span><br></pre></td></tr></table></figure>
+<h2><span id="5circuitbreakerforceopen">（5）circuitBreaker.forceOpen</span></h2><p>如果设置为true的话，直接强迫打开短路器，相当于是手动短路了，手动降级，默认false</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HystrixCommandProperties.Setter().withCircuitBreakerForceOpen(<span class="keyword">boolean</span> value)</span><br></pre></td></tr></table></figure>
+<h2><span id="6circuitbreakerforceclosed">（6）circuitBreaker.forceClosed</span></h2><p>如果设置为ture的话，直接强迫关闭短路器，相当于是手动停止短路了，手动升级，默认false</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HystrixCommandProperties.Setter().withCircuitBreakerForceClosed(<span class="keyword">boolean</span> value)</span><br></pre></td></tr></table></figure>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1&gt;&lt;span id=&quot;hystrix原理图&quot;&gt;Hystrix原理图&lt;/span&gt;&lt;/h1&gt;&lt;p&gt;&lt;img src=&quot;/2018/07/23/图解hystrix请求降级条件和请求调用过程原理/hystrix降级原理和调用过程.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+&lt;h1&gt;&lt;spa
+    
+    </summary>
+    
+    
+      <category term="hystrix" scheme="http://www.forwardlee.com/tags/hystrix/"/>
+    
+  </entry>
   
   <entry>
     <title>HashSet、HashMap 、ArrayList线程不安全与对策</title>
@@ -2301,30 +2344,6 @@
       <category term="Galera" scheme="http://www.forwardlee.com/tags/Galera/"/>
     
       <category term="CentOS" scheme="http://www.forwardlee.com/tags/CentOS/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Galera Cluster 3 + Mysql wresp 5.6安装配置</title>
-    <link href="http://www.forwardlee.com/2018/05/24/Galera-Cluster-3-Mysql-wresp-5-6%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/"/>
-    <id>http://www.forwardlee.com/2018/05/24/Galera-Cluster-3-Mysql-wresp-5-6安装配置/</id>
-    <published>2018-05-24T05:02:55.000Z</published>
-    <updated>2018-05-25T13:10:11.936Z</updated>
-    
-    <content type="html"><![CDATA[<p>安装yum-builddep工具<br>yum install yum-utils –enablerepo=extras</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;安装yum-builddep工具&lt;br&gt;yum install yum-utils –enablerepo=extras&lt;/p&gt;
-
-    
-    </summary>
-    
-    
-      <category term="Galera" scheme="http://www.forwardlee.com/tags/Galera/"/>
-    
-      <category term="MySQL" scheme="http://www.forwardlee.com/tags/MySQL/"/>
     
   </entry>
   

@@ -349,6 +349,167 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2018/07/23/图解hystrix请求降级条件和请求调用过程原理/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ForwardLee">
+      <meta itemprop="description" content="总结学习方法，实践技术技能。">
+      <meta itemprop="image" content="/images/head.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="不忘初心">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/07/23/图解hystrix请求降级条件和请求调用过程原理/" itemprop="url">
+                  图解hystrix请求限流、降级条件和请求调用过程原理
+                </a>
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-07-23 09:43:40 / 修改时间：18:02:02" itemprop="dateCreated datePublished" datetime="2018-07-23T09:43:40+08:00">2018-07-23</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1><span id="hystrix原理图">Hystrix原理图</span></h1><p><img src="/2018/07/23/图解hystrix请求降级条件和请求调用过程原理/hystrix降级原理和调用过程.png" alt=""></p>
+<h1><span id="hystrix应用场景">Hystrix应用场景</span></h1><ul>
+<li>资源隔离：你如果有很多个依赖服务，高可用性，先做资源隔离，任何一个依赖服务的故障不会导致你的服务的资源耗尽，不会崩溃</li>
+<li>请求缓存：对于一个request context内的多个相同command，使用request cache，提升性能</li>
+<li>熔断：基于短路器，采集各种异常事件，报错，超时，reject，短路，熔断，一定时间范围内就不允许访问了，直接降级，自动恢复的机制</li>
+<li>降级：报错，超时，reject，熔断，降级，服务提供容错的机制</li>
+<li>限流：在你的服务里面，通过线程池，或者信号量，限制对某个后端的服务或资源的访问量，避免从你的服务这里过去太多的流量，打死某个资源</li>
+<li>超时：避免某个依赖服务性能过差，导致大量的线程hang住去调用那个服务，会导致你的服务本身性能也比较差</li>
+</ul>
+<h1><span id="hystrix-circuit-breaker配置">Hystrix Circuit Breaker配置</span></h1><h2><span id="1circuitbreakerenabled">（1）circuitBreaker.enabled</span></h2><p>控制短路器是否允许工作，包括跟踪依赖服务调用的健康状况，以及对异常情况过多时是否允许触发短路，默认是true</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HystrixCommandProperties.Setter().withCircuitBreakerEnabled(<span class="keyword">boolean</span> value)</span><br></pre></td></tr></table></figure>
+<h2><span id="2circuitbreakerrequestvolumethreshold">（2）circuitBreaker.requestVolumeThreshold</span></h2><p>设置一个rolling window，滑动窗口中，最少要有多少个请求时，才触发开启短路</p>
+<p>举例来说，如果设置为20（默认值），那么在一个10秒的滑动窗口内，如果只有19个请求，即使这19个请求都是异常的，也是不会触发开启短路器的</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HystrixCommandProperties.Setter().withCircuitBreakerRequestVolumeThreshold(<span class="keyword">int</span> value)</span><br></pre></td></tr></table></figure>
+<h2><span id="3circuitbreakersleepwindowinmilliseconds">（3）circuitBreaker.sleepWindowInMilliseconds</span></h2><p>设置在短路之后，需要在多长时间内直接reject请求，然后在这段时间之后，再重新导holf-open状态，尝试允许请求通过以及自动恢复，默认值是5000毫秒</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HystrixCommandProperties.Setter().withCircuitBreakerSleepWindowInMilliseconds(<span class="keyword">int</span> value)</span><br></pre></td></tr></table></figure>
+<h2><span id="4circuitbreakererrorthresholdpercentage">（4）circuitBreaker.errorThresholdPercentage</span></h2><p>设置异常请求量的百分比，当异常请求达到这个百分比时，就触发打开短路器，默认是50，也就是50%</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HystrixCommandProperties.Setter().withCircuitBreakerErrorThresholdPercentage(<span class="keyword">int</span> value)</span><br></pre></td></tr></table></figure>
+<h2><span id="5circuitbreakerforceopen">（5）circuitBreaker.forceOpen</span></h2><p>如果设置为true的话，直接强迫打开短路器，相当于是手动短路了，手动降级，默认false</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HystrixCommandProperties.Setter().withCircuitBreakerForceOpen(<span class="keyword">boolean</span> value)</span><br></pre></td></tr></table></figure>
+<h2><span id="6circuitbreakerforceclosed">（6）circuitBreaker.forceClosed</span></h2><p>如果设置为ture的话，直接强迫关闭短路器，相当于是手动停止短路了，手动升级，默认false</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HystrixCommandProperties.Setter().withCircuitBreakerForceClosed(<span class="keyword">boolean</span> value)</span><br></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2018/07/15/HashSet、HashMap、ArrayList线程不安全与对策/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1800,154 +1961,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2018/06/07/数据库和缓存双写导致数据不一致问题分析和解决方案/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="ForwardLee">
-      <meta itemprop="description" content="总结学习方法，实践技术技能。">
-      <meta itemprop="image" content="/images/head.jpeg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="不忘初心">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/06/07/数据库和缓存双写导致数据不一致问题分析和解决方案/" itemprop="url">
-                  数据库和缓存致数据不一致问题分析和解决方案
-                </a>
-              
-            
-          </h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2018-06-07 10:15:31 / 修改时间：12:39:16" itemprop="dateCreated datePublished" datetime="2018-06-07T10:15:31+08:00">2018-06-07</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1><span id="低并发读写更新数据和删除缓存的双写导致数据不一致">低并发读写—更新数据和删除缓存的双写导致数据不一致</span></h1><p><img src="/2018/06/07/数据库和缓存双写导致数据不一致问题分析和解决方案/1.png" alt="数据更新操作"><br>step1：更新数据库中的数据<br>step2：删除缓存<br>如果step1执行成功，step2执行失败，那么客户端获取缓存中的数据就是旧数据，而数据库中是新数据，造成数据不一致。</p>
-<p><strong>解决方案：</strong>先删除缓存，在执行数据库更新，保证缓存和数据库中数据一致。</p>
-<h1><span id="高并发读写更新数据和删除缓存双写导致数据不一致">高并发读写—更新数据和删除缓存双写导致数据不一致</span></h1><p>低并发的读写策略在高并发场景下也会出现数据不一致的问题，图片中展示的操作步骤就会出现此类问题。<br><img src="/2018/06/07/数据库和缓存双写导致数据不一致问题分析和解决方案/2.png" alt="优化后的数据更新操作"><br>step1：删除缓存<br>step2：更新数据库</p>
-<p>如果step1执行完，step2正在执行的过程中还未flush到数据库，此时，客户端来一个请求获取正在更新的数据，缓存中已经删除了该数据，那么服务端会转到后端服务从数据库中加载旧数据并存到缓存一份，恰巧缓存完成后，step2执行完成了，该数据在数据库被更新了，那么就导致数据库和缓存中的数据是不一致的。</p>
-<p><strong>解决方案：</strong>把并发读写的的指令在服务层内存做成串行队列按顺序执行，在内存中执行效率高，不会明显影响数据服务的响应速度。把被执行更新操作的对象id做hash，然后根据队列数取模，对应该对象的操作指令队列。（可采取nginx的hash路由功能，保证在读取每个对象数据时，每次都从同一个内存队列中执行）</p>
-<p>读写指令的内存队列：<br><img src="/2018/06/07/数据库和缓存双写导致数据不一致问题分析和解决方案/3.png" alt="指令内存队列"></p>
-<p>进一步优化，因为服务接口每次查询都会把数据放入缓存，那么有一个更新后堆积了大量的查询操作，就会造成数据读取性能。可以在查询操作在内存队列存储之前，先查找队列上一个指令是不是update操作，如果是update操作，那么就直接存储当前select操作，如果是select操作，那么就把当前的查询服务等待200ms后，等待上一个select完成把数据存入缓存，当前select转向查询缓存数据。</p>
-<p>优化后，出现update指令堆积的内存队列：<br><img src="/2018/06/07/数据库和缓存双写导致数据不一致问题分析和解决方案/4.png" alt="指令内存队列"></p>
-<p>PS：需要做数据演练，监视内存队列中update指令和最后一个select指令的个数，判断最后一个select需要等待前面n个update操作完成后的时间间隔t（单个update请求执行时间t/n应该小于10ms），t不能超过系统预期要求（通常要求一个读请求在200ms内完成）。如果内存队列堆积的update操作指令数据量太大，那么就需要考虑增加更多机器处理内存队列中的update操作，减少队列堆积量，提高服务接口的响应速度。</p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1999,7 +2012,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">38</span>
+                    <span class="site-state-item-count">39</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -2066,7 +2079,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">26</span>
+                      
+                    
+                    <span class="site-state-item-count">27</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
