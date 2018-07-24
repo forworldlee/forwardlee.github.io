@@ -369,7 +369,7 @@
           <h2 class="post-title" itemprop="name headline">
                 
                 <a class="post-title-link" href="/2018/07/24/Hystrix在实际应用中的多级降级策略/" itemprop="url">
-                  Hystrix在实际应用中的多级降级策略
+                  Hystrix在实际应用中的多级降级和手动降级策略
                 </a>
               
             
@@ -395,7 +395,7 @@
                 
               
 
-              <time title="创建时间：2018-07-24 17:57:50 / 修改时间：18:14:09" itemprop="dateCreated datePublished" datetime="2018-07-24T17:57:50+08:00">2018-07-24</time>
+              <time title="创建时间：2018-07-24 17:57:50 / 修改时间：19:31:39" itemprop="dateCreated datePublished" datetime="2018-07-24T17:57:50+08:00">2018-07-24</time>
             
 
             
@@ -434,8 +434,9 @@
 
       
         
-          <h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>当HystrixCommand在执行跨网络请求接口时，可能因为接口服务不可用而导致接口服务降级，此时回调用HystrixCommand的fallback()方法返回数据。在实际应用中，网络服务接口要实现高可用，需要对接口进行主备的部署方案，主接口宕机，可以调用备用服务接口获取数据。此时在HystrixCommand的fallback()方法中再使用HystrixCommand调用备用服务接口，实现第一次降级；如果备用服务接口仍然不可用，那么进行第二次服务降级，返回Stubbed Fallback（残缺降级）数据。</p>
-<h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><p><strong>PS：</strong> GetProductInfoCmmd的GroupKey的值为GetProductInfoCmmdGroup，第一级降级fallback()中调用的GetProductInfoFallBackCmmd的GroupKey的值为GetProductInfoFallBackGroup，这两个GropKey值不能相同，因为第一级降级时GetProductInfoCmmdGroup线程池中的线程可能已经被耗尽，再使用这个GroupKey将无法从中获取空闲的线程执行降级的GetProductInfoFallBackCmmd。</p>
+          <h1 id="HystrixCommand嵌套实现多级降级"><a href="#HystrixCommand嵌套实现多级降级" class="headerlink" title="HystrixCommand嵌套实现多级降级"></a>HystrixCommand嵌套实现多级降级</h1><p>当HystrixCommand在执行跨网络请求接口时，可能因为接口服务不可用而导致接口服务降级，此时回调用HystrixCommand的fallback()方法返回数据。在实际应用中，网络服务接口要实现高可用，需要对接口进行主备的部署方案，主接口宕机，可以调用备用服务接口获取数据。此时在HystrixCommand的fallback()方法中再使用HystrixCommand调用备用服务接口，实现第一次降级；如果备用服务接口仍然不可用，那么进行第二次服务降级，返回Stubbed Fallback（残缺降级）数据。</p>
+<p><img src="2018/07/24/Hystrix在实际应用中的多级降级策略/command嵌套.png" alt=""></p>
+<h1 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h1><p><strong>PS：</strong> GetProductInfoCmmd的GroupKey的值为GetProductInfoCmmdGroup，第一级降级fallback()中调用的GetProductInfoFallBackCmmd的GroupKey的值为GetProductInfoFallBackGroup，这两个GropKey值不能相同，因为第一级降级时GetProductInfoCmmdGroup线程池中的线程可能已经被耗尽，再使用这个GroupKey将无法从中获取空闲的线程执行降级的GetProductInfoFallBackCmmd。</p>
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2018/07/24/Hystrix在实际应用中的多级降级策略/#more" rel="contents">

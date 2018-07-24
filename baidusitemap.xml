@@ -5,10 +5,10 @@
     
   <url>
     <loc>http://www.forwardlee.com/2018/07/24/Hystrix%E5%9C%A8%E5%AE%9E%E9%99%85%E5%BA%94%E7%94%A8%E4%B8%AD%E7%9A%84%E5%A4%9A%E7%BA%A7%E9%99%8D%E7%BA%A7%E7%AD%96%E7%95%A5/</loc>
-    <lastmod>2018-07-24T10:14:09.887Z</lastmod>
+    <lastmod>2018-07-24T11:31:39.937Z</lastmod>
     <data>
         <display>
-        <title>Hystrix在实际应用中的多级降级策略</title>
+        <title>Hystrix在实际应用中的多级降级和手动降级策略</title>
         <pubTime>2018-07-24T09:57:50.000Z</pubTime>
         
         <tag>hystrix</tag>
