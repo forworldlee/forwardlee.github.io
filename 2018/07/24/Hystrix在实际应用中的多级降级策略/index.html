@@ -108,16 +108,18 @@
 
 
 
-  <meta name="description" content="总结学习方法，实践技术技能。">
-<meta property="og:type" content="website">
-<meta property="og:title" content="不忘初心">
-<meta property="og:url" content="http://www.forwardlee.com/archives/2017/08/index.html">
+  <meta name="description" content="背景当HystrixCommand在执行跨网络请求接口时，可能因为接口服务不可用而导致接口服务降级，此时回调用HystrixCommand的fallback()方法返回数据。在实际应用中，网络服务接口要实现高可用，需要对接口进行主备的部署方案，主接口宕机，可以调用备用服务接口获取数据。此时在HystrixCommand的fallback()方法中再使用HystrixCommand调用备用服务接口，">
+<meta name="keywords" content="hystrix,高并发">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hystrix在实际应用中的多级降级策略">
+<meta property="og:url" content="http://www.forwardlee.com/2018/07/24/Hystrix在实际应用中的多级降级策略/index.html">
 <meta property="og:site_name" content="不忘初心">
-<meta property="og:description" content="总结学习方法，实践技术技能。">
+<meta property="og:description" content="背景当HystrixCommand在执行跨网络请求接口时，可能因为接口服务不可用而导致接口服务降级，此时回调用HystrixCommand的fallback()方法返回数据。在实际应用中，网络服务接口要实现高可用，需要对接口进行主备的部署方案，主接口宕机，可以调用备用服务接口获取数据。此时在HystrixCommand的fallback()方法中再使用HystrixCommand调用备用服务接口，">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-07-24T10:12:49.472Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="不忘初心">
-<meta name="twitter:description" content="总结学习方法，实践技术技能。">
+<meta name="twitter:title" content="Hystrix在实际应用中的多级降级策略">
+<meta name="twitter:description" content="背景当HystrixCommand在执行跨网络请求接口时，可能因为接口服务不可用而导致接口服务降级，此时回调用HystrixCommand的fallback()方法返回数据。在实际应用中，网络服务接口要实现高可用，需要对接口进行主备的部署方案，主接口宕机，可以调用备用服务接口获取数据。此时在HystrixCommand的fallback()方法中再使用HystrixCommand调用备用服务接口，">
 
 
 
@@ -126,7 +128,7 @@
 
 
 
-  <link rel="canonical" href="http://www.forwardlee.com/archives/2017/08/"/>
+  <link rel="canonical" href="http://www.forwardlee.com/2018/07/24/Hystrix在实际应用中的多级降级策略/"/>
 
 
 
@@ -136,7 +138,7 @@
   };
 </script>
 
-  <title>归档 | 不忘初心</title>
+  <title>Hystrix在实际应用中的多级降级策略 | 不忘初心</title>
   
 
 
@@ -183,7 +185,7 @@
     
   
 
-  <div class="container sidebar-position-left page-archive">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -256,7 +258,7 @@
         
         
           
-          <li class="menu-item menu-item-archives menu-item-active">
+          <li class="menu-item menu-item-archives">
     <a href="/archives/" rel="section">
       <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
   </li>
@@ -328,182 +330,222 @@
           
             
 
-    
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-    
-
-  
-
-
           
           <div id="content" class="content">
             
 
+  <div id="posts" class="posts-expand">
+    
+
+  
+
   
   
   
-  <div class="post-block archive">
-    <div id="posts" class="posts-collapse">
-      <span class="archive-move-on"></span>
 
-      
-      <span class="archive-page-counter">
-        
-        
-         
-        
-        还行! 目前共计 41 篇日志。 继续努力。
-      </span>
-      
+  
 
-      
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2018/07/24/Hystrix在实际应用中的多级降级策略/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ForwardLee">
+      <meta itemprop="description" content="总结学习方法，实践技术技能。">
+      <meta itemprop="image" content="/images/head.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="不忘初心">
+    </span>
+
+    
+      <header class="post-header">
 
         
         
+          <h2 class="post-title" itemprop="name headline">Hystrix在实际应用中的多级降级策略
+              
+            
+          </h2>
         
 
-        
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-07-24 17:57:50 / 修改时间：18:12:49" itemprop="dateCreated datePublished" datetime="2018-07-24T17:57:50+08:00">2018-07-24</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
           
-          <div class="collection-title">
-            <h2 class="archive-year" id="archive-year-2017">2017</h2>
-          </div>
-        
-        
 
-        
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/07/24/Hystrix在实际应用中的多级降级策略/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count gitment-comments-count" data-xid="/2018/07/24/Hystrix在实际应用中的多级降级策略/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
 
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+          
+          
 
-      <h3 class="post-title">
-        
-            <a class="post-title-link" href="/2017/08/01/p/Laravel5.x进阶笔记（二）/" itemprop="url">
-              
-                <span itemprop="name">Laravel 5.x进阶笔记（二）</span>
-              
-            </a>
-        
-      </h3>
+          
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-08-01T15:54:53+08:00"
-              content="2017-08-01" >
-          08-01
-        </time>
-      </div>
+          
 
-    </header>
-  </article>
+          
 
+        </div>
+      </header>
+    
 
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h3 class="post-title">
-        
-            <a class="post-title-link" href="/2017/08/01/p/Laravel5.x进阶笔记（一）/" itemprop="url">
-              
-                <span itemprop="name">Laravel 5.x进阶笔记（一）</span>
-              
-            </a>
-        
-      </h3>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-08-01T14:42:53+08:00"
-              content="2017-08-01" >
-          08-01
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h3 class="post-title">
-        
-            <a class="post-title-link" href="/2017/08/01/p/Laravel5.x进阶笔记（三）/" itemprop="url">
-              
-                <span itemprop="name">Laravel 5.x进阶笔记（二）</span>
-              
-            </a>
-        
-      </h3>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-08-01T14:42:53+08:00"
-              content="2017-08-01" >
-          08-01
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
       
 
+      
+        <h1><span id="背景">背景</span></h1><p>当HystrixCommand在执行跨网络请求接口时，可能因为接口服务不可用而导致接口服务降级，此时回调用HystrixCommand的fallback()方法返回数据。在实际应用中，网络服务接口要实现高可用，需要对接口进行主备的部署方案，主接口宕机，可以调用备用服务接口获取数据。此时在HystrixCommand的fallback()方法中再使用HystrixCommand调用备用服务接口，实现第一次降级；如果备用服务接口仍然不可用，那么进行第二次服务降级，返回Stubbed Fallback（残缺降级）数据。</p>
+<h1><span id="代码">代码</span></h1><p><strong>PS：</strong> GetProductInfoCmmd的GroupKey的值为GetProductInfoCmmdGroup，第一级降级fallback()中调用的GetProductInfoFallBackCmmd的GroupKey的值为GetProductInfoFallBackGroup，这两个GropKey值不能相同，因为第一级降级时GetProductInfoCmmdGroup线程池中的线程可能已经被耗尽，再使用这个GroupKey将无法从中获取空闲的线程执行降级的GetProductInfoFallBackCmmd。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Slf</span>4j</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GetProductInfoCmmd</span>  <span class="keyword">extends</span> <span class="title">HystrixCommand</span>&lt;<span class="title">ProductInfo</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> HystrixCommandKey KEY = HystrixCommandKey.Factory.asKey(<span class="string">"GetProductInfoCmmd"</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Long productId;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">GetProductInfoCmmd</span><span class="params">(Long productId)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(HystrixCommandGroupKey.Factory.asKey(<span class="string">"GetProductInfoCmmdGroup"</span>));</span><br><span class="line">        <span class="keyword">this</span>.productId = productId;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> ProductInfo <span class="title">run</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        String url = <span class="string">"http://127.0.0.1:8082/product/get?productId="</span>+productId;</span><br><span class="line"></span><br><span class="line">        String s = HttpClientUtils.sendGetRequestWithException(url);</span><br><span class="line">        log.info(<span class="string">"product-ha response &#123;&#125;"</span>,s);</span><br><span class="line">        ProductInfo productInfo = JSONObject.parseObject(s, ProductInfo.class);</span><br><span class="line">        <span class="keyword">return</span> productInfo;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 从hystrix本地缓存中获取数据，而不是执行run方法</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> String <span class="title">getCacheKey</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"product_key_"</span>+productId;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 清理hystrix缓存的数据</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> productId</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">flushCache</span><span class="params">(Long productId)</span></span>&#123;</span><br><span class="line">        HystrixRequestCache.getInstance(KEY,</span><br><span class="line">                                         HystrixConcurrencyStrategyDefault.getInstance())</span><br><span class="line">            .clear(<span class="string">"product_key_"</span>+productId);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 第一次降级调用备用服务的Command</span></span><br><span class="line"><span class="comment">     * hystrix执行降级请求时返回的数据</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> ProductInfo <span class="title">getFallback</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> GetProductInfoFallBackCmmd(productId).execute();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">GetProductInfoFallBackCmmd</span> <span class="keyword">extends</span> <span class="title">HystrixCommand</span>&lt;<span class="title">ProductInfo</span>&gt;</span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">private</span> Long productId;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">GetProductInfoFallBackCmmd</span><span class="params">(Long productId)</span> </span>&#123;</span><br><span class="line">            <span class="comment">//特别注意：多级降级时，fallback调用的command的groupkey不能与</span></span><br><span class="line">            <span class="comment">//调用者的groupkey相同，因为调用者</span></span><br><span class="line">            <span class="comment">//的groupkey中的线程可能已经被耗尽，所以才走的调用者的fallback。</span></span><br><span class="line">            <span class="keyword">super</span>(Setter</span><br><span class="line">                  .withGroupKey(HystrixCommandGroupKey.Factory</span><br><span class="line">                                .asKey(<span class="string">"GetProductInfoFallBackGroup"</span>)));</span><br><span class="line">            <span class="keyword">this</span>.productId = productId;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">protected</span> ProductInfo <span class="title">run</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">            <span class="comment">//此处应该调用备用服务的接口</span></span><br><span class="line">            String url = <span class="string">"http://127.0.0.1:8083/product/get?productId="</span>+productId;</span><br><span class="line"></span><br><span class="line">            String s = HttpClientUtils.sendGetRequestWithException(url);</span><br><span class="line">            log.info(<span class="string">"product-ha response &#123;&#125;"</span>,s);</span><br><span class="line">            ProductInfo productInfo = JSONObject.parseObject(s, ProductInfo.class);</span><br><span class="line">            <span class="keyword">return</span> productInfo;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         * 第二次降级，返回stubbed fallback数据</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">protected</span> ProductInfo <span class="title">getFallback</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            String product = <span class="string">"&#123;\"id\": 111, \"name\": \"iphone7手机\", \"price\": 5599, \"pictureList\":\"a.jpg,b.jpg\", \"specification\": \"iphone7的规格\", \"service\": \"iphone7的售后服务\", \"color\": \"红色,白色,黑色\", \"size\": \"5.5\", \"shopId\": 1, \"modifiedTime\": \"2017-01-01 12:00:00\", \"cityId\":1&#125;"</span>;</span><br><span class="line">            log.info(<span class="string">"getFallback:&#123;&#125;"</span>,product);</span><br><span class="line">            ProductInfo productInfo = JSONObject.parseObject(product, ProductInfo.class);</span><br><span class="line">            <span class="keyword">return</span> productInfo;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
     </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>谢谢你请我吃糖果</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wxcode.jpeg" alt="ForwardLee 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/hystrix/" rel="tag"># hystrix</a>
+          
+            <a href="/tags/高并发/" rel="tag"># 高并发</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/07/24/Hystrix高并发请求合并处理/" rel="next" title="Hystrix高并发请求合并处理">
+                <i class="fa fa-chevron-left"></i> Hystrix高并发请求合并处理
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
 
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
           
+
+  
+    <div class="comments" id="comments">
+      
+        <div id="gitment-container"></div>
+      
+    </div>
+
+  
+
+
 
         </div>
         
@@ -524,8 +566,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -685,6 +736,22 @@
       </section>
 
       
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">2.</span> <span class="nav-text">代码</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
 
       
 
@@ -820,6 +887,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.3.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.3.0"></script>
+
+
 
   
 
@@ -861,6 +932,30 @@
 
     
 
+    
+      <script type="text/javascript">
+      function renderGitment(){
+        var gitment = new Gitmint({
+            id: 'page_s_blog_2018-07-24 05:57:50',
+            owner: 'forworldlee',
+            repo: 'forworldlee.github.io',
+            
+            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
+            
+            oauth: {
+            
+            
+                client_secret: 'e84ed43a122ffe38e55a2372f27e4639ec673564',
+            
+                client_id: '38b9430818b98ed8d839'
+            }});
+        gitment.render('gitment-container');
+      }
+
+      
+      renderGitment();
+      
+      </script>
     
 
 

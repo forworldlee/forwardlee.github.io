@@ -349,6 +349,152 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2017/08/01/p/Laravel5.x进阶笔记（二）/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ForwardLee">
+      <meta itemprop="description" content="总结学习方法，实践技术技能。">
+      <meta itemprop="image" content="/images/head.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="不忘初心">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/08/01/p/Laravel5.x进阶笔记（二）/" itemprop="url">
+                  Laravel 5.x进阶笔记（二）
+                </a>
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2017-08-01 15:54:53 / 修改时间：16:21:26" itemprop="dateCreated datePublished" datetime="2017-08-01T15:54:53+08:00">2017-08-01</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2><span id="在浏览器中展示创建的article列表">在浏览器中展示创建的Article列表</span></h2><p>在浏览器中展示创建的Article数据，需要使用Http请求Web服务器，Web服务器接收请求并将Article数据在视图页面中展示，即MVC。完成上述操作，离不开Laravel的路由功能，所谓路由就是请求的控制转发。Laravel把所有的请求地址预先配置在路由列表文件中learnlaravel5/app/Http/routes.php。描述路由的基本格式是：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Route::get(&apos;/home&apos;, &apos;HomeController@index&apos;);</span><br></pre></td></tr></table></figure>
+<p>Route类（\Illuminate\Support\Facades\Route）是Laravel框架提供的路由配置工具类，get标识http请求的Method（get/post/put/patch…），get函数的第一个参数是url格式定义，第二个参数用@分割成两部分，第一部分是Http请求的Controller类，第二部分标识Controller的具体执行方法，具体看HomeController类的内容描述：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line"></span><br><span class="line">namespace App\Http\Controllers;</span><br><span class="line"></span><br><span class="line">use App\Article;</span><br><span class="line">use App\Http\Requests;</span><br><span class="line">use Illuminate\Http\Request;</span><br><span class="line"></span><br><span class="line">class HomeController extends \Illuminate\Routing\Controller</span><br><span class="line">&#123;</span><br><span class="line">    /**</span><br><span class="line">     * Create a new controller instance.</span><br><span class="line">     *</span><br><span class="line">     * @return void</span><br><span class="line">     */</span><br><span class="line">    public function __construct()</span><br><span class="line">    &#123;</span><br><span class="line">        $this-&gt;middleware(&apos;auth&apos;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * Show the application dashboard.</span><br><span class="line">     *</span><br><span class="line">     * @return \Illuminate\Http\Response</span><br><span class="line">     */</span><br><span class="line">    public function index()</span><br><span class="line">    &#123;</span><br><span class="line">        return view(&apos;home&apos;)-&gt;withArticles(Article::all());;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>_construct()是默认构造函数，函数体使用middleware(‘auth’)中间件，描述访问这个Controller需要登录验证。index()方法则是在路由中指定的执行方法，返回值是一个视图层对象view，视图的目录位置是模板文件learnlaravel5/resources/views/home.blade.php，view(‘home’)中的home与模板文件的第一个关键字相同，index函数指定了返回的视图文件，并把Article数据通过Eloquent方法取出，使用withArticles方法携带返回到视图页面，此处withArticles标识在页面可以通过articles对象取得所有返回的数据，依次类推如果是withAcls,则在页面上使用acls对象获取返回的数据。home.blade.php示例（php模板语法自行解决）：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">@extends(&apos;layouts.app&apos;)</span><br><span class="line"></span><br><span class="line">@section(&apos;content&apos;)</span><br><span class="line">    &lt;div id=&quot;title&quot; style=&quot;text-align: center;&quot;&gt;</span><br><span class="line">        &lt;h1&gt;Learn Laravel 5&lt;/h1&gt;</span><br><span class="line">        &lt;div style=&quot;padding: 5px; font-size: 16px;&quot;&gt;Learn Laravel 5&lt;/div&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">    &lt;hr&gt;</span><br><span class="line">    &lt;div id=&quot;content&quot;&gt;</span><br><span class="line">        &lt;ul&gt;</span><br><span class="line">            @foreach ($articles as $article)</span><br><span class="line">                &lt;li style=&quot;margin: 50px 0;&quot;&gt;</span><br><span class="line">                    &lt;div class=&quot;title&quot;&gt;</span><br><span class="line">                        &lt;a href=&quot;&#123;&#123; url(&apos;article/&apos;.$article-&gt;id) &#125;&#125;&quot;&gt;</span><br><span class="line">                            &lt;h4&gt;&#123;&#123; $article-&gt;title &#125;&#125;&lt;/h4&gt;</span><br><span class="line">                        &lt;/a&gt;</span><br><span class="line">                    &lt;/div&gt;</span><br><span class="line">                    &lt;div class=&quot;body&quot;&gt;</span><br><span class="line">                        &lt;p&gt;&#123;&#123; $article-&gt;body &#125;&#125;&lt;/p&gt;</span><br><span class="line">                    &lt;/div&gt;</span><br><span class="line">                &lt;/li&gt;</span><br><span class="line">            @endforeach</span><br><span class="line">        &lt;/ul&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">@endsection</span><br></pre></td></tr></table></figure>
+<p>通过浏览器输入<a href="http://localhost:1024/home，就能看到数据加载到页面。" target="_blank" rel="noopener">http://localhost:1024/home，就能看到数据加载到页面。</a><br><img src="/images/home_articles.png" alt=""></p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2017/08/01/p/Laravel5.x进阶笔记（一）/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1746,179 +1892,11 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2015/01/05/Redis在CentOS6上安装并配置主从/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="ForwardLee">
-      <meta itemprop="description" content="总结学习方法，实践技术技能。">
-      <meta itemprop="image" content="/images/head.jpeg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="不忘初心">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2015/01/05/Redis在CentOS6上安装并配置主从/" itemprop="url">
-                  Redis在CentOS6上安装并配置主从
-                </a>
-              
-            
-          </h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2015-01-05 10:29:04" itemprop="dateCreated datePublished" datetime="2015-01-05T10:29:04+08:00">2015-01-05</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2018-05-31 11:46:46" itemprop="dateModified" datetime="2018-05-31T11:46:46+08:00">2018-05-31</time>
-              
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1><span id="安装redis">安装Redis</span></h1><p>step1：tcl工具包安装</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install -y install tcl</span><br></pre></td></tr></table></figure>
-<p>step2：Redis安装</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">wget http://download.redis.io/releases/redis-2.8.13.tar.gz</span><br><span class="line">tar -zvxf redis-2.8.13.tar.gz</span><br><span class="line">cd redis-2.8.13</span><br><span class="line">make &amp; make install</span><br></pre></td></tr></table></figure>
-<h1><span id="redis启动和主从配置">Redis启动和主从配置</span></h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mkdir /etc/redis</span><br><span class="line">mkdir -pv /var/redis/6379</span><br><span class="line">mv redis.conf /etc/redis/6379.conf</span><br><span class="line">vi /etc/redis/6379.conf</span><br></pre></td></tr></table></figure>
-<p>单机启动配置</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">#守护进程启动</span><br><span class="line">daemonize yes</span><br><span class="line">#进程id文件</span><br><span class="line">pidfile /var/run/redis_6379.pid</span><br><span class="line">#数据文件目录</span><br><span class="line">dir /var/redis/6379</span><br><span class="line">#redis节点绑定ip访问</span><br><span class="line">bind 192.168.1.212</span><br><span class="line">#redis节点访问端口</span><br><span class="line">port 6379</span><br></pre></td></tr></table></figure>
-<p>设置redis随系统自启动</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cp utils/redis_init_script /etc/init.d/redis_6379</span><br><span class="line">vi /etc/init.d/redis_6379</span><br></pre></td></tr></table></figure>
-<p>在redis_6379文件顶部添加</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#chkconfig:   2345 90 10</span><br><span class="line">#description:  Redis is a persistent key-value database</span><br><span class="line">chkconfig redis_6379 on</span><br></pre></td></tr></table></figure>
-<p>多节点主从配置</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">#master节点信息</span><br><span class="line">slaveof 192.168.1.210 6379</span><br><span class="line">#master节点连接密码</span><br><span class="line">masterauth redis-pass</span><br><span class="line">#slave节点只读</span><br><span class="line">slave-read-only yes</span><br><span class="line">#slave节点连接master节点进行full synchronizaton操作时，mastr的rdb快照文件直接写入slave socket，不写入磁盘，也就是无磁盘化复制。无磁盘化配置no，磁盘化配置yes。</span><br><span class="line">repl-diskless-sync no</span><br><span class="line">#master延迟n秒后，进行无磁盘化full synchronization操作，目的是等待更多的slave节点连接master进行全量同步复制。全量数据的RDB文件一旦在master节点缓存内创建完成，就不再接收新的slave，直至本次全量同步完成。</span><br><span class="line">repl-diskless-sync-delay 5</span><br><span class="line">#主从复制的超时设置，超时则停止复制，根据RDB数据大小、硬件IO、带宽设置超时时间。默认60s。</span><br><span class="line">repl-timeout 60 </span><br><span class="line">#backlog用在slave如果断开了与master之间的连接，这时master记录一部分要写入slave的数据和offset位置，当slave重连master后，不需要进行full resync操作，只需要从slave断开连接丢失的数据开始同步即可。默认缓冲大小1M。</span><br><span class="line">repl-backlog-size 1mb</span><br><span class="line">#至少有3个slave节点数据同步延时少于10s，否则master将暂停写操作。此配置主要用来保证主从异步复制数据和redis集群脑裂时，确保数据不丢失的配置方案。配合master在不能写入数据时进行异步写队列或者磁盘，保证数据丢失在可控范围内。</span><br><span class="line">min-slaves-to-write 3</span><br><span class="line">min-slaves-max-lag 10</span><br><span class="line">#redis节点连接密码</span><br><span class="line">requirepass redis-pass</span><br><span class="line">#开启AOF数据持久化</span><br><span class="line">appendonly yes</span><br><span class="line">#每秒进行一次从os cache写aof文件操作</span><br><span class="line">appendfsync everysec</span><br><span class="line">#aof文件rewrite操作时机配置，当aof的文件大小已经超过64m的100%，也就是128m时，就进行rewrite aof文件。</span><br><span class="line">auto-aof-rewrite-percentage 100</span><br><span class="line">auto-aof-rewrite-min-size 64mb</span><br></pre></td></tr></table></figure>
-<p>开发环境设置防火墙或者关闭防火墙</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">service iptables stop</span><br></pre></td></tr></table></figure>
-<p>启动、访问、测试</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">cd /etc/init.d</span><br><span class="line">./redis_6379 start</span><br><span class="line"></span><br><span class="line">redis-cli -h 192.168.1.212 -a redis-pass</span><br><span class="line"></span><br><span class="line">192.168.1.212:6379&gt; info replication</span><br><span class="line"># Replication</span><br><span class="line">role:slave</span><br><span class="line">master_host:192.168.1.210</span><br><span class="line">master_port:6379</span><br><span class="line">master_link_status:up</span><br><span class="line">master_last_io_seconds_ago:8</span><br><span class="line">master_sync_in_progress:0</span><br><span class="line">slave_repl_offset:180178228</span><br><span class="line">slave_priority:100</span><br><span class="line">slave_read_only:1</span><br><span class="line">connected_slaves:0</span><br><span class="line">master_repl_offset:0</span><br><span class="line">repl_backlog_active:0</span><br><span class="line">repl_backlog_size:1048576</span><br><span class="line">repl_backlog_first_byte_offset:0</span><br><span class="line">repl_backlog_histlen:0</span><br></pre></td></tr></table></figure>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span>
+    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -1965,7 +1943,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">40</span>
+                    <span class="site-state-item-count">41</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>

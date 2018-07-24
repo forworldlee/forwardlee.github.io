@@ -349,6 +349,153 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2018/05/25/Redis持久化方式RDB和AOF比较应用/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ForwardLee">
+      <meta itemprop="description" content="总结学习方法，实践技术技能。">
+      <meta itemprop="image" content="/images/head.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="不忘初心">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/05/25/Redis持久化方式RDB和AOF比较应用/" itemprop="url">
+                  Redis持久化方式RDB和AOF比较应用
+                </a>
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-05-25 18:00:11 / 修改时间：22:57:51" itemprop="dateCreated datePublished" datetime="2018-05-25T18:00:11+08:00">2018-05-25</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p><img src="/2018/05/25/Redis持久化方式RDB和AOF比较应用/RDB和AOF的介绍.png" alt="RDB和AOF工作原理"></p>
+<h1 id="RDB持久化方式的工作原理"><a href="#RDB持久化方式的工作原理" class="headerlink" title="RDB持久化方式的工作原理"></a>RDB持久化方式的工作原理</h1><p>设定时间间隔t内有n次key的操作检查，就进行持久化。例如save 60 1000，每个60秒有1000个key发生变化，则进行持久化。<br>RDB在做持久化时，保存完整的一份数据快照，旧的快照文件被覆盖。</p>
+<h2 id="RDB持久化方案的优点"><a href="#RDB持久化方案的优点" class="headerlink" title="RDB持久化方案的优点"></a>RDB持久化方案的优点</h2><p>（1）持久化的时间间隔可以由redis控制，所以可以按照一定的时间间隔把数据快照文件拷贝出来，更好的支撑数据冷备份。<br>（2）RDB持久化文件是Redis数据文件，在做redis故障恢复时，数据加载效率更高。<br>（3）Redis数据操作都在内存中进行，效率高。<br>（4）Redis会创建一个副本进程（fork）进行数据持久化，持久化过程中，对redis本身的数据操作影响较小。</p>
+<h2 id="RDB持久化方式的缺点"><a href="#RDB持久化方式的缺点" class="headerlink" title="RDB持久化方式的缺点"></a>RDB持久化方式的缺点</h2><p>（1）两次持久化操作的间隔时间内，Redis发生故障，那么将丢失这个时间内的所有数据。–重点<br>（2）当两次持久化操作间隔时间较长，Redis内可能产生大量新的数据，生成数据快照文件时，可能导致Redis数据服务暂停数秒。</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/05/25/Redis持久化方式RDB和AOF比较应用/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2018/05/24/CentOS-6-8-MariaDB-10-0-with-Galera-Cluster-Keepalived高可用解决方案/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1913,157 +2060,11 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2017/08/01/p/Laravel5.x进阶笔记（二）/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="ForwardLee">
-      <meta itemprop="description" content="总结学习方法，实践技术技能。">
-      <meta itemprop="image" content="/images/head.jpeg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="不忘初心">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/08/01/p/Laravel5.x进阶笔记（二）/" itemprop="url">
-                  Laravel 5.x进阶笔记（二）
-                </a>
-              
-            
-          </h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2017-08-01 15:54:53 / 修改时间：16:21:26" itemprop="dateCreated datePublished" datetime="2017-08-01T15:54:53+08:00">2017-08-01</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2><span id="在浏览器中展示创建的article列表">在浏览器中展示创建的Article列表</span></h2><p>在浏览器中展示创建的Article数据，需要使用Http请求Web服务器，Web服务器接收请求并将Article数据在视图页面中展示，即MVC。完成上述操作，离不开Laravel的路由功能，所谓路由就是请求的控制转发。Laravel把所有的请求地址预先配置在路由列表文件中learnlaravel5/app/Http/routes.php。描述路由的基本格式是：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Route::get(&apos;/home&apos;, &apos;HomeController@index&apos;);</span><br></pre></td></tr></table></figure>
-<p>Route类（\Illuminate\Support\Facades\Route）是Laravel框架提供的路由配置工具类，get标识http请求的Method（get/post/put/patch…），get函数的第一个参数是url格式定义，第二个参数用@分割成两部分，第一部分是Http请求的Controller类，第二部分标识Controller的具体执行方法，具体看HomeController类的内容描述：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line"></span><br><span class="line">namespace App\Http\Controllers;</span><br><span class="line"></span><br><span class="line">use App\Article;</span><br><span class="line">use App\Http\Requests;</span><br><span class="line">use Illuminate\Http\Request;</span><br><span class="line"></span><br><span class="line">class HomeController extends \Illuminate\Routing\Controller</span><br><span class="line">&#123;</span><br><span class="line">    /**</span><br><span class="line">     * Create a new controller instance.</span><br><span class="line">     *</span><br><span class="line">     * @return void</span><br><span class="line">     */</span><br><span class="line">    public function __construct()</span><br><span class="line">    &#123;</span><br><span class="line">        $this-&gt;middleware(&apos;auth&apos;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * Show the application dashboard.</span><br><span class="line">     *</span><br><span class="line">     * @return \Illuminate\Http\Response</span><br><span class="line">     */</span><br><span class="line">    public function index()</span><br><span class="line">    &#123;</span><br><span class="line">        return view(&apos;home&apos;)-&gt;withArticles(Article::all());;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>_construct()是默认构造函数，函数体使用middleware(‘auth’)中间件，描述访问这个Controller需要登录验证。index()方法则是在路由中指定的执行方法，返回值是一个视图层对象view，视图的目录位置是模板文件learnlaravel5/resources/views/home.blade.php，view(‘home’)中的home与模板文件的第一个关键字相同，index函数指定了返回的视图文件，并把Article数据通过Eloquent方法取出，使用withArticles方法携带返回到视图页面，此处withArticles标识在页面可以通过articles对象取得所有返回的数据，依次类推如果是withAcls,则在页面上使用acls对象获取返回的数据。home.blade.php示例（php模板语法自行解决）：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">@extends(&apos;layouts.app&apos;)</span><br><span class="line"></span><br><span class="line">@section(&apos;content&apos;)</span><br><span class="line">    &lt;div id=&quot;title&quot; style=&quot;text-align: center;&quot;&gt;</span><br><span class="line">        &lt;h1&gt;Learn Laravel 5&lt;/h1&gt;</span><br><span class="line">        &lt;div style=&quot;padding: 5px; font-size: 16px;&quot;&gt;Learn Laravel 5&lt;/div&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">    &lt;hr&gt;</span><br><span class="line">    &lt;div id=&quot;content&quot;&gt;</span><br><span class="line">        &lt;ul&gt;</span><br><span class="line">            @foreach ($articles as $article)</span><br><span class="line">                &lt;li style=&quot;margin: 50px 0;&quot;&gt;</span><br><span class="line">                    &lt;div class=&quot;title&quot;&gt;</span><br><span class="line">                        &lt;a href=&quot;&#123;&#123; url(&apos;article/&apos;.$article-&gt;id) &#125;&#125;&quot;&gt;</span><br><span class="line">                            &lt;h4&gt;&#123;&#123; $article-&gt;title &#125;&#125;&lt;/h4&gt;</span><br><span class="line">                        &lt;/a&gt;</span><br><span class="line">                    &lt;/div&gt;</span><br><span class="line">                    &lt;div class=&quot;body&quot;&gt;</span><br><span class="line">                        &lt;p&gt;&#123;&#123; $article-&gt;body &#125;&#125;&lt;/p&gt;</span><br><span class="line">                    &lt;/div&gt;</span><br><span class="line">                &lt;/li&gt;</span><br><span class="line">            @endforeach</span><br><span class="line">        &lt;/ul&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">@endsection</span><br></pre></td></tr></table></figure>
-<p>通过浏览器输入<a href="http://localhost:1024/home，就能看到数据加载到页面。" target="_blank" rel="noopener">http://localhost:1024/home，就能看到数据加载到页面。</a><br><img src="/images/home_articles.png" alt=""></p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -2110,7 +2111,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">40</span>
+                    <span class="site-state-item-count">41</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
