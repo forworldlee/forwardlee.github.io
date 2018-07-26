@@ -108,19 +108,19 @@
 
 
 
-  <meta name="description" content="Hystrix原理图 Hystrix应用场景 资源隔离：你如果有很多个依赖服务，高可用性，先做资源隔离，任何一个依赖服务的故障不会导致你的服务的资源耗尽，不会崩溃 请求缓存：对于一个request context内的多个相同command，使用request cache，提升性能 熔断：基于短路器，采集各种异常事件，报错，超时，reject，短路，熔断，一定时间范围内就不允许访问了，直接降级，自动">
+  <meta name="description" content="Hystrix原理图">
 <meta name="keywords" content="hystrix">
 <meta property="og:type" content="article">
 <meta property="og:title" content="图解hystrix请求限流、降级条件和请求调用过程原理">
 <meta property="og:url" content="http://www.forwardlee.com/2018/07/23/图解hystrix请求降级条件和请求调用过程原理/index.html">
 <meta property="og:site_name" content="不忘初心">
-<meta property="og:description" content="Hystrix原理图 Hystrix应用场景 资源隔离：你如果有很多个依赖服务，高可用性，先做资源隔离，任何一个依赖服务的故障不会导致你的服务的资源耗尽，不会崩溃 请求缓存：对于一个request context内的多个相同command，使用request cache，提升性能 熔断：基于短路器，采集各种异常事件，报错，超时，reject，短路，熔断，一定时间范围内就不允许访问了，直接降级，自动">
+<meta property="og:description" content="Hystrix原理图">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://www.forwardlee.com/2018/07/23/图解hystrix请求降级条件和请求调用过程原理/hystrix降级原理和调用过程.png">
-<meta property="og:updated_time" content="2018-07-23T10:02:02.722Z">
+<meta property="og:updated_time" content="2018-07-26T02:10:17.511Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="图解hystrix请求限流、降级条件和请求调用过程原理">
-<meta name="twitter:description" content="Hystrix原理图 Hystrix应用场景 资源隔离：你如果有很多个依赖服务，高可用性，先做资源隔离，任何一个依赖服务的故障不会导致你的服务的资源耗尽，不会崩溃 请求缓存：对于一个request context内的多个相同command，使用request cache，提升性能 熔断：基于短路器，采集各种异常事件，报错，超时，reject，短路，熔断，一定时间范围内就不允许访问了，直接降级，自动">
+<meta name="twitter:description" content="Hystrix原理图">
 <meta name="twitter:image" content="http://www.forwardlee.com/2018/07/23/图解hystrix请求降级条件和请求调用过程原理/hystrix降级原理和调用过程.png">
 
 
@@ -394,12 +394,24 @@
                 
               
 
-              <time title="创建时间：2018-07-23 09:43:40 / 修改时间：18:02:02" itemprop="dateCreated datePublished" datetime="2018-07-23T09:43:40+08:00">2018-07-23</time>
+              <time title="创建时间：2018-07-23 09:43:40" itemprop="dateCreated datePublished" datetime="2018-07-23T09:43:40+08:00">2018-07-23</time>
             
 
             
               
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-07-26 10:10:17" itemprop="dateModified" datetime="2018-07-26T10:10:17+08:00">2018-07-26</time>
               
             
           </span>
@@ -443,6 +455,7 @@
 
       
         <h1><span id="hystrix原理图">Hystrix原理图</span></h1><p><img src="/2018/07/23/图解hystrix请求降级条件和请求调用过程原理/hystrix降级原理和调用过程.png" alt=""></p>
+<a id="more"></a>
 <h1><span id="hystrix应用场景">Hystrix应用场景</span></h1><ul>
 <li>资源隔离：你如果有很多个依赖服务，高可用性，先做资源隔离，任何一个依赖服务的故障不会导致你的服务的资源耗尽，不会崩溃</li>
 <li>请求缓存：对于一个request context内的多个相同command，使用request cache，提升性能</li>
@@ -464,6 +477,7 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HystrixCommandProperties.Setter().withCircuitBreakerForceOpen(<span class="keyword">boolean</span> value)</span><br></pre></td></tr></table></figure>
 <h2><span id="6circuitbreakerforceclosed">（6）circuitBreaker.forceClosed</span></h2><p>如果设置为ture的话，直接强迫关闭短路器，相当于是手动停止短路了，手动升级，默认false</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HystrixCommandProperties.Setter().withCircuitBreakerForceClosed(<span class="keyword">boolean</span> value)</span><br></pre></td></tr></table></figure>
+<h1><span id="hystrix-circuit-breaker示例代码">Hystrix Circuit Breaker示例代码</span></h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Slf</span>4j</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GetECourseAuthorInfoFromRedisCmmd</span> <span class="keyword">extends</span> <span class="title">HystrixCommand</span>&lt;<span class="title">ECourseAuthorInfo</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> pkid;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">GetECourseAuthorInfoFromRedisCmmd</span><span class="params">(<span class="keyword">int</span> pkid)</span></span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey(<span class="string">"RedisGroup"</span>))</span><br><span class="line">                .andCommandPropertiesDefaults(HystrixCommandProperties.defaultSetter()</span><br><span class="line">                         <span class="comment">//配合hystrix-dashboard收集的数据对TP99.5的请求延时如果是100ms，</span></span><br><span class="line">                         <span class="comment">//那么再给一点重试时间50ms，那么就可以设置command执行超时为150ms</span></span><br><span class="line">                        .withExecutionTimeoutInMilliseconds(<span class="number">150</span>)</span><br><span class="line">                         <span class="comment">//circuitBreaker一个请求窗口持续10s。如果TP99的QPS为50，那么这个</span></span><br><span class="line">                         <span class="comment">//值可以设置为50*10=500</span></span><br><span class="line">                        .withCircuitBreakerRequestVolumeThreshold(<span class="number">500</span>)</span><br><span class="line">                         <span class="comment">//默认值50，依赖服务的Command执行报错占比。</span></span><br><span class="line">                         <span class="comment">//可以根据业务场景修改，如果是对服务接口安全级别要求高的</span></span><br><span class="line">                         <span class="comment">//可以设置小一点,如支付接口，可以设置10，如果安全级别低的就设置大一点。</span></span><br><span class="line">                        .withCircuitBreakerErrorThresholdPercentage(<span class="number">30</span>)</span><br><span class="line">                         <span class="comment">//断路器为open状态后持续多长时间直接拒绝请求，超过这个时间后状态改为half-open</span></span><br><span class="line">                        .withCircuitBreakerSleepWindowInMilliseconds(<span class="number">60</span>*<span class="number">1000</span>)));</span><br><span class="line">        <span class="keyword">this</span>.pkid = pkid;</span><br><span class="line">    &#125;</span><br><span class="line"> ...   </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -768,7 +782,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">1.</span> <span class="nav-text">Hystrix原理图</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">2.</span> <span class="nav-text">Hystrix应用场景</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">3.</span> <span class="nav-text">Hystrix Circuit Breaker配置</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">3.1.</span> <span class="nav-text">（1）circuitBreaker.enabled</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">3.2.</span> <span class="nav-text">（2）circuitBreaker.requestVolumeThreshold</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">3.3.</span> <span class="nav-text">（3）circuitBreaker.sleepWindowInMilliseconds</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">3.4.</span> <span class="nav-text">（4）circuitBreaker.errorThresholdPercentage</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">3.5.</span> <span class="nav-text">（5）circuitBreaker.forceOpen</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">3.6.</span> <span class="nav-text">（6）circuitBreaker.forceClosed</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">1.</span> <span class="nav-text">Hystrix原理图</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">2.</span> <span class="nav-text">Hystrix应用场景</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">3.</span> <span class="nav-text">Hystrix Circuit Breaker配置</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">3.1.</span> <span class="nav-text">（1）circuitBreaker.enabled</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">3.2.</span> <span class="nav-text">（2）circuitBreaker.requestVolumeThreshold</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">3.3.</span> <span class="nav-text">（3）circuitBreaker.sleepWindowInMilliseconds</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">3.4.</span> <span class="nav-text">（4）circuitBreaker.errorThresholdPercentage</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">3.5.</span> <span class="nav-text">（5）circuitBreaker.forceOpen</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">3.6.</span> <span class="nav-text">（6）circuitBreaker.forceClosed</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">4.</span> <span class="nav-text">Hystrix Circuit Breaker示例代码</span></a></li></ol></div>
             
 
           </div>
