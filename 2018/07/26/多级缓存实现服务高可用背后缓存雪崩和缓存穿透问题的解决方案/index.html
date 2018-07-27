@@ -1,0 +1,1374 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.3.0" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.3.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.3.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '6.3.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="多级缓存架构实现服务高可用传统web服务架构模式 请求从浏览器发起，到达Nginx代理服务器，可以加载静态资源，如html、js、css等；如果是请求动态内容，就会请求tomcat服务，从缓存、数据库、文件服务器加载。有一部分访问量大的数据，可以使用模板引擎技术，在数据发生变更时把动态数据加载到模板中，生成静态页面内容，当请求访问这部分数据时就可以直接加载静态页面内容了。 问题：随着业务量的增加，">
+<meta name="keywords" content="多级缓存,缓存雪崩,缓存穿透">
+<meta property="og:type" content="article">
+<meta property="og:title" content="多级缓存实现服务高可用背后缓存雪崩和缓存穿透问题的解决方案">
+<meta property="og:url" content="http://www.forwardlee.com/2018/07/26/多级缓存实现服务高可用背后缓存雪崩和缓存穿透问题的解决方案/index.html">
+<meta property="og:site_name" content="不忘初心">
+<meta property="og:description" content="多级缓存架构实现服务高可用传统web服务架构模式 请求从浏览器发起，到达Nginx代理服务器，可以加载静态资源，如html、js、css等；如果是请求动态内容，就会请求tomcat服务，从缓存、数据库、文件服务器加载。有一部分访问量大的数据，可以使用模板引擎技术，在数据发生变更时把动态数据加载到模板中，生成静态页面内容，当请求访问这部分数据时就可以直接加载静态页面内容了。 问题：随着业务量的增加，">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://www.forwardlee.com/2018/07/26/多级缓存实现服务高可用背后缓存雪崩和缓存穿透问题的解决方案/简单的web服务架构.png">
+<meta property="og:image" content="http://www.forwardlee.com/2018/07/26/多级缓存实现服务高可用背后缓存雪崩和缓存穿透问题的解决方案/双层Nginx+多级缓存架构图.png">
+<meta property="og:image" content="http://www.forwardlee.com/2018/07/26/多级缓存实现服务高可用背后缓存雪崩和缓存穿透问题的解决方案/HystrixDashboard截图.png">
+<meta property="og:updated_time" content="2018-07-27T04:55:11.819Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="多级缓存实现服务高可用背后缓存雪崩和缓存穿透问题的解决方案">
+<meta name="twitter:description" content="多级缓存架构实现服务高可用传统web服务架构模式 请求从浏览器发起，到达Nginx代理服务器，可以加载静态资源，如html、js、css等；如果是请求动态内容，就会请求tomcat服务，从缓存、数据库、文件服务器加载。有一部分访问量大的数据，可以使用模板引擎技术，在数据发生变更时把动态数据加载到模板中，生成静态页面内容，当请求访问这部分数据时就可以直接加载静态页面内容了。 问题：随着业务量的增加，">
+<meta name="twitter:image" content="http://www.forwardlee.com/2018/07/26/多级缓存实现服务高可用背后缓存雪崩和缓存穿透问题的解决方案/简单的web服务架构.png">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="不忘初心" type="application/atom+xml" />
+
+
+
+
+  <link rel="canonical" href="http://www.forwardlee.com/2018/07/26/多级缓存实现服务高可用背后缓存雪崩和缓存穿透问题的解决方案/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>多级缓存实现服务高可用背后缓存雪崩和缓存穿透问题的解决方案 | 不忘初心</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">不忘初心</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <h1 class="site-subtitle" itemprop="description">李奉华的个人博客</h1>
+      
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+    <a href="/about/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-user"></i> <br />关于</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-commonweal">
+    <a href="/404/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />公益 404</a>
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2018/07/26/多级缓存实现服务高可用背后缓存雪崩和缓存穿透问题的解决方案/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ForwardLee">
+      <meta itemprop="description" content="总结学习方法，实践技术技能。">
+      <meta itemprop="image" content="/images/head.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="不忘初心">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">多级缓存实现服务高可用背后缓存雪崩和缓存穿透问题的解决方案
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-07-26 15:54:49" itemprop="dateCreated datePublished" datetime="2018-07-26T15:54:49+08:00">2018-07-26</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-07-27 12:55:11" itemprop="dateModified" datetime="2018-07-27T12:55:11+08:00">2018-07-27</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/07/26/多级缓存实现服务高可用背后缓存雪崩和缓存穿透问题的解决方案/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count gitment-comments-count" data-xid="/2018/07/26/多级缓存实现服务高可用背后缓存雪崩和缓存穿透问题的解决方案/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1><span id="多级缓存架构实现服务高可用">多级缓存架构实现服务高可用</span></h1><h2><span id="传统web服务架构模式">传统web服务架构模式</span></h2><p><img src="/2018/07/26/多级缓存实现服务高可用背后缓存雪崩和缓存穿透问题的解决方案/简单的web服务架构.png" alt=""></p>
+<p>请求从浏览器发起，到达Nginx代理服务器，可以加载静态资源，如html、js、css等；如果是请求动态内容，就会请求tomcat服务，从缓存、数据库、文件服务器加载。有一部分访问量大的数据，可以使用模板引擎技术，在数据发生变更时把动态数据加载到模板中，生成静态页面内容，当请求访问这部分数据时就可以直接加载静态页面内容了。</p>
+<p>问题：随着业务量的增加，需要静态化处理的页面达到成千上万个时，每次数据变化都要静态化成千上万个页面，这个静态化操作过程的耗时量可想而知，而且会因为页面静态化过程大大降低Tomcat容器的吞吐量，降低性能。</p>
+<a id="more"></a>
+<h1><span id="双层nginx多级缓存架构设计">双层Nginx+多级缓存架构设计</span></h1><p><img src="/2018/07/26/多级缓存实现服务高可用背后缓存雪崩和缓存穿透问题的解决方案/双层Nginx+多级缓存架构图.png" alt=""></p>
+<h2><span id="双层nginx架构">双层Nginx架构</span></h2><p>为了避免大量页面使用模板技术进行静态化带来的严重性能问题，使用Nginx+LUA脚本作为分发层，LUA脚本对请求的特殊参数进行与Nginx应用层数量取模运算，把请求分发到Nginx应用层；使用Nginx+LUA+Cache+模板进行应用层缓存处理，LUA脚本完成对应用层Tomcat接口的请求，并把返回数据写入Nginx本地缓存中，Nginx本地缓存的数据读取出来后渲染到模板页面，完成页面显示；通过以上两步操作，完成双层Nginx架构设计。这样频繁访问的热数据加载到应用层Nginx缓存中，并使用模板技术把缓存内容显示出来，请求从Nginx应用层中获取数据就返回了，不需要到达后端缓存服务或者数据库服务，提高了系统架构的健壮性。</p>
+<p>分发层Nginx的LUA脚本代码：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">local uri_args = ngx.req.get_uri_args()</span><br><span class="line">local ecourseId = uri_args["ecourseId"]</span><br><span class="line"></span><br><span class="line">local hosts = &#123;"192.168.1.210", "192.168.1.211"&#125;</span><br><span class="line">local hash = ngx.crc32_long(ecourseId)</span><br><span class="line">local index = (hash % 2) + 1</span><br><span class="line">backend = "http://"..hosts[index]</span><br><span class="line"></span><br><span class="line">local requestPath = uri_args["requestPath"]</span><br><span class="line">requestPath = "/"..requestPath.."?ecourseId="..ecourseId</span><br><span class="line"></span><br><span class="line">local http = require("resty.http")</span><br><span class="line">local httpc = http.new()</span><br><span class="line"></span><br><span class="line">local resp, err = httpc:request_uri(backend,&#123;</span><br><span class="line">  method = "GET",</span><br><span class="line">  path = requestPath</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">if not resp then</span><br><span class="line">  ngx.say("request error: ", err)</span><br><span class="line">  return</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line">ngx.say(resp.body)</span><br><span class="line"></span><br><span class="line">httpc:close()</span><br></pre></td></tr></table></figure>
+<p>应用层Nginx的LUA脚本代码：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line">local uri_args = ngx.req.get_uri_args()</span><br><span class="line">local ecourseId = uri_args["ecourseId"]</span><br><span class="line">local authorId = uri_args["authorId"]</span><br><span class="line"></span><br><span class="line">local cache_ngx = ngx.shared.my_cache</span><br><span class="line"></span><br><span class="line">local ecourseCacheKey = "ecourse_info_"..ecourseId</span><br><span class="line">local authorCacheKey = "author_info_"..authorId</span><br><span class="line"></span><br><span class="line">local ecourseCache = cache_ngx:get(ecourseCacheKey)</span><br><span class="line">local authorCache = cache_ngx:get(authorCacheKey)</span><br><span class="line"></span><br><span class="line">if ecourseCache == "" or ecourseCache == nil then</span><br><span class="line">	local http = require("resty.http")</span><br><span class="line">	local httpc = http.new()</span><br><span class="line"></span><br><span class="line">	local resp, err = httpc:request_uri("http://192.168.31.179:8080",&#123;</span><br><span class="line">  		method = "GET",</span><br><span class="line">  		path = "/getEcourseInfo?ecourseId="..ecourseId</span><br><span class="line">	&#125;)</span><br><span class="line"></span><br><span class="line">	ecourseCache = resp.body</span><br><span class="line">	cache_ngx:set(ecourseCacheKey, ecourseCache, 10 * 60)</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line">if authorCache == "" or authorCache == nil then</span><br><span class="line">	local http = require("resty.http")</span><br><span class="line">	local httpc = http.new()</span><br><span class="line"></span><br><span class="line">	local resp, err = httpc:request_uri("http://192.168.31.179:8080",&#123;</span><br><span class="line">  		method = "GET",</span><br><span class="line">  		path = "/getEcourseAuthorInfo?authorId="..authorId</span><br><span class="line">	&#125;)</span><br><span class="line"></span><br><span class="line">	authorCache = resp.body</span><br><span class="line">	cache_ngx:set(authorCacheKey, authorCache, 10 * 60)</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line">local cjson = require("cjson")</span><br><span class="line">local ecourseCacheJSON = cjson.decode(ecourseCache)</span><br><span class="line">local authorCacheJSON = cjson.decode(authorCache)</span><br><span class="line"></span><br><span class="line">local context = &#123;</span><br><span class="line">	ecourseId = ecourseCacheJSON.id,</span><br><span class="line">	ecourseName = ecourseCacheJSON.name,</span><br><span class="line">	ecoursePrice = ecourseCacheJSON.price,</span><br><span class="line">	ecoursePictureList = ecourseCacheJSON.pictureList,</span><br><span class="line">	ecourseSpecification = ecourseCacheJSON.specification,</span><br><span class="line">	ecourseService = ecourseCacheJSON.service,</span><br><span class="line">	ecourseColor = ecourseCacheJSON.color,</span><br><span class="line">	ecourseSize = ecourseCacheJSON.size,</span><br><span class="line">	authorId = authorCacheJSON.id,</span><br><span class="line">	authorName = authorCacheJSON.name,</span><br><span class="line">	authorLevel = authorCacheJSON.level,</span><br><span class="line">	authorGoodCommentRate = authorCacheJSON.goodCommentRate</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">local template = require("resty.template")</span><br><span class="line">template.render("ecourse.html", context)</span><br></pre></td></tr></table></figure>
+<p><strong>PS:</strong> OpenResty是打包了resty和lua模块的Nginx版本，能直接使用LUA脚本进行简单开发动态程序。</p>
+<h2><span id="多级缓存架构">多级缓存架构</span></h2><p>为避免缓存失效后大量的数据访问请求到达MySQL数据库服务层导致MySQL服务被冲垮，需要在数据访问请求到达MySQL服务层之前进行多级缓存处理。在Nginx应用层已经实现了Cache缓存模板数据，在后端应用层中对数据缓存服务进行多层化设计，例如拆分成Redis共享缓存和Ehcache本地缓存，Ehcache缓存作为Redis共享缓存的补充，当应用层Nginx的请求到达缓存服务时，先查询Redis共享缓存中的数据，如果Redis中没有数据，再查询Ehcache本地缓存数据；如果Redis中有数据，就要写入Ehcache本地缓存，并返回请求；如果Redis共享缓存和Ehcache本地缓存中都没有数据，再调用数据生产服务接口从MySQL数据库中获取。</p>
+<p>Redis共享缓存+Ehcache本地缓存代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">ECourseInfo eCourseInfo = ecCacheService.getECoureseInfoFromRedis(ecourseId);</span><br><span class="line">log.info(<span class="string">"=======从redis中查询课程信息========="</span>);</span><br><span class="line"><span class="keyword">if</span> (eCourseInfo == <span class="keyword">null</span>) &#123;</span><br><span class="line">    log.info(<span class="string">"=======从ehcache中查询课程信息========="</span>);</span><br><span class="line">    eCourseInfo = ecCacheService.getECoureseInfoFromEhcache(ecourseId);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (eCourseInfo == <span class="keyword">null</span>) &#123;</span><br><span class="line">    log.info(<span class="string">"=======调用MySQL数据生产服务接口获取eCourseInfo数据======="</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Ehcache本地缓存配置ehcache.xml:</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span><br><span class="line"><span class="tag">&lt;<span class="name">ehcache</span> <span class="attr">xmlns:xsi</span>=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span></span></span><br><span class="line"><span class="tag">         <span class="attr">xsi:noNamespaceSchemaLocation</span>=<span class="string">"http://ehcache.org/ehcache.xsd"</span></span></span><br><span class="line"><span class="tag">         <span class="attr">updateCheck</span>=<span class="string">"false"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">diskStore</span> <span class="attr">path</span>=<span class="string">"java.io.tmpdir/Tmp_EhCache"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!-- 可以配置多个缓存策略，但是如果没有其他的缓存策略，则使用defaultCache缓存策略--&gt;</span></span><br><span class="line">    <span class="comment">&lt;!--eternal过期是否可用，false有过期时间，true数据永不过期--&gt;</span></span><br><span class="line">    <span class="comment">&lt;!--maxElementsInMemory 存储对象的个数，需要存储对象的大小计算可存储多少个对象 --&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- memoryStoreEvictionPolicy 当达到maxElementsInMemory限制时，Ehcache将会根据指定的策略去清理内存。默认策略是LRU（最近最少使用）。--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">defaultCache</span></span></span><br><span class="line"><span class="tag">            <span class="attr">eternal</span>=<span class="string">"false"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">maxElementsInMemory</span>=<span class="string">"1000"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">overflowToDisk</span>=<span class="string">"false"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">diskPersistent</span>=<span class="string">"false"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">timeToIdleSeconds</span>=<span class="string">"0"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">timeToLiveSeconds</span>=<span class="string">"0"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">memoryStoreEvictionPolicy</span>=<span class="string">"LRU"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">cache</span></span></span><br><span class="line"><span class="tag">            <span class="attr">name</span>=<span class="string">"local"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">eternal</span>=<span class="string">"false"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">maxElementsInMemory</span>=<span class="string">"1000"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">overflowToDisk</span>=<span class="string">"false"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">diskPersistent</span>=<span class="string">"false"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">timeToIdleSeconds</span>=<span class="string">"0"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">timeToLiveSeconds</span>=<span class="string">"0"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">memoryStoreEvictionPolicy</span>=<span class="string">"LRU"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">ehcache</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>按照这样的设计，由Nginx本地缓存+Redis共享缓存+缓存服务Ehcache本地缓存构成三级缓存架构，也可以根据实际业务需求，增加更多的缓存层，保护后端MySQL服务。</p>
+<h1><span id="缓存雪崩问题及对策">缓存雪崩问题及对策</span></h1><h2><span id="缓存雪崩">缓存雪崩</span></h2><p>通过多级缓存策略降低请求对后端Mysql服务的请求数量，但是当多级缓存在高并发场景下出现某个缓存服务接口不可用，大量的请求Blocking在这个接口上，耗费大量的缓存服务器资源，出现连锁反应，导致其他的缓存服务接口不可用，甚至导致缓存服务层全部瘫痪，所有的网络请求如果都被缓存服务层Blocking住，那么处于同一web容器内的所有服务会直接瘫痪；如果网络请求能够绕过缓存服务，所有的请求流量到达MySQL服务接口，那么就会使MySQL的瞬时连接数飙升，很快出现服务宕机，这样的场景是灾难性的，公司的经济损失也是不可估量的。</p>
+<h2><span id="redis数据接口请求隔离和服务降级">Redis数据接口请求隔离和服务降级</span></h2><p>防止Redis服务接口因为网络问题导致接口服务阻塞或者宕机，可以对Redis的服务接口使用Hystrix进行请求资源隔离和服务降级。</p>
+<h3><span id="hystrix-dashboard配置">Hystrix Dashboard配置</span></h3><p>Hystrix Dashboard可以对Hystrix Command接口监控，收集接口的执行性能数据，例如TP90、TP99、TP99.5的QPS数据。</p>
+<p>在Hystrix Command所在工程内添加Hystrix Metrics依赖包，实现对接口的扫描监控</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.netflix.hystrix<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>hystrix-metrics-event-stream<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.5.12<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>注册Hystrix Dashboard收集数据使用的HystrixMeticsStreamServlet</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> ServletRegistrationBean <span class="title">servletRegistrationBean</span><span class="params">()</span></span>&#123;</span><br><span class="line">        ServletRegistrationBean servletRegistrationBean = <span class="keyword">new</span> ServletRegistrationBean();</span><br><span class="line">        servletRegistrationBean.setServlet(<span class="keyword">new</span> HystrixMetricsStreamServlet());</span><br><span class="line">        servletRegistrationBean.addUrlMappings(<span class="string">"/hystrix.stream"</span>);</span><br><span class="line">        <span class="keyword">return</span> servletRegistrationBean;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>配置Hystrix应用集群监控的Turbine，在Turbine的TURBINE-HOME/WEB-INF/classes下创建config.properties</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">turbine.ConfigPropertyBasedDiscovery.default.instances=192.68.1.211,192.68.1.212</span><br><span class="line">turbine.instanceUrlSuffix=:8081/hystrix.stream</span><br></pre></td></tr></table></figure>
+<p>启动Hystrix Dashboard 和Turbine两个web应用，Hystrix Dashboard用来显示收集的数据，自身实现单点监控，Turbine实现对Hystrix应用集群的监控。</p>
+<p><img src="/2018/07/26/多级缓存实现服务高可用背后缓存雪崩和缓存穿透问题的解决方案/HystrixDashboard截图.png" alt=""></p>
+<p>从图片中可以看出每个HystrixCommand执行的TP90、TP99、TP99.5耗时，从而也能计算出每个Command的QPS，根据Dashboard提供的数据，可以进一步优化HystrixCommandThreadPool配置。<a href="http://www.forwardlee.com/2018/07/25/Hystrix%E7%94%9F%E4%BA%A7%E7%8E%AF%E5%A2%83%E5%AE%9E%E8%B7%B5/">Hystrix生产环境配置实践</a></p>
+<h3><span id="redis接口限流和降级">Redis接口限流和降级</span></h3><p>使用Hystrix多级降级，并且在二级降级的HystrixCommand中实现fallback silent 或者 fallback stubbed，将Redis的服务接口隔离在单独的线程池内执行，即使当前Redis接口宕机，也不会占用其他接口资源，保证整个web服务的高可用。</p>
+<p><strong>特别注意：</strong>多级降级时，嵌套的内部Command不能使用外层Command的GroupKey，因为外层Command进行降级请求，很有可能是它所在的线程池资源已耗尽，如果嵌套的内部Command继续使用相同点的GroupKey，嵌套的内部Command就无法获取空闲的线程资源执行Command，导致内嵌Command对应的Hystrix CircuitBreaker直接短路，所有请求都被Reject，执行内嵌Command的fallback降级逻辑，这样多级降级就不发生作用了。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Slf</span>4j</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GetECourseInfoFromRedisCmmd</span> <span class="keyword">extends</span> <span class="title">HystrixCommand</span>&lt;<span class="title">ECourseInfo</span>&gt; </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> pkid;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">GetECourseInfoFromRedisCmmd</span><span class="params">(<span class="keyword">int</span> pkid)</span></span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey(<span class="string">"RedisGroup"</span>))</span><br><span class="line">                .andCommandKey(HystrixCommandKey.Factory.asKey(<span class="string">"GetECourseInfoFromRedisCmmd"</span>))</span><br><span class="line">                .andThreadPoolPropertiesDefaults(HystrixThreadPoolProperties.defaultSetter()</span><br><span class="line">                        <span class="comment">//高峰时段QPS*TP99耗时+buffer，例如30QPS*0.2S+4=10;</span></span><br><span class="line">                        .withCoreSize(<span class="number">10</span>)</span><br><span class="line">                        .withAllowMaximumSizeToDivergeFromCoreSize(<span class="keyword">true</span>)</span><br><span class="line">                        .withMaximumSize(<span class="number">30</span>)</span><br><span class="line">                        .withKeepAliveTimeMinutes(<span class="number">1</span>)</span><br><span class="line">                        .withMaxQueueSize(<span class="number">10</span>)</span><br><span class="line">                        .withQueueSizeRejectionThreshold(<span class="number">15</span>))</span><br><span class="line">                .andCommandPropertiesDefaults(HystrixCommandProperties.defaultSetter()</span><br><span class="line">                        <span class="comment">//TP99.5延迟+buffer,例如100ms+50ms</span></span><br><span class="line">                        .withExecutionTimeoutInMilliseconds(<span class="number">150</span>)</span><br><span class="line">                        <span class="comment">//根据业务而定</span></span><br><span class="line">                        .withCircuitBreakerErrorThresholdPercentage(<span class="number">30</span>)</span><br><span class="line">                        <span class="comment">//10秒内一个窗口处理的请求数，高峰QPS*10;</span></span><br><span class="line">                        .withCircuitBreakerRequestVolumeThreshold(<span class="number">40</span>)</span><br><span class="line">                        .withCircuitBreakerSleepWindowInMilliseconds(<span class="number">60</span>*<span class="number">1000</span>)));</span><br><span class="line">        <span class="keyword">this</span>.pkid = pkid;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> ECourseInfo <span class="title">run</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        JedisCluster jedisCluster = (JedisCluster) SpringContext.getContext().getBean(<span class="string">"jedisClusterFactory"</span>);</span><br><span class="line">        String key = <span class="string">"ecourse_info_"</span>+pkid;</span><br><span class="line">        String s = jedisCluster.get(key);</span><br><span class="line">        ECourseInfo eCourseInfo = JSONObject.parseObject(s, ECourseInfo.class);</span><br><span class="line">        <span class="keyword">return</span> eCourseInfo;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> ECourseInfo <span class="title">getFallback</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> GetECourseInfoFromBakRedisCmmd(pkid).execute();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">GetECourseInfoFromBakRedisCmmd</span> <span class="keyword">extends</span> <span class="title">HystrixCommand</span>&lt;<span class="title">ECourseInfo</span>&gt; </span>&#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">int</span> pkid;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">GetECourseInfoFromBakRedisCmmd</span><span class="params">(<span class="keyword">int</span> pkid)</span></span>&#123;</span><br><span class="line">            <span class="keyword">super</span>(Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey(<span class="string">"RedisBakGroup"</span>))</span><br><span class="line">                    .andCommandKey(HystrixCommandKey.Factory.asKey(<span class="string">"GetECourseInfoFromBakRedisCmmd"</span>))</span><br><span class="line">                    .andThreadPoolPropertiesDefaults(HystrixThreadPoolProperties.defaultSetter()</span><br><span class="line">                            <span class="comment">//高峰时段QPS*TP99耗时+buffer，例如30QPS*0.2S+4=10;</span></span><br><span class="line">                            .withCoreSize(<span class="number">10</span>)</span><br><span class="line">                            .withAllowMaximumSizeToDivergeFromCoreSize(<span class="keyword">true</span>)</span><br><span class="line">                            .withMaximumSize(<span class="number">30</span>)</span><br><span class="line">                            .withKeepAliveTimeMinutes(<span class="number">1</span>)</span><br><span class="line">                            .withMaxQueueSize(<span class="number">10</span>)</span><br><span class="line">                            .withQueueSizeRejectionThreshold(<span class="number">15</span>))</span><br><span class="line">                    .andCommandPropertiesDefaults(HystrixCommandProperties.defaultSetter()</span><br><span class="line">                            <span class="comment">//TP99.5延迟+buffer,例如100ms+50ms</span></span><br><span class="line">                            .withExecutionTimeoutInMilliseconds(<span class="number">150</span>)</span><br><span class="line">                            <span class="comment">//根据业务而定</span></span><br><span class="line">                            .withCircuitBreakerErrorThresholdPercentage(<span class="number">30</span>)</span><br><span class="line">                            <span class="comment">//10秒内一个窗口处理的请求数，高峰QPS*10;</span></span><br><span class="line">                            .withCircuitBreakerRequestVolumeThreshold(<span class="number">40</span>)</span><br><span class="line">                            .withCircuitBreakerSleepWindowInMilliseconds(<span class="number">60</span>*<span class="number">1000</span>)));</span><br><span class="line">            <span class="keyword">this</span>.pkid = pkid;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">protected</span> ECourseInfo <span class="title">run</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">            JedisCluster jedisCluster = (JedisCluster) SpringContext.getContext().getBean(<span class="string">"jedisClusterFactory"</span>);</span><br><span class="line">            String key = <span class="string">"ecourse_info_"</span>+pkid;</span><br><span class="line">            String s = jedisCluster.get(key);</span><br><span class="line">            ECourseInfo eCourseInfo = JSONObject.parseObject(s, ECourseInfo.class);</span><br><span class="line">            <span class="keyword">return</span> eCourseInfo;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         * fail silent</span></span><br><span class="line"><span class="comment">         * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">protected</span> ECourseInfo <span class="title">getFallback</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2><span id="数据生产服务层请求隔离和服务降级">数据生产服务层请求隔离和服务降级</span></h2><p>数据缓存服务层，除了要跨网络请求Redis接口数据，还要跨网络请求数据生产服务的接口数据。如果大量的请求涌入数据生产服务，除了会给后端数据库带来高并发压力外，还有可能因为缓存层的高并发占用缓存服务接口的资源，导致缓存层服务宕机。</p>
+<h3><span id="数据生产服务接口多级降级和最终fallback-stubbed">数据生产服务接口多级降级和最终Fallback Stubbed</span></h3><p>内外两层Command不能使用相同的GroupKey，原理与缓存服务层的Redis数据接口的多级降级配置原理相同。外层Command调用数据生产服务接口获取数据，第一次降级请求云端历史数据（或其他冷备历史数据），第二次降级实现残缺数据降级，根据请求参数中的数据组装一些初级数据返回。</p>
+<p><strong>第二级降级一定要实现Fallback Stubbed，这样才能保证客户端请求有数据返回。</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Slf</span>4j</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GetECourseInfoFromServiceCmmd</span> <span class="keyword">extends</span> <span class="title">HystrixCommand</span>&lt;<span class="title">ECourseInfo</span>&gt; </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Integer ecourseId;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">GetECourseInfoFromServiceCmmd</span><span class="params">(Integer ecourseId)</span></span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey(<span class="string">"ECourseInfoServiceGroup"</span>))</span><br><span class="line">                .andCommandKey(HystrixCommandKey.Factory.asKey(<span class="string">"GetECourseInfoFromServiceCmmd"</span>))</span><br><span class="line">                .andThreadPoolPropertiesDefaults(HystrixThreadPoolProperties.defaultSetter()</span><br><span class="line">                        <span class="comment">//高峰时段QPS*TP99耗时+buffer，例如30QPS*0.2S+4=10;</span></span><br><span class="line">                        .withCoreSize(<span class="number">10</span>)</span><br><span class="line">                        .withAllowMaximumSizeToDivergeFromCoreSize(<span class="keyword">true</span>)</span><br><span class="line">                        .withMaximumSize(<span class="number">30</span>)</span><br><span class="line">                        .withKeepAliveTimeMinutes(<span class="number">1</span>)</span><br><span class="line">                        .withMaxQueueSize(<span class="number">10</span>)</span><br><span class="line">                        .withQueueSizeRejectionThreshold(<span class="number">15</span>))</span><br><span class="line">                .andCommandPropertiesDefaults(HystrixCommandProperties.defaultSetter()</span><br><span class="line">                        <span class="comment">//TP99.5延迟+buffer,例如100ms+50ms</span></span><br><span class="line">                        .withExecutionTimeoutInMilliseconds(<span class="number">150</span>)</span><br><span class="line">                        <span class="comment">//根据业务而定</span></span><br><span class="line">                        .withCircuitBreakerErrorThresholdPercentage(<span class="number">30</span>)</span><br><span class="line">                        <span class="comment">//10秒内一个窗口处理的请求数，高峰QPS*10;</span></span><br><span class="line">                        .withCircuitBreakerRequestVolumeThreshold(<span class="number">40</span>)</span><br><span class="line">                        .withCircuitBreakerSleepWindowInMilliseconds(<span class="number">60</span>*<span class="number">1000</span>)));</span><br><span class="line">        <span class="keyword">this</span>.ecourseId = ecourseId;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> ECourseInfo <span class="title">run</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line"></span><br><span class="line">        RestTemplate restTemplate = (RestTemplate) SpringContext.getContext().getBean(<span class="string">"restTemplate"</span>);</span><br><span class="line">        ECourseInfo ecourseInfo = restTemplate.getForObject(<span class="string">"http://localhost:9090/ecourse?ecourseId="</span> + ecourseId, ECourseInfo.class);</span><br><span class="line">        <span class="keyword">return</span> ecourseInfo;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> ECourseInfo <span class="title">getFallback</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">super</span>.getFallback();</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">GetECourseInfoFromCloudDataCmmd</span> <span class="keyword">extends</span> <span class="title">HystrixCommand</span>&lt;<span class="title">ECourseInfo</span>&gt;</span>&#123;</span><br><span class="line">        <span class="keyword">private</span> Integer ecourseId;</span><br><span class="line">        </span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">GetECourseInfoFromCloudDataCmmd</span><span class="params">(Integer ecourseId)</span></span>&#123;</span><br><span class="line">            <span class="keyword">super</span>(Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey(<span class="string">"ECourseInfoCloudDataGroup"</span>))</span><br><span class="line">                    .andCommandKey(HystrixCommandKey.Factory.asKey(<span class="string">"GetECourseInfoFromServiceCmmd"</span>))</span><br><span class="line">                    .andThreadPoolPropertiesDefaults(HystrixThreadPoolProperties.defaultSetter()</span><br><span class="line">                            <span class="comment">//高峰时段QPS*TP99耗时+buffer，例如30QPS*0.2S+4=10;</span></span><br><span class="line">                            .withCoreSize(<span class="number">10</span>)</span><br><span class="line">                            .withAllowMaximumSizeToDivergeFromCoreSize(<span class="keyword">true</span>)</span><br><span class="line">                            .withMaximumSize(<span class="number">30</span>)</span><br><span class="line">                            .withKeepAliveTimeMinutes(<span class="number">1</span>)</span><br><span class="line">                            .withMaxQueueSize(<span class="number">10</span>)</span><br><span class="line">                            .withQueueSizeRejectionThreshold(<span class="number">15</span>))</span><br><span class="line">                    .andCommandPropertiesDefaults(HystrixCommandProperties.defaultSetter()</span><br><span class="line">                            <span class="comment">//TP99.5延迟+buffer,例如100ms+50ms</span></span><br><span class="line">                            .withExecutionTimeoutInMilliseconds(<span class="number">150</span>)</span><br><span class="line">                            <span class="comment">//根据业务而定</span></span><br><span class="line">                            .withCircuitBreakerErrorThresholdPercentage(<span class="number">30</span>)</span><br><span class="line">                            <span class="comment">//10秒内一个窗口处理的请求数，高峰QPS*10;</span></span><br><span class="line">                            .withCircuitBreakerRequestVolumeThreshold(<span class="number">40</span>)</span><br><span class="line">                            .withCircuitBreakerSleepWindowInMilliseconds(<span class="number">60</span>*<span class="number">1000</span>)));</span><br><span class="line">            <span class="keyword">this</span>.ecourseId = ecourseId;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">protected</span> ECourseInfo <span class="title">run</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">            RestTemplate restTemplate = (RestTemplate) SpringContext.getContext().getBean(<span class="string">"restTemplate"</span>);</span><br><span class="line">            ECourseInfo ecourseInfo = restTemplate.getForObject(<span class="string">"http://localhost:9990/ecourse?ecourseId="</span> + ecourseId, ECourseInfo.class);</span><br><span class="line">            <span class="keyword">return</span> ecourseInfo;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         * 实现fallback stubbed残缺降级</span></span><br><span class="line"><span class="comment">         * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">protected</span> ECourseInfo <span class="title">getFallback</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            ECourseInfo eCourseInfo = <span class="keyword">new</span> ECourseInfo();</span><br><span class="line">            eCourseInfo.setPkid(<span class="keyword">this</span>.ecourseId);</span><br><span class="line">            eCourseInfo.setModifyTime(<span class="keyword">new</span> Date());</span><br><span class="line">            eCourseInfo.setAuthorId(<span class="number">11111</span>);</span><br><span class="line">            eCourseInfo.setName(<span class="string">"stubbed fallback ecourse name"</span>);</span><br><span class="line">            eCourseInfo.setPrice(<span class="number">123.33</span>);</span><br><span class="line">            <span class="keyword">return</span>  eCourseInfo;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1><span id="缓存穿透问题及对策">缓存穿透问题及对策</span></h1><h2><span id="缓存穿透">缓存穿透</span></h2><p>当一个请求从浏览器经过三级缓存查询后，没有查到数据，就会到达数据库层查询数据，如果数据库也没有查到数据就返回NULL了。如果大量的这类请求并发访问服务接口，必然会导致请求到达数据库接口层，增大数据库的压力，这个现象就是缓存穿透。</p>
+<h2><span id="后端缓存层缓存空数据">后端缓存层缓存空数据</span></h2><p>只要把数据库返回的Null数据结合请求参数放入缓存层，这样相同参数的请求再查询数据时，就能从缓存层获得空数据，而不用去查询数据库。而对应参数的数据在数据库中产生时，及时删除缓存即可。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//如果从两级缓存中还是查不到，应该去数据生产服务中查询，同一个缓存服务实例接收到多个并发查询并更新redis缓存，就可能出现因为执行先后造成的新数据被旧数据覆盖的冲突问题。并发请求改为异步内存队列处理。</span></span><br><span class="line">        <span class="keyword">if</span> (eCourseInfo == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="comment">//从数据管理服务查询数据，存入内存队列，异步按顺序写入缓存。</span></span><br><span class="line">            GetECourseInfoFromServiceCmmd getECourseInfoFromServiceCmmd = <span class="keyword">new</span> GetECourseInfoFromServiceCmmd(ecourseId);</span><br><span class="line">            eCourseInfo = getECourseInfoFromServiceCmmd.execute();</span><br><span class="line"></span><br><span class="line">            <span class="comment">//防止多级缓存被穿透，即使从课程服务接口从数据库中没有查询到课程信息，也要在此处实例化一个对象 爆炸</span></span><br><span class="line">            <span class="keyword">if</span> (eCourseInfo == <span class="keyword">null</span>) &#123;</span><br><span class="line">                eCourseInfo = <span class="keyword">new</span> ECourseInfo(ecourseId);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">//放入队列，等待队列处理线程把数据更新到redis</span></span><br><span class="line">            MultiThreadUpdateRedisQueue.Singleton.getInstance().put(eCourseInfo);</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>谢谢你请我吃糖果</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wxcode.jpeg" alt="ForwardLee 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/多级缓存/" rel="tag"># 多级缓存</a>
+          
+            <a href="/tags/缓存雪崩/" rel="tag"># 缓存雪崩</a>
+          
+            <a href="/tags/缓存穿透/" rel="tag"># 缓存穿透</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/07/25/Hystrix生产环境实践/" rel="next" title="Hystrix生产环境配置实践">
+                <i class="fa fa-chevron-left"></i> Hystrix生产环境配置实践
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+      
+        <div id="gitment-container"></div>
+      
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/head.jpeg"
+                alt="ForwardLee" />
+            
+              <p class="site-author-name" itemprop="name">ForwardLee</p>
+              <p class="site-description motion-element" itemprop="description">总结学习方法，实践技术技能。</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">43</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">31</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/forworldlee" target="_blank" title="GitHub" rel="external nofollow"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="mailto:279079608@qq.com" target="_blank" title="E-Mail" rel="external nofollow"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://wujun.name" title="武军" target="_blank">武军</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.laruence.com/" title="鸟哥" target="_blank">鸟哥</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://lvwenhan.com/" title="岁寒" target="_blank">岁寒</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">1.</span> <span class="nav-text">多级缓存架构实现服务高可用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">1.1.</span> <span class="nav-text">传统web服务架构模式</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">2.</span> <span class="nav-text">双层Nginx+多级缓存架构设计</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">2.1.</span> <span class="nav-text">双层Nginx架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">2.2.</span> <span class="nav-text">多级缓存架构</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">3.</span> <span class="nav-text">缓存雪崩问题及对策</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">3.1.</span> <span class="nav-text">缓存雪崩</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">3.2.</span> <span class="nav-text">Redis数据接口请求隔离和服务降级</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#undefined"><span class="nav-number">3.2.1.</span> <span class="nav-text">Hystrix Dashboard配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#undefined"><span class="nav-number">3.2.2.</span> <span class="nav-text">Redis接口限流和降级</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">3.3.</span> <span class="nav-text">数据生产服务层请求隔离和服务降级</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#undefined"><span class="nav-number">3.3.1.</span> <span class="nav-text">数据生产服务接口多级降级和最终Fallback Stubbed</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">4.</span> <span class="nav-text">缓存穿透问题及对策</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">4.1.</span> <span class="nav-text">缓存穿透</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">4.2.</span> <span class="nav-text">后端缓存层缓存空数据</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">forworldlee</span>
+
+  
+
+  
+</div>
+
+
+  
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" rel="external nofollow" href="https://hexo.io">Hexo</a> 强力驱动 v3.7.1</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" rel="external nofollow" href="https://github.com/theme-next/hexo-theme-next">NexT.Gemini</a> v6.3.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.3.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.3.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.3.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.3.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.3.0"></script>
+
+
+
+  
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+<!-- LOCAL: You can save these files to your site and update links -->
+    
+        
+        <link rel="stylesheet" href="https://aimingoo.github.io/gitmint/style/default.css">
+        <script src="https://aimingoo.github.io/gitmint/dist/gitmint.browser.js"></script>
+    
+<!-- END LOCAL -->
+
+    
+
+    
+      <script type="text/javascript">
+      function renderGitment(){
+        var gitment = new Gitmint({
+            id: 'page_s_blog_2018-07-26 03:54:49',
+            owner: 'forworldlee',
+            repo: 'forworldlee.github.io',
+            
+            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
+            
+            oauth: {
+            
+            
+                client_secret: 'e84ed43a122ffe38e55a2372f27e4639ec673564',
+            
+                client_id: '38b9430818b98ed8d839'
+            }});
+        gitment.render('gitment-container');
+      }
+
+      
+      renderGitment();
+      
+      </script>
+    
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
