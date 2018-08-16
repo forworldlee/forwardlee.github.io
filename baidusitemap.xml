@@ -4,6 +4,25 @@
 
     
   <url>
+    <loc>http://www.forwardlee.com/2018/08/13/Redis-Sentinel%E8%84%91%E8%A3%82%E9%97%AE%E9%A2%98%E4%B8%8E%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/</loc>
+    <lastmod>2018-08-16T03:16:58.164Z</lastmod>
+    <data>
+        <display>
+        <title>Redis主从异步复制和Sentinel脑裂导致数据丢失的问题与解决方案</title>
+        <pubTime>2018-08-13T03:40:37.000Z</pubTime>
+        
+        <tag>Redis</tag>
+         
+        <tag>Sentinel</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://www.forwardlee.com/2018/07/26/%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98%E5%AE%9E%E7%8E%B0%E6%9C%8D%E5%8A%A1%E9%AB%98%E5%8F%AF%E7%94%A8%E8%83%8C%E5%90%8E%E7%BC%93%E5%AD%98%E9%9B%AA%E5%B4%A9%E5%92%8C%E7%BC%93%E5%AD%98%E7%A9%BF%E9%80%8F%E9%97%AE%E9%A2%98%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/</loc>
     <lastmod>2018-07-27T09:41:57.379Z</lastmod>
     <data>
