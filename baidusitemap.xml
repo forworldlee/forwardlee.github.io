@@ -4,6 +4,23 @@
 
     
   <url>
+    <loc>http://www.forwardlee.com/2018/06/07/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%92%8C%E7%BC%93%E5%AD%98%E5%8F%8C%E5%86%99%E5%AF%BC%E8%87%B4%E6%95%B0%E6%8D%AE%E4%B8%8D%E4%B8%80%E8%87%B4%E9%97%AE%E9%A2%98%E5%88%86%E6%9E%90%E5%92%8C%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/</loc>
+    <lastmod>2018-08-21T11:22:47.058Z</lastmod>
+    <data>
+        <display>
+        <title>数据库和缓存致数据不一致问题分析和解决方案</title>
+        <pubTime>2018-06-07T02:15:31.000Z</pubTime>
+        
+        <tag>数据不一致</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://www.forwardlee.com/2018/08/13/Redis-Sentinel%E8%84%91%E8%A3%82%E9%97%AE%E9%A2%98%E4%B8%8E%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/</loc>
     <lastmod>2018-08-16T03:16:58.164Z</lastmod>
     <data>
@@ -296,23 +313,6 @@
 
     
   <url>
-    <loc>http://www.forwardlee.com/2018/06/07/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%92%8C%E7%BC%93%E5%AD%98%E5%8F%8C%E5%86%99%E5%AF%BC%E8%87%B4%E6%95%B0%E6%8D%AE%E4%B8%8D%E4%B8%80%E8%87%B4%E9%97%AE%E9%A2%98%E5%88%86%E6%9E%90%E5%92%8C%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/</loc>
-    <lastmod>2018-06-07T04:39:16.589Z</lastmod>
-    <data>
-        <display>
-        <title>数据库和缓存致数据不一致问题分析和解决方案</title>
-        <pubTime>2018-06-07T02:15:31.000Z</pubTime>
-        
-        <tag>数据不一致</tag>
-         
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
     <loc>http://www.forwardlee.com/2018/06/06/Redis%E7%94%9F%E4%BA%A7%E7%8E%AF%E5%A2%83%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E5%8F%8A%E4%BC%98%E5%8C%96/</loc>
     <lastmod>2018-06-06T09:20:09.813Z</lastmod>
     <data>
@@ -557,13 +557,13 @@
         <title>CentOS 6.8 + MariaDB 10.0 with Galera Cluster+Keepalived高可用解决方案</title>
         <pubTime>2018-05-24T11:40:46.000Z</pubTime>
         
-        <tag>MariaDB</tag>
-         
-        <tag>Keepalived</tag>
-         
         <tag>Galera</tag>
          
         <tag>CentOS</tag>
+         
+        <tag>MariaDB</tag>
+         
+        <tag>Keepalived</tag>
          
          
            
@@ -598,11 +598,11 @@
         <title>CentOS 6.8+MySQL 5.5 with Galera Cluster环境搭建</title>
         <pubTime>2018-05-22T16:13:16.000Z</pubTime>
         
+        <tag>MySQL</tag>
+         
         <tag>Galera</tag>
          
         <tag>CentOS</tag>
-         
-        <tag>MySQL</tag>
          
          
            
@@ -619,11 +619,11 @@
         <title>Keepalived HA +LVS+ Galera Cluster环境</title>
         <pubTime>2018-05-23T08:14:48.000Z</pubTime>
         
-        <tag>Keepalived</tag>
+        <tag>MySQL</tag>
          
         <tag>Galera</tag>
          
-        <tag>MySQL</tag>
+        <tag>Keepalived</tag>
          
          
            
@@ -640,9 +640,9 @@
         <title>Galera Cluster 3 + Mysql wresp 5.6安装配置</title>
         <pubTime>2018-05-24T05:02:55.000Z</pubTime>
         
-        <tag>Galera</tag>
-         
         <tag>MySQL</tag>
+         
+        <tag>Galera</tag>
          
          
            
@@ -659,11 +659,11 @@
         <title>Docker Galera Cluster环境快速搭建</title>
         <pubTime>2018-05-22T03:12:14.000Z</pubTime>
         
-        <tag>MariaDB</tag>
-         
         <tag>Galera</tag>
          
         <tag>Docker</tag>
+         
+        <tag>MariaDB</tag>
          
          
            
