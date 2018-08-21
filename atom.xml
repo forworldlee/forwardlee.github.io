@@ -2027,11 +2027,11 @@
   </entry>
   
   <entry>
-    <title>数据库和缓存致数据不一致问题分析和解决方案</title>
+    <title>数据库和缓存双写数据不一致问题分析和解决方案</title>
     <link href="http://www.forwardlee.com/2018/06/07/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%92%8C%E7%BC%93%E5%AD%98%E5%8F%8C%E5%86%99%E5%AF%BC%E8%87%B4%E6%95%B0%E6%8D%AE%E4%B8%8D%E4%B8%80%E8%87%B4%E9%97%AE%E9%A2%98%E5%88%86%E6%9E%90%E5%92%8C%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/"/>
     <id>http://www.forwardlee.com/2018/06/07/数据库和缓存双写导致数据不一致问题分析和解决方案/</id>
     <published>2018-06-07T02:15:31.000Z</published>
-    <updated>2018-08-21T11:22:47.058Z</updated>
+    <updated>2018-08-21T11:26:01.949Z</updated>
     
     <content type="html"><![CDATA[<h1><span id="低并发读写更新数据和删除缓存的双写导致数据不一致">低并发读写—更新数据和删除缓存的双写导致数据不一致</span></h1><p><img src="/2018/06/07/数据库和缓存双写导致数据不一致问题分析和解决方案/1.png" alt="数据更新操作"><br>step1：更新数据库中的数据<br>step2：删除缓存<br>如果step1执行成功，step2执行失败，那么客户端获取缓存中的数据就是旧数据，而数据库中是新数据，造成数据不一致。</p>
 <p><strong>解决方案：</strong>先删除缓存，在执行数据库更新，保证缓存和数据库中数据一致。</p>
@@ -2054,6 +2054,8 @@
     
     
       <category term="数据不一致" scheme="http://www.forwardlee.com/tags/%E6%95%B0%E6%8D%AE%E4%B8%8D%E4%B8%80%E8%87%B4/"/>
+    
+      <category term="数据丢失" scheme="http://www.forwardlee.com/tags/%E6%95%B0%E6%8D%AE%E4%B8%A2%E5%A4%B1/"/>
     
   </entry>
   
