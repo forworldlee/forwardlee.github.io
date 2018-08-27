@@ -349,6 +349,148 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2018/08/22/为什么最后两行代码没有打印/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ForwardLee">
+      <meta itemprop="description" content="总结学习方法，实践技术技能。">
+      <meta itemprop="image" content="/images/head.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="不忘初心">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/08/22/为什么最后两行代码没有打印/" itemprop="url">
+                  为什么最后两行代码没有打印?
+                </a>
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-08-22 18:24:14 / 修改时间：19:06:50" itemprop="dateCreated datePublished" datetime="2018-08-22T18:24:14+08:00">2018-08-22</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>一个来自于<a href="http://ifeve.com/question/%E4%B8%BA%E4%BB%80%E4%B9%88%E6%9C%80%E5%90%8E%E4%B8%A4%E8%A1%8C%E6%B2%A1%E6%9C%89%E8%BF%90%E8%A1%8C/" target="_blank" rel="noopener">并发编程网 - ifeve.com</a>的题目“为什么最后两行没有运行“。我刚看到这个问题也有点一脸懵逼，但知道肯定是因为主线程和子线程执行的问题所导致的，但始终看不出为什么最后两行”没有运行“，我对原有代码稍作改动，增加了一个临时变量tmp，通过在子线程中打印tmp就可以看出最后三行肯定是执行了，只不过没有在控制台打印。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AutomicDemo</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> k = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">static</span> AtomicInteger i = <span class="keyword">new</span> AtomicInteger(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> m = <span class="number">0</span>; m &lt; <span class="number">10</span>; m++) &#123;</span><br><span class="line">            Thread t = <span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">                <span class="meta">@Override</span></span><br><span class="line">                <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">                    <span class="keyword">for</span> (<span class="keyword">int</span> p = <span class="number">0</span>; p &lt; <span class="number">4000</span>; p++) &#123;</span><br><span class="line">                        System.out.println(<span class="string">"i："</span> + i.get());</span><br><span class="line">                        i.getAndIncrement();</span><br><span class="line">                        System.out.println(<span class="string">"k: "</span> + k);</span><br><span class="line">                        k++;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;);</span><br><span class="line">            t.start();</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(<span class="string">"最终i： --------------"</span> + i);</span><br><span class="line">        System.out.println(<span class="string">"最终k: --------------"</span> + k);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>解答：</strong>主线程先于子线程执行结束，并关闭</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2018/08/13/Redis-Sentinel脑裂问题与解决方案/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1765,192 +1907,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2018/06/29/Springboot-Springcloud技术栈/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="ForwardLee">
-      <meta itemprop="description" content="总结学习方法，实践技术技能。">
-      <meta itemprop="image" content="/images/head.jpeg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="不忘初心">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/06/29/Springboot-Springcloud技术栈/" itemprop="url">
-                  Springboot/Springcloud技术栈
-                </a>
-              
-            
-          </h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2018-06-29 11:51:00 / 修改时间：18:06:19" itemprop="dateCreated datePublished" datetime="2018-06-29T11:51:00+08:00">2018-06-29</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="Spring-Cloud"><a href="#Spring-Cloud" class="headerlink" title="Spring Cloud"></a>Spring Cloud</h1><h2 id="预备（Preparation））"><a href="#预备（Preparation））" class="headerlink" title="预备（Preparation））"></a>预备（Preparation））</h2><h3 id="技术体系"><a href="#技术体系" class="headerlink" title="技术体系"></a>技术体系</h3><ul>
-<li>架构  <ul>
-<li>面向服务架构（SOA）  </li>
-<li>微服务（MSA）  <ul>
-<li>测试驱动开发（TDD)  </li>
-<li>领域驱动设计（DDD）  </li>
-</ul>
-</li>
-<li>事件驱动架构（EDA）  </li>
-</ul>
-</li>
-<li>技术  <ul>
-<li>Java 8 基础  </li>
-<li>Spring Framework 4.x  </li>
-<li>Spring Boot 1.x  </li>
-</ul>
-</li>
-</ul>
-<h3 id="环境依赖"><a href="#环境依赖" class="headerlink" title="环境依赖"></a>环境依赖</h3><ul>
-<li>Spring Cloud  <ul>
-<li>Dalston.SR3  </li>
-</ul>
-</li>
-<li>Spring Boot  <ul>
-<li>1.5.x  </li>
-</ul>
-</li>
-<li>Spring Framework  <ul>
-<li>4.3.x  </li>
-</ul>
-</li>
-<li>Maven  <ul>
-<li>3.5.0  </li>
-</ul>
-</li>
-<li>Java  <ul>
-<li><blockquote>
-<p>= 8  </p>
-</blockquote>
-</li>
-</ul>
-</li>
-</ul>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/06/29/Springboot-Springcloud技术栈/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2002,7 +1958,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">44</span>
+                    <span class="site-state-item-count">45</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -2081,7 +2037,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">32</span>
+                      
+                    
+                    <span class="site-state-item-count">33</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
