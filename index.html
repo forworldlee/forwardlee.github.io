@@ -341,6 +341,168 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2018/08/27/JAVA垃圾回收策略与内存泄漏/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ForwardLee">
+      <meta itemprop="description" content="总结学习方法，实践技术技能。">
+      <meta itemprop="image" content="/images/head.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="不忘初心">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/08/27/JAVA垃圾回收策略与内存泄漏/" itemprop="url">
+                  JAVA垃圾回收策略与内存泄漏
+                </a>
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-08-27 23:07:58" itemprop="dateCreated datePublished" datetime="2018-08-27T23:07:58+08:00">2018-08-27</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-08-28 08:58:42" itemprop="dateModified" datetime="2018-08-28T08:58:42+08:00">2018-08-28</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>【转自】<a href="https://www.ibm.com/developerworks/cn/java/l-JavaMemoryLeak/index.html" target="_blank" rel="noopener">https://www.ibm.com/developerworks/cn/java/l-JavaMemoryLeak/index.html</a></p>
+<h2 id="问题背景"><a href="#问题背景" class="headerlink" title="问题背景"></a>问题背景</h2><p>JVM进行垃圾回收时判断对象是否存活的算法有引用计数算法和可达性分析算法，更多使用中会使用对象可达性分析算法。如果某个对象JVM运行时一直处于GCROOT可达，GC不会回收这个对象，但是一直没有被JVM方法栈所使用，这就可能出现内存泄漏。</p>
+<h2 id="问题的提出"><a href="#问题的提出" class="headerlink" title="问题的提出"></a>问题的提出</h2><p>Java的一个重要优点就是通过垃圾收集器(Garbage Collection，GC)自动管理内存的回收，程序员不需要通过调用函数来释放内存。因此，很多程序员认为Java不存在内存泄漏问题，或者认为即使有内存泄漏也不是程序的责任，而是GC或JVM的问题。其实，这种想法是不正确的，因为Java也存在内存泄露，但它的表现与C++不同。</p>
+<p>随着越来越多的服务器程序采用Java技术，例如JSP，Servlet， EJB等，服务器程序往往长期运行。另外，在很多嵌入式系统中，内存的总量非常有限。内存泄露问题也就变得十分关键，即使每次运行少量泄漏，长期运行之后，系统也是面临崩溃的危险。</p>
+<h2 id="Java是如何管理内存"><a href="#Java是如何管理内存" class="headerlink" title="Java是如何管理内存"></a>Java是如何管理内存</h2><p>为了判断Java中是否有内存泄露，我们首先必须了解Java是如何管理内存的。Java的内存管理就是对象的分配和释放问题。在Java中，程序员需要通过关键字new为每个对象申请内存空间 (基本类型除外)，所有的对象都在堆 (Heap)中分配空间。另外，对象的释放是由GC决定和执行的。在Java中，内存的分配是由程序完成的，而内存的释放是有GC完成的，这种收支两条线的方法确实简化了程序员的工作。但同时，它也加重了JVM的工作。这也是Java程序运行速度较慢的原因之一。因为，GC为了能够正确释放对象，GC必须监控每一个对象的运行状态，包括对象的申请、引用、被引用、赋值等，GC都需要进行监控。</p>
+<p>监视对象状态是为了更加准确地、及时地释放对象，而释放对象的根本原则就是该对象不再被引用。</p>
+<p>为了更好理解GC的工作原理，我们可以将对象考虑为有向图的顶点，将引用关系考虑为图的有向边，有向边从引用者指向被引对象。另外，每个线程对象可以作为一个图的起始顶点，例如大多程序从main进程开始执行，那么该图就是以main进程顶点开始的一棵根树。在这个有向图中，根顶点可达的对象都是有效对象，GC将不回收这些对象。如果某个对象 (连通子图)与这个根顶点不可达(注意，该图为有向图)，那么我们认为这个(这些)对象不再被引用，可以被GC回收。</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/08/27/JAVA垃圾回收策略与内存泄漏/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2018/08/22/为什么最后两行代码没有打印/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1738,167 +1900,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2018/07/02/Nexus私服搭建/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="ForwardLee">
-      <meta itemprop="description" content="总结学习方法，实践技术技能。">
-      <meta itemprop="image" content="/images/head.jpeg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="不忘初心">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/07/02/Nexus私服搭建/" itemprop="url">
-                  Nexus私服搭建
-                </a>
-              
-            
-          </h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2018-07-02 17:21:57 / 修改时间：18:34:37" itemprop="dateCreated datePublished" datetime="2018-07-02T17:21:57+08:00">2018-07-02</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="写在文前"><a href="#写在文前" class="headerlink" title="写在文前"></a>写在文前</h1><p>在没有配置Nexus私服的情况下，搭建maven工程后，通过pom.xml中配置的<depency></depency>标签引入所需要的jar包，这样做会有两个很不理想的情况。</p>
-<ol>
-<li>maven每次都要从网络上下载新引入的jar包，耗时耗力；</li>
-<li>jar在互联网上分布不够集中，就需要在maven的配置文件settings.xml中配置很多仓库镜像标签<mirro></mirro>，对maven所依赖的jar包不方便管理。</li>
-</ol>
-<p>Nexus的出现解决了上述两种问题，它作为Maven远程仓库的代理工具，可以把分散的镜像划入一个代理组内，然后再maven的配置文件中只需要配置这个代理组的私有仓库地址即可。</p>
-<h1 id="安装Nexus"><a href="#安装Nexus" class="headerlink" title="安装Nexus"></a>安装Nexus</h1><p>环境：CentOS 6.8 x86_64</p>
-<p>安装包：nexus-2.14.4-03-bundle.tar.gz</p>
-<p>安装过程：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">tar -zvxf nexus-2.14.4-03-bundle.tar.gz</span><br><span class="line">cd nexus-2.14.4-03/bin</span><br><span class="line">vi nexus</span><br></pre></td></tr></table></figure>
-<p>如果要使用linux的root用户运行nexus，只需要修改以下代码：</p>
-<p><img src="/2018/07/02/Nexus私服搭建/image-20180702180141767.png" alt="image-20180702180141767"></p>
-<p>运行nexus</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd nexus-2.14.4-03/bin</span><br><span class="line">./nexus start</span><br></pre></td></tr></table></figure>
-<p>访问nexus</p>
-<p><a href="http://ip:8081/nexus" target="_blank" rel="noopener">http://ip:8081/nexus</a></p>
-<h1 id="管理nexus"><a href="#管理nexus" class="headerlink" title="管理nexus"></a>管理nexus</h1><p>public repositories是一个公共的仓库代理组，只要把需要的第三方远程仓库以代理的形式添加到nexus中，并放入public repositories中，maven只需要依赖这一个代理仓库地址即可。</p>
-<p><img src="/2018/07/02/Nexus私服搭建/QQ20180702-175202.png" alt="nexus界面"></p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/07/02/Nexus私服搭建/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1950,7 +1951,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">45</span>
+                    <span class="site-state-item-count">46</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -2031,7 +2032,11 @@
                     
                       
                     
-                    <span class="site-state-item-count">33</span>
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">35</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
