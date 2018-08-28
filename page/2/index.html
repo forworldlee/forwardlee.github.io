@@ -341,167 +341,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2018/07/02/Nexus私服搭建/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="ForwardLee">
-      <meta itemprop="description" content="总结学习方法，实践技术技能。">
-      <meta itemprop="image" content="/images/head.jpeg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="不忘初心">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/07/02/Nexus私服搭建/" itemprop="url">
-                  Nexus私服搭建
-                </a>
-              
-            
-          </h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2018-07-02 17:21:57 / 修改时间：18:34:37" itemprop="dateCreated datePublished" datetime="2018-07-02T17:21:57+08:00">2018-07-02</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="写在文前"><a href="#写在文前" class="headerlink" title="写在文前"></a>写在文前</h1><p>在没有配置Nexus私服的情况下，搭建maven工程后，通过pom.xml中配置的<depency></depency>标签引入所需要的jar包，这样做会有两个很不理想的情况。</p>
-<ol>
-<li>maven每次都要从网络上下载新引入的jar包，耗时耗力；</li>
-<li>jar在互联网上分布不够集中，就需要在maven的配置文件settings.xml中配置很多仓库镜像标签<mirro></mirro>，对maven所依赖的jar包不方便管理。</li>
-</ol>
-<p>Nexus的出现解决了上述两种问题，它作为Maven远程仓库的代理工具，可以把分散的镜像划入一个代理组内，然后再maven的配置文件中只需要配置这个代理组的私有仓库地址即可。</p>
-<h1 id="安装Nexus"><a href="#安装Nexus" class="headerlink" title="安装Nexus"></a>安装Nexus</h1><p>环境：CentOS 6.8 x86_64</p>
-<p>安装包：nexus-2.14.4-03-bundle.tar.gz</p>
-<p>安装过程：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">tar -zvxf nexus-2.14.4-03-bundle.tar.gz</span><br><span class="line">cd nexus-2.14.4-03/bin</span><br><span class="line">vi nexus</span><br></pre></td></tr></table></figure>
-<p>如果要使用linux的root用户运行nexus，只需要修改以下代码：</p>
-<p><img src="/2018/07/02/Nexus私服搭建/image-20180702180141767.png" alt="image-20180702180141767"></p>
-<p>运行nexus</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd nexus-2.14.4-03/bin</span><br><span class="line">./nexus start</span><br></pre></td></tr></table></figure>
-<p>访问nexus</p>
-<p><a href="http://ip:8081/nexus" target="_blank" rel="noopener">http://ip:8081/nexus</a></p>
-<h1 id="管理nexus"><a href="#管理nexus" class="headerlink" title="管理nexus"></a>管理nexus</h1><p>public repositories是一个公共的仓库代理组，只要把需要的第三方远程仓库以代理的形式添加到nexus中，并放入public repositories中，maven只需要依赖这一个代理仓库地址即可。</p>
-<p><img src="/2018/07/02/Nexus私服搭建/QQ20180702-175202.png" alt="nexus界面"></p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/07/02/Nexus私服搭建/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2018/06/29/Springboot-Springcloud技术栈/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1896,6 +1735,151 @@
 
 
     
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2018/06/01/RedisCluster配置和部署/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ForwardLee">
+      <meta itemprop="description" content="总结学习方法，实践技术技能。">
+      <meta itemprop="image" content="/images/head.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="不忘初心">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/06/01/RedisCluster配置和部署/" itemprop="url">
+                  RedisCluster配置和部署--创建多master多slave高可用集群环境
+                </a>
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-06-01 10:37:51 / 修改时间：18:04:40" itemprop="dateCreated datePublished" datetime="2018-06-01T10:37:51+08:00">2018-06-01</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>Redis的主从配置的主要作用是实现读写分离，并且可以通过配置一主多从来实现Redis横向扩展，保证Redis读取数据的QPS能够达到10W+。<strong>如果应用的Redis写数据量QPS只需要几万，而读数据要几十万或上百万QPS，那么Redis Sentinel集群就可以满足业务需求，一主多从，而且可以实现自动Master主备切换，实现高可用。</strong>当写数据的QPS需要几十万或者上百万QPS，或者写数据量达到1T以上的场景，Sentinel的一主多从就不能满足业务需求，此时需要更多的Master来支撑写操作。</p>
+<p>Redis Cluster实现多主多从的集群架构，并且能够进行自动故障节点转移和恢复，并支持多Master节点写入，能够支撑更大数据量的写操作。虽然Redis Cluster实现了读写分离的主从结构，但是Redis的客户端Jedis操作对读写分离支持不够完善，需要对Jedis进行扩展才能支持读写分离。而且Redis Cluster本身slave节点不能直接读取数据，需要先执行readonly命令，再读取数据。所以<strong>Redis Cluster的重点在实现Master节点的横向扩展支撑更大数据量，能够通过Master节点实现读写操作，Slave节点的作用主要用是数据热备和在Master节点故障时的主备自动切换，保证Redis Cluster的高可用。</strong></p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/06/01/RedisCluster配置和部署/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
   </section>
 
   
@@ -1947,7 +1931,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">46</span>
+                    <span class="site-state-item-count">45</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -2032,7 +2016,7 @@
                     
                       
                     
-                    <span class="site-state-item-count">35</span>
+                    <span class="site-state-item-count">34</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
