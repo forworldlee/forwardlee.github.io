@@ -4,6 +4,25 @@
 
     
   <url>
+    <loc>http://www.forwardlee.com/2018/09/06/OpenResty%E7%94%9F%E4%BA%A7%E7%8E%AF%E5%A2%83%E4%B8%80%E8%87%B4%E6%80%A7hash%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E9%85%8D%E7%BD%AE%E7%AD%96%E7%95%A5/</loc>
+    <lastmod>2018-09-06T07:05:26.333Z</lastmod>
+    <data>
+        <display>
+        <title>OpenResty生产环境反向代理和七层负载均衡配置策略</title>
+        <pubTime>2018-09-05T23:42:16.000Z</pubTime>
+        
+        <tag>OpenResty</tag>
+         
+        <tag>负载均衡</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://www.forwardlee.com/2018/06/20/Nginx%E8%AF%B7%E6%B1%82%E5%88%86%E5%8F%91%E5%B1%82%E5%92%8C%E5%BA%94%E7%94%A8%E5%B1%82%E5%8F%8C%E5%B1%82%E6%9E%B6%E6%9E%84%E6%A8%A1%E5%BC%8F%E4%B8%8B%E7%9A%84%E5%BA%94%E7%94%A8%E5%B1%82%E6%95%B0%E6%8D%AE%E9%9D%99%E6%80%81%E5%8C%96%E7%AD%96%E7%95%A5/</loc>
     <lastmod>2018-09-05T10:12:09.338Z</lastmod>
     <data>
