@@ -341,6 +341,175 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2017/05/21/Docker清理命令/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ForwardLee">
+      <meta itemprop="description" content="总结学习方法，实践技术技能。">
+      <meta itemprop="image" content="/images/head.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="不忘初心">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/05/21/Docker清理命令/" itemprop="url">
+                  Docker清理命令
+                </a>
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2017-05-21 20:41:01" itemprop="dateCreated datePublished" datetime="2017-05-21T20:41:01+08:00">2017-05-21</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-05-21 20:44:33" itemprop="dateModified" datetime="2018-05-21T20:44:33+08:00">2018-05-21</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>杀死所有正在运行的容器</p>
+<p><code>docker kill $(docker ps -a -q)</code></p>
+<p>删除所有已经停止的容器</p>
+<p><code>docker rm $(docker ps -a -q)</code></p>
+<p>删除所有未打 dangling 标签的镜像</p>
+<p><code>docker rmi $(docker images -q -f dangling=true)</code></p>
+<p>删除所有镜像</p>
+<p><code>docker rmi $(docker images -q)</code></p>
+<p>为这些命令创建别名</p>
+<p> <code>~/.bash_aliases COMMOND</code></p>
+<p>杀死所有正在运行的容器.</p>
+<p><code>alias dockerkill=&#39;docker kill $(docker ps -a -q)&#39;</code></p>
+<p>删除所有已经停止的容器.</p>
+<p><code>alias dockercleanc=&#39;docker rm $(docker ps -a -q)&#39;</code></p>
+<p>删除所有未打标签的镜像.</p>
+<p><code>alias dockercleani=&#39;docker rmi $(docker images -q -f dangling=true)&#39;</code></p>
+<p>删除所有已经停止的容器和未打标签的镜像.</p>
+<p><code>alias dockerclean=&#39;dockercleanc || true &amp;&amp; dockercleani&#39;</code></p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2016/04/21/使用wait-notify-配合synchronized实现自定义阻塞队列MyBlockingQueue/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1313,7 +1482,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">46</span>
+                    <span class="site-state-item-count">47</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -1400,7 +1569,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">36</span>
+                      
+                    
+                    <span class="site-state-item-count">37</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>

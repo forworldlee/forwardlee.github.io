@@ -341,6 +341,183 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2018/05/23/CentOS-6-8-MySQL-5-5-with-Galera-Cluster环境搭建/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ForwardLee">
+      <meta itemprop="description" content="总结学习方法，实践技术技能。">
+      <meta itemprop="image" content="/images/head.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="不忘初心">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/05/23/CentOS-6-8-MySQL-5-5-with-Galera-Cluster环境搭建/" itemprop="url">
+                  CentOS 6.8+MySQL 5.5 with Galera Cluster环境搭建
+                </a>
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-05-23 00:13:16" itemprop="dateCreated datePublished" datetime="2018-05-23T00:13:16+08:00">2018-05-23</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-05-25 21:11:43" itemprop="dateModified" datetime="2018-05-25T21:11:43+08:00">2018-05-25</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">##先安装依赖库</span><br><span class="line">yum install libaio gcc gcc-c++ boost-devel scons check-devel openssl-devel</span><br><span class="line">ln -sf /usr/lib64/libssl.so.10 /usr/lib64/libssl.so.6</span><br><span class="line">ln -sf /usr/lib64/libcrypto.so.10 /usr/lib64/libcrypto.so.6</span><br><span class="line">##下载MySQL with wsrep源码包，目前最新版本是5.5.34-25.9</span><br><span class="line">wget https://launchpad.net/codership-mysql/5.5/5.5.34-25.9/+download/mysql-5.5.34_wsrep_25.9-linux-x86_64.tar.gz</span><br><span class="line">tar zxvf mysql-5.5*</span><br><span class="line">mv mysql-5.5.34_wsrep_25.9-linux-x86_64 /usr/local/mysql</span><br><span class="line">cd /usr/local/mysql/</span><br><span class="line">groupadd mysql</span><br><span class="line">useradd -r -g mysql mysql</span><br><span class="line">chown -R mysql:mysql .</span><br><span class="line">./scripts/mysql_install_db --no-defaults --datadir=/opt/mysqldb/ --user=mysql</span><br><span class="line">chown -R root .</span><br><span class="line">chown -R mysql /opt/mysqldb/</span><br><span class="line">echo &quot;export PATH=$PATH:/usr/local/mysql/bin&quot; &gt;&gt; /etc/profile</span><br><span class="line">source /etc/profile</span><br><span class="line">[root@localhost mysql]# vi /etc/my.cnf</span><br></pre></td></tr></table></figure>
+<p>[mysqld]<br>datadir=/opt/mysqldb<br>socket = /tmp/mysql.sock<br>user=mysql</p>
+<p>symbolic-links=0</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">##启动Mysql</span><br><span class="line">mysqld_safe --wsrep_cluster_address=gcomm:// &gt;/dev/null &amp;</span><br><span class="line"></span><br><span class="line">##安装Xtrabackup</span><br><span class="line">yum install perl-DBD-MySQL perl-Time-HiRes nc</span><br><span class="line"></span><br><span class="line">wget https://www.percona.com/downloads/XtraBackup/XtraBackup-2.1.9/RPM/rhel6/x86_64/percona-xtrabackup-2.1.9-744.rhel6.x86_64.rpm</span><br><span class="line"></span><br><span class="line">rpm -ivh percona-xtrabackup-2.1.9-744.rhel6.x86_64.rpm</span><br><span class="line"></span><br><span class="line">##安装Galera复制插件</span><br><span class="line">wget https://launchpad.net/galera/3.x/25.3.5/+download/galera-25.3.5-src.tar.gz</span><br><span class="line"></span><br><span class="line">tar zxvf galera-25.3.5-src.tar.gz</span><br><span class="line"></span><br><span class="line">cd galera-25.3.5-src</span><br><span class="line"></span><br><span class="line">scons</span><br><span class="line"></span><br><span class="line">cp garb/garbd /usr/local/mysql/bin/</span><br><span class="line"></span><br><span class="line">cp libgalera_smm.so /usr/local/mysql/lib/plugin/</span><br></pre></td></tr></table></figure>
+<p>mysql初始化配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p /var/lib/mysql</span><br><span class="line">mkdir -p /etc/mysql/conf.d/</span><br><span class="line">chown mysql:mysql /var/lib/mysql</span><br><span class="line">cp /usr/local/mysql/support-files/mysql.server /etc/init.d/mysql</span><br><span class="line">/usr/local/mysql/bin/mysqld_safe --wsrep_cluster_address=gcomm:// &gt;/dev/null &amp;</span><br><span class="line">##创建用于同步的帐号，注意替换掉示例值。</span><br><span class="line">mysql  -e &quot;SET wsrep_on=OFF; GRANT ALL ON *.* TO &apos;galera&apos;@&apos;%&apos; IDENTIFIED BY &apos;galera&apos;&quot;;</span><br><span class="line">##我使用的mysql版本再执行上述授权语句后，%代表任意主机，却不包含localhost，所以要给防伪localhost单独授权。</span><br><span class="line">mysql  -e &quot;SET wsrep_on=OFF; GRANT ALL ON *.* TO &apos;galera&apos;@&apos;localhost&apos; IDENTIFIED BY &apos;galera&apos;&quot;;</span><br><span class="line">##修改root帐号密码，注意替换掉示例值。</span><br><span class="line">mysql -e &quot;SET wsrep_on=OFF;GRANT ALL PRIVILEGES ON * . * TO &apos;root&apos;@&apos;localhost&apos; IDENTIFIED BY &apos;root&apos; WITH GRANT OPTION MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0 ; &quot;</span><br><span class="line"></span><br><span class="line">##查看授权</span><br><span class="line">mysql -uroot -proot;</span><br><span class="line">show grants for galera@&quot;%&quot;;</span><br><span class="line">show grants for galera@&quot;localhost&quot;;</span><br><span class="line"></span><br><span class="line">##关闭MySQL</span><br><span class="line">pkill mysql</span><br></pre></td></tr></table></figure>
+<p>Galera集群配置</p>
+<p>修改my.cnf</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/my.cnf</span><br></pre></td></tr></table></figure>
+<p>my.cnf配置：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">[mysqld]</span><br><span class="line">datadir=/opt/mysqldb</span><br><span class="line">socket = /tmp/mysql.sock</span><br><span class="line">user=mysql</span><br><span class="line"></span><br><span class="line">symbolic-links=0</span><br><span class="line"></span><br><span class="line">######galera conf start########</span><br><span class="line">server-id=101</span><br><span class="line">wsrep_node_name = mysql1</span><br><span class="line">wsrep_provider = /usr/local/mysql/lib/plugin/libgalera_smm.so</span><br><span class="line">wsrep_sst_method = rsync</span><br><span class="line">#使用sst的用户和密码，这里如果开启，需要在mysql上创建该用户，并授予其足够的权限</span><br><span class="line">wsrep_sst_auth=galera:galera</span><br><span class="line"># 配置集群的所有节点</span><br><span class="line">wsrep_cluster_address=gcomm://192.168.1.150:4567,192.168.1.151:4567</span><br><span class="line"># 配置自己的ip:port，每个配置各不相同</span><br><span class="line">wsrep_node_address=192.168.1.150:4567</span><br><span class="line">default_storage_engine=InnoDB</span><br><span class="line">innodb_autoinc_lock_mode=2</span><br><span class="line">innodb_locks_unsafe_for_binlog=1</span><br><span class="line">innodb_flush_log_at_trx_commit=1</span><br><span class="line">innodb_file_per_table=1</span><br><span class="line">binlog_format=ROW</span><br><span class="line">log-bin=mysql-bin</span><br><span class="line">relay-log=mysql-relay-bin</span><br><span class="line">log-slave-updates=1</span><br><span class="line"></span><br><span class="line">#[mysqld_safe]</span><br><span class="line">#log-error=/var/lib/mysql/mysqld.log</span><br><span class="line">#pid-file=/var/lib/mysql/mysqld.pid</span><br></pre></td></tr></table></figure>
+<p>节点mysql1启动</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/local/mysql/bin/mysqld_safe --wsrep_cluster_address=gcomm:// &gt;/dev/null &amp;</span><br></pre></td></tr></table></figure>
+<p>检查启动的端口，应该有3306和4567两个端口</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">netstat -tunlp |grep 4567</span><br><span class="line">netstat -tunlp |grep 3306</span><br></pre></td></tr></table></figure>
+<p>在集群中添加新的节点，并执行启动脚本。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/etc/init.d/mysql start</span><br></pre></td></tr></table></figure>
+<p>PS：复制虚拟机，设置新IP</p>
+<p>在新的虚拟机中修改ifconfig-eth0，设置IP为192.168.1.151，去掉UUID、MAC两个参数。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/sysconfig/network-scripts/ifcfg-eth0</span><br></pre></td></tr></table></figure>
+<p>重建路由</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rm -rf /etc/udev/rules.d/70-persistent-net.rules</span><br></pre></td></tr></table></figure>
+<p>重启虚拟机</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">shutown -r now</span><br></pre></td></tr></table></figure>
+<p>测试网络</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ping 192.168.1.150</span><br></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2018/05/22/Docker-Galera-Cluster环境快速搭建/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1835,175 +2012,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2017/05/21/Docker清理命令/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="ForwardLee">
-      <meta itemprop="description" content="总结学习方法，实践技术技能。">
-      <meta itemprop="image" content="/images/head.jpeg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="不忘初心">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/05/21/Docker清理命令/" itemprop="url">
-                  Docker清理命令
-                </a>
-              
-            
-          </h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2017-05-21 20:41:01" itemprop="dateCreated datePublished" datetime="2017-05-21T20:41:01+08:00">2017-05-21</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2018-05-21 20:44:33" itemprop="dateModified" datetime="2018-05-21T20:44:33+08:00">2018-05-21</time>
-              
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>杀死所有正在运行的容器</p>
-<p><code>docker kill $(docker ps -a -q)</code></p>
-<p>删除所有已经停止的容器</p>
-<p><code>docker rm $(docker ps -a -q)</code></p>
-<p>删除所有未打 dangling 标签的镜像</p>
-<p><code>docker rmi $(docker images -q -f dangling=true)</code></p>
-<p>删除所有镜像</p>
-<p><code>docker rmi $(docker images -q)</code></p>
-<p>为这些命令创建别名</p>
-<p> <code>~/.bash_aliases COMMOND</code></p>
-<p>杀死所有正在运行的容器.</p>
-<p><code>alias dockerkill=&#39;docker kill $(docker ps -a -q)&#39;</code></p>
-<p>删除所有已经停止的容器.</p>
-<p><code>alias dockercleanc=&#39;docker rm $(docker ps -a -q)&#39;</code></p>
-<p>删除所有未打标签的镜像.</p>
-<p><code>alias dockercleani=&#39;docker rmi $(docker images -q -f dangling=true)&#39;</code></p>
-<p>删除所有已经停止的容器和未打标签的镜像.</p>
-<p><code>alias dockerclean=&#39;dockercleanc || true &amp;&amp; dockercleani&#39;</code></p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2055,7 +2063,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">46</span>
+                    <span class="site-state-item-count">47</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -2142,7 +2150,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">36</span>
+                      
+                    
+                    <span class="site-state-item-count">37</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
