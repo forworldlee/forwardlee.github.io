@@ -341,6 +341,163 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2018/09/19/Nginx-keepalived实现高可用/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ForwardLee">
+      <meta itemprop="description" content="总结学习方法，实践技术技能。">
+      <meta itemprop="image" content="/images/head.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="不忘初心">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/09/19/Nginx-keepalived实现高可用/" itemprop="url">
+                  Nginx+keepalived实现高可用
+                </a>
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-09-19 18:19:43 / 修改时间：18:21:08" itemprop="dateCreated datePublished" datetime="2018-09-19T18:19:43+08:00">2018-09-19</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1><span id="安装openresty">安装openresty</span></h1><p><a href="http://www.forwardlee.com/2018/06/19/%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AENginx-LUA%E5%8F%8C%E5%B1%82Ngnix%E6%9E%B6%E6%9E%84/">openresty安装步骤参照这里</a></p>
+<h1><span id="安装keepalived">安装Keepalived</span></h1><p>Centos 6编译安装ipvsadm-1.26 </p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">[root@vpsback software]# uname -r</span><br><span class="line"></span><br><span class="line">2.6.32-696.30.1.el6.x86_64</span><br><span class="line"></span><br><span class="line">yum install -y kernel-devel-2.6.32-696.30.1.el6.x86_64</span><br><span class="line"></span><br><span class="line">ln -s /usr/src/kernels/2.6.32-696.30.1.el6.x86_64/ /usr/src/linux</span><br><span class="line"></span><br><span class="line">yum -y install popt popt-devel libnl libnl-devel popt-static </span><br><span class="line"></span><br><span class="line">tar xzvf ipvsadm-1.26.tar.gz</span><br><span class="line"></span><br><span class="line">cd ipvsadm-1.26</span><br><span class="line"></span><br><span class="line">make</span><br><span class="line"></span><br><span class="line">make install</span><br><span class="line"></span><br><span class="line">[root@vpsback ipvsadm-1.26]# ipvsadm --version</span><br><span class="line"></span><br><span class="line">ipvsadm v1.26 2008/5/15 (compiled with popt and IPVS v1.2.1)</span><br><span class="line"></span><br><span class="line">[root@vpsback ipvsadm-1.26]# ipvsadm -ln</span><br><span class="line"></span><br><span class="line">IP Virtual Server version 1.2.1 (size=4096)</span><br><span class="line"></span><br><span class="line">Prot LocalAddress:Port Scheduler Flags</span><br><span class="line"></span><br><span class="line"><span class="meta">  -&gt;</span> RemoteAddress:Port           Forward Weight ActiveConn InActConn</span><br></pre></td></tr></table></figure>
+<p>安装keepalived软件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"> tar zxvf keepalived-1.3.5.tar.gz </span><br><span class="line"> cd ikeepalived-1.3.5</span><br><span class="line"> ./configure --prefix=/usr/local/keepalived --with-kernel-dir=/usr/src/kernels/2.6.32-696.30.1.el6.x86_64  </span><br><span class="line">make</span><br><span class="line">make install</span><br></pre></td></tr></table></figure>
+<p>配置和启动keepalived</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkdir  /etc/keepalived</span><br><span class="line">vi /etc/keepalived/keepalived.conf</span><br></pre></td></tr></table></figure>
+<p>keepalived.conf</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">! Configuration File for keepalived</span><br><span class="line"></span><br><span class="line">global_defs &#123;</span><br><span class="line">   notification_email &#123;</span><br><span class="line">     acassen</span><br><span class="line">   &#125;</span><br><span class="line">   notification_email_from Alexandre.Cassen@firewall.loc</span><br><span class="line">   smtp_server 192.168.200.1</span><br><span class="line">   smtp_connect_timeout 30</span><br><span class="line">   router_id LVS_DEVEL</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">vrrp_script chk_nginx &#123;</span><br><span class="line">    script "/etc/keepalived/check_nginx.sh"</span><br><span class="line">    interval 2</span><br><span class="line">    weight -5</span><br><span class="line">    fall 3</span><br><span class="line">    rise 2</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">vrrp_instance VI_1 &#123;</span><br><span class="line">    state MASTER  ##备用keepalived配置为BACKUP</span><br><span class="line">    interface eth0</span><br><span class="line">    virtual_router_id 50 #虚拟路由标示，相同实例，需相同标示。</span><br><span class="line">    nopreempt</span><br><span class="line">    priority 100 #优先级 数字越大 优先级越高 MASTER的优先级高于BACKUP优先级（如master 100,backup 50）</span><br><span class="line">    advert_int 1</span><br><span class="line">    virtual_ipaddress &#123;</span><br><span class="line">        192.168.1.230  ##设定虚拟IP地址 可以设置多个 每行一个</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>/etc/keepalived/nginx_check.sh</code>内容如下</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span>!/bin/bash</span><br><span class="line">A=`ps -C nginx –no-header |wc -l`</span><br><span class="line">if [ $A -eq 0 ];then</span><br><span class="line">    /usr/servers/nginx/sbin/nginx</span><br><span class="line">    sleep 2</span><br><span class="line">    if [ `ps -C nginx --no-header |wc -l` -eq 0 ];then</span><br><span class="line">        killall keepalived</span><br><span class="line">    fi</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
+<p>启动keepalived</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/servers/keepalived/sbin/keepalived</span><br></pre></td></tr></table></figure>
+<p>查看虚拟IP和真实IP的状态</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost keepalived]# ip a | grep eth0</span><br><span class="line">2: eth0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc pfifo_fast state UP qlen 1000</span><br><span class="line">    inet 192.168.1.231/24 brd 192.168.1.255 scope global eth0</span><br><span class="line">    inet 192.168.1.230/32 scope global eth0</span><br></pre></td></tr></table></figure>
+<p>重启keepalived</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/servers/keepalived/sbin/keepalived --signum=reload</span><br></pre></td></tr></table></figure>
+<p>通过浏览器访问<a href="http://192.168.1.230:81/查看是否请求到了http://192.168.1.231:81/" target="_blank" rel="noopener">http://192.168.1.230:81/查看是否请求到了http://192.168.1.231:81/</a></p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2018/09/07/Redis和Zookeeper实现分布式锁的原理对比/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1704,168 +1861,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2018/07/15/HashSet、HashMap、ArrayList线程不安全与对策/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="ForwardLee">
-      <meta itemprop="description" content="总结学习方法，实践技术技能。">
-      <meta itemprop="image" content="/images/head.jpeg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="不忘初心">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/07/15/HashSet、HashMap、ArrayList线程不安全与对策/" itemprop="url">
-                  HashSet、HashMap 、ArrayList线程不安全与对策
-                </a>
-              
-            
-          </h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2018-07-15 11:34:52" itemprop="dateCreated datePublished" datetime="2018-07-15T11:34:52+08:00">2018-07-15</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2018-07-20 20:19:41" itemprop="dateModified" datetime="2018-07-20T20:19:41+08:00">2018-07-20</time>
-              
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="测试用例"><a href="#测试用例" class="headerlink" title="测试用例"></a>测试用例</h1><p>设定2000个请求，分多次并发请求往容器内添加元素，使用信号量Semaphore控制并发量的大小，查看集合中元素数量是否等于2000，等于2000表示容器是并发线程安全的，小于2000表示容器是并发线程不安全的。</p>
-<h1 id="普通容器的线程不安全示例"><a href="#普通容器的线程不安全示例" class="headerlink" title="普通容器的线程不安全示例"></a>普通容器的线程不安全示例</h1><h2 id="HashSet线程不安全示例"><a href="#HashSet线程不安全示例" class="headerlink" title="HashSet线程不安全示例"></a>HashSet线程不安全示例</h2><h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testHashSet</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> threadSize = <span class="number">2000</span>;</span><br><span class="line">    HashSet set = <span class="keyword">new</span> HashSet&lt;&gt;();</span><br><span class="line">    ExecutorService service = Executors.newFixedThreadPool(threadSize);</span><br><span class="line">    <span class="keyword">final</span> Semaphore semaphore = <span class="keyword">new</span> Semaphore(<span class="number">500</span>);<span class="comment">//500的信号量相当于500个并发</span></span><br><span class="line">    <span class="keyword">final</span> CountDownLatch countDownLatch = <span class="keyword">new</span> CountDownLatch(threadSize);</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; threadSize; i++) &#123;</span><br><span class="line">        service.submit(()-&gt;&#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                semaphore.acquire();</span><br><span class="line">                set.add(Thread.currentThread().getId());</span><br><span class="line">                semaphore.release();</span><br><span class="line">                countDownLatch.countDown();</span><br><span class="line">            &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    countDownLatch.await();<span class="comment">//主线程等待，直到countDownLatch被减到0，主线程再继续执行。</span></span><br><span class="line">    service.shutdown();</span><br><span class="line">    log.info(<span class="string">"集合大小：&#123;&#125;"</span>,set.size());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="执行结果"><a href="#执行结果" class="headerlink" title="执行结果"></a>执行结果</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">12:26:39.881 [main] INFO com.hledu.project1.front.concurrent.CollectionsConcurrent - 集合大小：1998</span><br></pre></td></tr></table></figure>
-<h2 id="HashMap线程不安全示例"><a href="#HashMap线程不安全示例" class="headerlink" title="HashMap线程不安全示例"></a>HashMap线程不安全示例</h2><h3 id="代码-1"><a href="#代码-1" class="headerlink" title="代码"></a>代码</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testHashMap</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> threadSize = <span class="number">2000</span>;</span><br><span class="line">    HashMap&lt;Object, Object&gt; map = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">    ExecutorService service = Executors.newFixedThreadPool(threadSize);</span><br><span class="line">    <span class="keyword">final</span> Semaphore semaphore = <span class="keyword">new</span> Semaphore(<span class="number">1000</span>);<span class="comment">//1000的信号量相当于1000个并发</span></span><br><span class="line">    <span class="keyword">final</span> CountDownLatch countDownLatch = <span class="keyword">new</span> CountDownLatch(threadSize);</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; threadSize; i++) &#123;</span><br><span class="line">        service.submit(()-&gt;&#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                semaphore.acquire();</span><br><span class="line">                map.put(Thread.currentThread().getId(), Thread.currentThread().getId());</span><br><span class="line">                semaphore.release();</span><br><span class="line">                countDownLatch.countDown();</span><br><span class="line">            &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    countDownLatch.await();<span class="comment">//主线程等待，直到countDownLatch被减到0，主线程再继续执行。</span></span><br><span class="line">    service.shutdown();</span><br><span class="line">    log.info(<span class="string">"集合大小：&#123;&#125;"</span>,map.size());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="执行结果-1"><a href="#执行结果-1" class="headerlink" title="执行结果"></a>执行结果</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">12:35:48.188 [main] INFO com.hledu.project1.front.concurrent.CollectionsConcurrent - 集合大小：1999</span><br></pre></td></tr></table></figure>
-<h2 id="ArrayList线程不安全示例"><a href="#ArrayList线程不安全示例" class="headerlink" title="ArrayList线程不安全示例"></a>ArrayList线程不安全示例</h2><h3 id="代码-2"><a href="#代码-2" class="headerlink" title="代码"></a>代码</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testArrayList</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">       <span class="keyword">int</span> threadSize = <span class="number">2000</span>;</span><br><span class="line">       ArrayList&lt;Object&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">       ExecutorService service = Executors.newFixedThreadPool(threadSize);</span><br><span class="line">       <span class="keyword">final</span> Semaphore semaphore = <span class="keyword">new</span> Semaphore(<span class="number">500</span>);<span class="comment">//500的信号量相当于500个并发</span></span><br><span class="line">       <span class="keyword">final</span> CountDownLatch countDownLatch = <span class="keyword">new</span> CountDownLatch(threadSize);</span><br><span class="line">       <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; threadSize; i++) &#123;</span><br><span class="line">           service.submit(()-&gt;&#123;</span><br><span class="line">               <span class="keyword">try</span> &#123;</span><br><span class="line">                   semaphore.acquire();</span><br><span class="line">                   list.add(Thread.currentThread().getId());</span><br><span class="line">                   semaphore.release();</span><br><span class="line">                   countDownLatch.countDown();</span><br><span class="line">               &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                   e.printStackTrace();</span><br><span class="line">               &#125;</span><br><span class="line">           &#125;);</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       countDownLatch.await();<span class="comment">//主线程等待，直到countDownLatch被减到0，主线程再继续执行。</span></span><br><span class="line">       service.shutdown();</span><br><span class="line">       log.info(<span class="string">"集合大小：&#123;&#125;"</span>,list.size());</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
-<h3 id="执行结果-2"><a href="#执行结果-2" class="headerlink" title="执行结果"></a>执行结果</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">12:44:06.468 [main] INFO com.hledu.project1.front.concurrent.CollectionsConcurrent - 集合大小：1999</span><br></pre></td></tr></table></figure>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/07/15/HashSet、HashMap、ArrayList线程不安全与对策/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1917,7 +1912,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">47</span>
+                    <span class="site-state-item-count">48</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>

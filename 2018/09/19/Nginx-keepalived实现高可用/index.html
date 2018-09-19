@@ -108,16 +108,18 @@
 
 
 
-  <meta name="description" content="总结学习方法，实践技术技能。">
-<meta property="og:type" content="website">
-<meta property="og:title" content="不忘初心">
-<meta property="og:url" content="http://www.forwardlee.com/archives/2018/07/index.html">
+  <meta name="description" content="安装openrestyopenresty安装步骤参照这里 安装KeepalivedCentos 6编译安装ipvsadm-1.26  1234567891011121314151617181920212223242526272829[root@vpsback software]# uname -r2.6.32-696.30.1.el6.x86_64yum install -y kernel-dev">
+<meta name="keywords" content="Keepalived,OpenResty">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Nginx+keepalived实现高可用">
+<meta property="og:url" content="http://www.forwardlee.com/2018/09/19/Nginx-keepalived实现高可用/index.html">
 <meta property="og:site_name" content="不忘初心">
-<meta property="og:description" content="总结学习方法，实践技术技能。">
+<meta property="og:description" content="安装openrestyopenresty安装步骤参照这里 安装KeepalivedCentos 6编译安装ipvsadm-1.26  1234567891011121314151617181920212223242526272829[root@vpsback software]# uname -r2.6.32-696.30.1.el6.x86_64yum install -y kernel-dev">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-09-19T10:21:08.583Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="不忘初心">
-<meta name="twitter:description" content="总结学习方法，实践技术技能。">
+<meta name="twitter:title" content="Nginx+keepalived实现高可用">
+<meta name="twitter:description" content="安装openrestyopenresty安装步骤参照这里 安装KeepalivedCentos 6编译安装ipvsadm-1.26  1234567891011121314151617181920212223242526272829[root@vpsback software]# uname -r2.6.32-696.30.1.el6.x86_64yum install -y kernel-dev">
 
 
 
@@ -126,7 +128,7 @@
 
 
 
-  <link rel="canonical" href="http://www.forwardlee.com/archives/2018/07/"/>
+  <link rel="canonical" href="http://www.forwardlee.com/2018/09/19/Nginx-keepalived实现高可用/"/>
 
 
 
@@ -136,7 +138,7 @@
   };
 </script>
 
-  <title>归档 | 不忘初心</title>
+  <title>Nginx+keepalived实现高可用 | 不忘初心</title>
   
 
 
@@ -183,7 +185,7 @@
     
   
 
-  <div class="container sidebar-position-left page-archive">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -248,7 +250,7 @@
         
         
           
-          <li class="menu-item menu-item-archives menu-item-active">
+          <li class="menu-item menu-item-archives">
     <a href="/archives/" rel="section">
       <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
   </li>
@@ -320,364 +322,237 @@
           
             
 
-    
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-    
-
-  
-
-
           
           <div id="content" class="content">
             
 
+  <div id="posts" class="posts-expand">
+    
+
+  
+
   
   
   
-  <div class="post-block archive">
-    <div id="posts" class="posts-collapse">
-      <span class="archive-move-on"></span>
 
-      
-      <span class="archive-page-counter">
-        
-        
-         
-        
-        还行! 目前共计 48 篇日志。 继续努力。
-      </span>
-      
+  
 
-      
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2018/09/19/Nginx-keepalived实现高可用/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ForwardLee">
+      <meta itemprop="description" content="总结学习方法，实践技术技能。">
+      <meta itemprop="image" content="/images/head.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="不忘初心">
+    </span>
+
+    
+      <header class="post-header">
 
         
         
+          <h2 class="post-title" itemprop="name headline">Nginx+keepalived实现高可用
+              
+            
+          </h2>
         
 
-        
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-09-19 18:19:43 / 修改时间：18:21:08" itemprop="dateCreated datePublished" datetime="2018-09-19T18:19:43+08:00">2018-09-19</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
           
-          <div class="collection-title">
-            <h2 class="archive-year" id="archive-year-2018">2018</h2>
-          </div>
-        
-        
 
-        
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/09/19/Nginx-keepalived实现高可用/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count gitment-comments-count" data-xid="/2018/09/19/Nginx-keepalived实现高可用/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
 
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+          
+          
 
-      <h3 class="post-title">
-        
-            <a class="post-title-link" href="/2018/07/26/多级缓存实现服务高可用背后缓存雪崩和缓存穿透问题的解决方案/" itemprop="url">
-              
-                <span itemprop="name">多级缓存实现服务高可用背后缓存雪崩和缓存穿透问题的解决方案</span>
-              
-            </a>
-        
-      </h3>
+          
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-07-26T15:54:49+08:00"
-              content="2018-07-26" >
-          07-26
-        </time>
-      </div>
+          
 
-    </header>
-  </article>
+          
 
+        </div>
+      </header>
+    
 
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h3 class="post-title">
-        
-            <a class="post-title-link" href="/2018/07/25/Hystrix生产环境实践/" itemprop="url">
-              
-                <span itemprop="name">Hystrix生产环境配置实践</span>
-              
-            </a>
-        
-      </h3>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-07-25T15:28:43+08:00"
-              content="2018-07-25" >
-          07-25
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h3 class="post-title">
-        
-            <a class="post-title-link" href="/2018/07/24/Hystrix在实际应用中的多级降级策略/" itemprop="url">
-              
-                <span itemprop="name">Hystrix在实际应用中的多级降级和手动降级策略</span>
-              
-            </a>
-        
-      </h3>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-07-24T17:57:50+08:00"
-              content="2018-07-24" >
-          07-24
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
       
 
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h3 class="post-title">
-        
-            <a class="post-title-link" href="/2018/07/24/Hystrix高并发请求合并处理/" itemprop="url">
-              
-                <span itemprop="name">Hystrix高并发请求合并处理</span>
-              
-            </a>
-        
-      </h3>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-07-24T08:59:49+08:00"
-              content="2018-07-24" >
-          07-24
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
+      
+        <h1><span id="安装openresty">安装openresty</span></h1><p><a href="http://www.forwardlee.com/2018/06/19/%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AENginx-LUA%E5%8F%8C%E5%B1%82Ngnix%E6%9E%B6%E6%9E%84/">openresty安装步骤参照这里</a></p>
+<h1><span id="安装keepalived">安装Keepalived</span></h1><p>Centos 6编译安装ipvsadm-1.26 </p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">[root@vpsback software]# uname -r</span><br><span class="line"></span><br><span class="line">2.6.32-696.30.1.el6.x86_64</span><br><span class="line"></span><br><span class="line">yum install -y kernel-devel-2.6.32-696.30.1.el6.x86_64</span><br><span class="line"></span><br><span class="line">ln -s /usr/src/kernels/2.6.32-696.30.1.el6.x86_64/ /usr/src/linux</span><br><span class="line"></span><br><span class="line">yum -y install popt popt-devel libnl libnl-devel popt-static </span><br><span class="line"></span><br><span class="line">tar xzvf ipvsadm-1.26.tar.gz</span><br><span class="line"></span><br><span class="line">cd ipvsadm-1.26</span><br><span class="line"></span><br><span class="line">make</span><br><span class="line"></span><br><span class="line">make install</span><br><span class="line"></span><br><span class="line">[root@vpsback ipvsadm-1.26]# ipvsadm --version</span><br><span class="line"></span><br><span class="line">ipvsadm v1.26 2008/5/15 (compiled with popt and IPVS v1.2.1)</span><br><span class="line"></span><br><span class="line">[root@vpsback ipvsadm-1.26]# ipvsadm -ln</span><br><span class="line"></span><br><span class="line">IP Virtual Server version 1.2.1 (size=4096)</span><br><span class="line"></span><br><span class="line">Prot LocalAddress:Port Scheduler Flags</span><br><span class="line"></span><br><span class="line"><span class="meta">  -&gt;</span> RemoteAddress:Port           Forward Weight ActiveConn InActConn</span><br></pre></td></tr></table></figure>
+<p>安装keepalived软件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"> tar zxvf keepalived-1.3.5.tar.gz </span><br><span class="line"> cd ikeepalived-1.3.5</span><br><span class="line"> ./configure --prefix=/usr/local/keepalived --with-kernel-dir=/usr/src/kernels/2.6.32-696.30.1.el6.x86_64  </span><br><span class="line">make</span><br><span class="line">make install</span><br></pre></td></tr></table></figure>
+<p>配置和启动keepalived</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkdir  /etc/keepalived</span><br><span class="line">vi /etc/keepalived/keepalived.conf</span><br></pre></td></tr></table></figure>
+<p>keepalived.conf</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">! Configuration File for keepalived</span><br><span class="line"></span><br><span class="line">global_defs &#123;</span><br><span class="line">   notification_email &#123;</span><br><span class="line">     acassen</span><br><span class="line">   &#125;</span><br><span class="line">   notification_email_from Alexandre.Cassen@firewall.loc</span><br><span class="line">   smtp_server 192.168.200.1</span><br><span class="line">   smtp_connect_timeout 30</span><br><span class="line">   router_id LVS_DEVEL</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">vrrp_script chk_nginx &#123;</span><br><span class="line">    script "/etc/keepalived/check_nginx.sh"</span><br><span class="line">    interval 2</span><br><span class="line">    weight -5</span><br><span class="line">    fall 3</span><br><span class="line">    rise 2</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">vrrp_instance VI_1 &#123;</span><br><span class="line">    state MASTER  ##备用keepalived配置为BACKUP</span><br><span class="line">    interface eth0</span><br><span class="line">    virtual_router_id 50 #虚拟路由标示，相同实例，需相同标示。</span><br><span class="line">    nopreempt</span><br><span class="line">    priority 100 #优先级 数字越大 优先级越高 MASTER的优先级高于BACKUP优先级（如master 100,backup 50）</span><br><span class="line">    advert_int 1</span><br><span class="line">    virtual_ipaddress &#123;</span><br><span class="line">        192.168.1.230  ##设定虚拟IP地址 可以设置多个 每行一个</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>/etc/keepalived/nginx_check.sh</code>内容如下</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span>!/bin/bash</span><br><span class="line">A=`ps -C nginx –no-header |wc -l`</span><br><span class="line">if [ $A -eq 0 ];then</span><br><span class="line">    /usr/servers/nginx/sbin/nginx</span><br><span class="line">    sleep 2</span><br><span class="line">    if [ `ps -C nginx --no-header |wc -l` -eq 0 ];then</span><br><span class="line">        killall keepalived</span><br><span class="line">    fi</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
+<p>启动keepalived</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/servers/keepalived/sbin/keepalived</span><br></pre></td></tr></table></figure>
+<p>查看虚拟IP和真实IP的状态</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost keepalived]# ip a | grep eth0</span><br><span class="line">2: eth0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc pfifo_fast state UP qlen 1000</span><br><span class="line">    inet 192.168.1.231/24 brd 192.168.1.255 scope global eth0</span><br><span class="line">    inet 192.168.1.230/32 scope global eth0</span><br></pre></td></tr></table></figure>
+<p>重启keepalived</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/servers/keepalived/sbin/keepalived --signum=reload</span><br></pre></td></tr></table></figure>
+<p>通过浏览器访问<a href="http://192.168.1.230:81/查看是否请求到了http://192.168.1.231:81/" target="_blank" rel="noopener">http://192.168.1.230:81/查看是否请求到了http://192.168.1.231:81/</a></p>
 
       
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h3 class="post-title">
-        
-            <a class="post-title-link" href="/2018/07/23/图解hystrix请求降级条件和请求调用过程原理/" itemprop="url">
-              
-                <span itemprop="name">图解hystrix请求限流、降级条件和请求调用过程原理</span>
-              
-            </a>
-        
-      </h3>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-07-23T09:43:40+08:00"
-              content="2018-07-23" >
-          07-23
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h3 class="post-title">
-        
-            <a class="post-title-link" href="/2018/07/15/HashSet、HashMap、ArrayList线程不安全与对策/" itemprop="url">
-              
-                <span itemprop="name">HashSet、HashMap 、ArrayList线程不安全与对策</span>
-              
-            </a>
-        
-      </h3>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-07-15T11:34:52+08:00"
-              content="2018-07-15" >
-          07-15
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h3 class="post-title">
-        
-            <a class="post-title-link" href="/2018/07/04/Docker常用命令/" itemprop="url">
-              
-                <span itemprop="name">Docker常用命令</span>
-              
-            </a>
-        
-      </h3>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-07-04T11:10:56+08:00"
-              content="2018-07-04" >
-          07-04
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h3 class="post-title">
-        
-            <a class="post-title-link" href="/2018/07/02/Nexus私服搭建/" itemprop="url">
-              
-                <span itemprop="name">Nexus私服搭建</span>
-              
-            </a>
-        
-      </h3>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-07-02T17:21:57+08:00"
-              content="2018-07-02" >
-          07-02
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
     </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>谢谢你请我吃糖果</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wxcode.jpeg" alt="ForwardLee 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Keepalived/" rel="tag"># Keepalived</a>
+          
+            <a href="/tags/OpenResty/" rel="tag"># OpenResty</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/09/07/Redis和Zookeeper实现分布式锁的原理对比/" rel="next" title="Redis和Zookeeper实现分布式锁的原理对比">
+                <i class="fa fa-chevron-left"></i> Redis和Zookeeper实现分布式锁的原理对比
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
 
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
           
+
+  
+    <div class="comments" id="comments">
+      
+        <div id="gitment-container"></div>
+      
+    </div>
+
+  
+
+
 
         </div>
         
@@ -698,8 +573,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -877,6 +761,22 @@
       </section>
 
       
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">1.</span> <span class="nav-text">安装openresty</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">2.</span> <span class="nav-text">安装Keepalived</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
 
       
 
@@ -1012,6 +912,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.3.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.3.0"></script>
+
+
 
   
 
@@ -1053,6 +957,30 @@
 
     
 
+    
+      <script type="text/javascript">
+      function renderGitment(){
+        var gitment = new Gitmint({
+            id: 'page_s_blog_2018-09-19 06:19:43',
+            owner: 'forworldlee',
+            repo: 'forworldlee.github.io',
+            
+            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
+            
+            oauth: {
+            
+            
+                client_secret: 'e84ed43a122ffe38e55a2372f27e4639ec673564',
+            
+                client_id: '38b9430818b98ed8d839'
+            }});
+        gitment.render('gitment-container');
+      }
+
+      
+      renderGitment();
+      
+      </script>
     
 
 

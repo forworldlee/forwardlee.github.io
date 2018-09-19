@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.forwardlee.com/"/>
-  <updated>2018-09-07T04:13:23.667Z</updated>
+  <updated>2018-09-19T10:21:08.583Z</updated>
   <id>http://www.forwardlee.com/</id>
   
   <author>
@@ -14,6 +14,46 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Nginx+keepalived实现高可用</title>
+    <link href="http://www.forwardlee.com/2018/09/19/Nginx-keepalived%E5%AE%9E%E7%8E%B0%E9%AB%98%E5%8F%AF%E7%94%A8/"/>
+    <id>http://www.forwardlee.com/2018/09/19/Nginx-keepalived实现高可用/</id>
+    <published>2018-09-19T10:19:43.000Z</published>
+    <updated>2018-09-19T10:21:08.583Z</updated>
+    
+    <content type="html"><![CDATA[<h1><span id="安装openresty">安装openresty</span></h1><p><a href="http://www.forwardlee.com/2018/06/19/%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AENginx-LUA%E5%8F%8C%E5%B1%82Ngnix%E6%9E%B6%E6%9E%84/">openresty安装步骤参照这里</a></p>
+<h1><span id="安装keepalived">安装Keepalived</span></h1><p>Centos 6编译安装ipvsadm-1.26 </p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">[root@vpsback software]# uname -r</span><br><span class="line"></span><br><span class="line">2.6.32-696.30.1.el6.x86_64</span><br><span class="line"></span><br><span class="line">yum install -y kernel-devel-2.6.32-696.30.1.el6.x86_64</span><br><span class="line"></span><br><span class="line">ln -s /usr/src/kernels/2.6.32-696.30.1.el6.x86_64/ /usr/src/linux</span><br><span class="line"></span><br><span class="line">yum -y install popt popt-devel libnl libnl-devel popt-static </span><br><span class="line"></span><br><span class="line">tar xzvf ipvsadm-1.26.tar.gz</span><br><span class="line"></span><br><span class="line">cd ipvsadm-1.26</span><br><span class="line"></span><br><span class="line">make</span><br><span class="line"></span><br><span class="line">make install</span><br><span class="line"></span><br><span class="line">[root@vpsback ipvsadm-1.26]# ipvsadm --version</span><br><span class="line"></span><br><span class="line">ipvsadm v1.26 2008/5/15 (compiled with popt and IPVS v1.2.1)</span><br><span class="line"></span><br><span class="line">[root@vpsback ipvsadm-1.26]# ipvsadm -ln</span><br><span class="line"></span><br><span class="line">IP Virtual Server version 1.2.1 (size=4096)</span><br><span class="line"></span><br><span class="line">Prot LocalAddress:Port Scheduler Flags</span><br><span class="line"></span><br><span class="line"><span class="meta">  -&gt;</span> RemoteAddress:Port           Forward Weight ActiveConn InActConn</span><br></pre></td></tr></table></figure>
+<p>安装keepalived软件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"> tar zxvf keepalived-1.3.5.tar.gz </span><br><span class="line"> cd ikeepalived-1.3.5</span><br><span class="line"> ./configure --prefix=/usr/local/keepalived --with-kernel-dir=/usr/src/kernels/2.6.32-696.30.1.el6.x86_64  </span><br><span class="line">make</span><br><span class="line">make install</span><br></pre></td></tr></table></figure>
+<p>配置和启动keepalived</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkdir  /etc/keepalived</span><br><span class="line">vi /etc/keepalived/keepalived.conf</span><br></pre></td></tr></table></figure>
+<p>keepalived.conf</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">! Configuration File for keepalived</span><br><span class="line"></span><br><span class="line">global_defs &#123;</span><br><span class="line">   notification_email &#123;</span><br><span class="line">     acassen</span><br><span class="line">   &#125;</span><br><span class="line">   notification_email_from Alexandre.Cassen@firewall.loc</span><br><span class="line">   smtp_server 192.168.200.1</span><br><span class="line">   smtp_connect_timeout 30</span><br><span class="line">   router_id LVS_DEVEL</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">vrrp_script chk_nginx &#123;</span><br><span class="line">    script "/etc/keepalived/check_nginx.sh"</span><br><span class="line">    interval 2</span><br><span class="line">    weight -5</span><br><span class="line">    fall 3</span><br><span class="line">    rise 2</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">vrrp_instance VI_1 &#123;</span><br><span class="line">    state MASTER  ##备用keepalived配置为BACKUP</span><br><span class="line">    interface eth0</span><br><span class="line">    virtual_router_id 50 #虚拟路由标示，相同实例，需相同标示。</span><br><span class="line">    nopreempt</span><br><span class="line">    priority 100 #优先级 数字越大 优先级越高 MASTER的优先级高于BACKUP优先级（如master 100,backup 50）</span><br><span class="line">    advert_int 1</span><br><span class="line">    virtual_ipaddress &#123;</span><br><span class="line">        192.168.1.230  ##设定虚拟IP地址 可以设置多个 每行一个</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>/etc/keepalived/nginx_check.sh</code>内容如下</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span>!/bin/bash</span><br><span class="line">A=`ps -C nginx –no-header |wc -l`</span><br><span class="line">if [ $A -eq 0 ];then</span><br><span class="line">    /usr/servers/nginx/sbin/nginx</span><br><span class="line">    sleep 2</span><br><span class="line">    if [ `ps -C nginx --no-header |wc -l` -eq 0 ];then</span><br><span class="line">        killall keepalived</span><br><span class="line">    fi</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
+<p>启动keepalived</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/servers/keepalived/sbin/keepalived</span><br></pre></td></tr></table></figure>
+<p>查看虚拟IP和真实IP的状态</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost keepalived]# ip a | grep eth0</span><br><span class="line">2: eth0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc pfifo_fast state UP qlen 1000</span><br><span class="line">    inet 192.168.1.231/24 brd 192.168.1.255 scope global eth0</span><br><span class="line">    inet 192.168.1.230/32 scope global eth0</span><br></pre></td></tr></table></figure>
+<p>重启keepalived</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/servers/keepalived/sbin/keepalived --signum=reload</span><br></pre></td></tr></table></figure>
+<p>通过浏览器访问<a href="http://192.168.1.230:81/查看是否请求到了http://192.168.1.231:81/" target="_blank" rel="noopener">http://192.168.1.230:81/查看是否请求到了http://192.168.1.231:81/</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1&gt;&lt;span id=&quot;安装openresty&quot;&gt;安装openresty&lt;/span&gt;&lt;/h1&gt;&lt;p&gt;&lt;a href=&quot;http://www.forwardlee.com/2018/06/19/%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AENginx
+    
+    </summary>
+    
+    
+      <category term="Keepalived" scheme="http://www.forwardlee.com/tags/Keepalived/"/>
+    
+      <category term="OpenResty" scheme="http://www.forwardlee.com/tags/OpenResty/"/>
+    
+  </entry>
   
   <entry>
     <title>Redis和Zookeeper实现分布式锁的原理对比</title>
@@ -1992,9 +2032,9 @@
     </summary>
     
     
-      <category term="Nginx" scheme="http://www.forwardlee.com/tags/Nginx/"/>
-    
       <category term="OpenResty" scheme="http://www.forwardlee.com/tags/OpenResty/"/>
+    
+      <category term="Nginx" scheme="http://www.forwardlee.com/tags/Nginx/"/>
     
   </entry>
   
@@ -2181,58 +2221,6 @@
       <category term="数据不一致" scheme="http://www.forwardlee.com/tags/%E6%95%B0%E6%8D%AE%E4%B8%8D%E4%B8%80%E8%87%B4/"/>
     
       <category term="数据丢失" scheme="http://www.forwardlee.com/tags/%E6%95%B0%E6%8D%AE%E4%B8%A2%E5%A4%B1/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Redis生产环境常见问题及优化</title>
-    <link href="http://www.forwardlee.com/2018/06/06/Redis%E7%94%9F%E4%BA%A7%E7%8E%AF%E5%A2%83%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E5%8F%8A%E4%BC%98%E5%8C%96/"/>
-    <id>http://www.forwardlee.com/2018/06/06/Redis生产环境常见问题及优化/</id>
-    <published>2018-06-06T06:33:39.000Z</published>
-    <updated>2018-06-06T09:20:09.813Z</updated>
-    
-    <content type="html"><![CDATA[<h1><span id="fork导致的redis延时增大">fork导致的Redis延时增大</span></h1><p>Redis在进行RDB和AOF持久化时，为了使主进程继续提供读写服务，Redis就会fork一个子进程进行RDB和AOF持久化，子进程会拷贝Redis主进程的全量数据，此时Redis会阻塞执行读写服务，如果Redis中存储的数据量过大，那么在拷贝时耗时会增大，因为阻塞导致Redis的响应速度从几毫秒延迟到几百或者达到1秒。</p>
-<p><strong>解决方案：</strong>单个Redis实例分配的内存空间不要大于10G，降低fork给Redis带来的延迟影响</p>
-<h1><span id="一主多从导致的复制风暴问题">一主多从导致的复制风暴问题</span></h1><p>如果一个Master带有n多个Slava，可能会出现Slave在某一个时间节点，同时对Master进行复制，那么就会导致网络带宽被复制数据占满，导致Redis服务不可用。</p>
-<p><strong>解决方案：</strong>把围绕一个Master创建n个Slave的网络拓扑结构进行优化，减少1个Master的Slave节点。Redis集群只支持一层Slave，如果要使用更多的Slave节点，那么就不能使用集群，而使用Redis的主从复制能力进行纵向扩展，给Slave节点创建Slave节点，使Redis节点成树形结构。</p>
-<a id="more"></a>
-<h1><span id="aof持久化导致的redis阻塞问题">AOF持久化导致的Redis阻塞问题</span></h1><p>Redis的AOF持久化方式，把数据以Redis写指令日志的形式先被写入os cache，然后进每秒进行fsync操作，把数据从os cache落入磁盘。Redis自身会对fsync的状态进行检查，如果两次fsync操作的时间间隔超过2s，那么Redis的写数据服务就会被阻塞，整个Redis的写服务就会被严重拖慢。</p>
-<p><strong>解决方案：</strong> 造成两次fsync操作的间隔超过两秒，是因为磁盘的I/O性能不足所导致数据不能高效地从os cache落入磁盘，可以通过更换SSD固态硬盘，提高磁盘的I/O来提高fsync的数据写入速度，减少延迟。</p>
-<h1><span id="主从复制的数据同步状态延迟较大">主从复制的数据同步状态延迟较大</span></h1><p>Redis在主从复制过程中，可能因为网络等例外因素导致主从复制延迟过大问题，影响Redis的数据一致性。</p>
-<p><strong>解决方案：</strong>人为介入，写定时任务脚本检查主从复制的offset值之间的差值，当差值达到预设阈值时，进行报警通知，排查估值，使主从复制的数据延迟缩小到有效范围内。</p>
-<h1><span id="redis申请内存的linux内核参数优化-vmovercommit_memory">Redis申请内存的linux内核参数优化-vm.overcommit_memory</span></h1><p>看一下redis启动日志的警告提醒：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">25483:M 27 May 13:41:39.856 # WARNING overcommit_memory is set to 0! Background save may fail under low memory condition. </span><br><span class="line">To fix this issue add &apos;vm.overcommit_memory = 1&apos; to /etc/sysctl.conf and then reboot or run the command &apos;sysctl vm.overcommit_memory=1&apos; for this to take effect.</span><br></pre></td></tr></table></figure>
-<p>0：检查有没有足够的内存，没有的话申请内存失败。例如fork子进程时申请内存，可能因为申请不到内存导致fork操作失败。<br>1：允许使用内存，直到用完为止。<strong>常用配置</strong><br>2：内存地址使用率不能超过swap+50%</p>
-<p>按照redis的警告提醒进行修改：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cat /proc/sys/vm/overcommit_memory</span><br><span class="line">echo &quot;vm.overcommit_memory=1&quot; &gt;&gt; /etc/sysctl.conf</span><br><span class="line">sysctl vm.overcommit_memory=1</span><br></pre></td></tr></table></figure>
-<h1><span id="redis申请内存的linux内核参数优化-swappiness">Redis申请内存的linux内核参数优化-swappiness</span></h1><p>设置linux在内存不足时，是否杀掉进程以获得更多空间。<br>查看linux内核版本</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat /proc/version</span><br></pre></td></tr></table></figure>
-<p>linux内核版本&lt;3.5，swappiness设置为0，<br>linux内核版本&gt;=3.5，swappiness设置为1，<br>这样在内存不足时lunix进行swap操作，也不会杀掉进程，保证Redis进程不会被linux杀掉。</p>
-<p>修改方法：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">echo 0 &gt; /proc/sys/vm/swappiness</span><br><span class="line">echo vm.swappiness=0 &gt;&gt; /etc/sysctl.conf</span><br></pre></td></tr></table></figure>
-<h1><span id="linux打开的文件句柄数修改">linux打开的文件句柄数修改</span></h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">25525:M 27 May 15:48:29.008 * Increased maximum number of open files to 10032 (it was originally set to 1024).</span><br></pre></td></tr></table></figure>
-<p>linux系统默认的打开句柄数最大为1024，修改为10032。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ulimit -n 10032 10032</span><br></pre></td></tr></table></figure>
-<h1><span id="linux内核进行tcp-socket连接通信参数优化-tcp-backlog">linux内核进行TCP Socket连接通信参数优化-tcp backlog</span></h1><p>backlog在Redis主从复制时，用来缓存每次进行socket连接复制的数据和offset。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">25483:M 27 May 13:41:39.856 # WARNING: The TCP backlog setting of 511 cannot be enforced because /proc/sys/net/core/somaxconn is set to the lower value of 128.</span><br></pre></td></tr></table></figure>
-<p>修改</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo 511 &gt;&gt; /proc/sys/net/core/somaxconn</span><br></pre></td></tr></table></figure>
-<p>PS:TCP socket服务开发的4个步骤 socket-&gt;bind-&gt;listen-&gt;accept<br>调用listen函数时,有一个backlog参数，此时TCP请求的连接状态是ESTABLISHED，TCP backlog值表示的就是ESTABLISHED状态的请求连接所在的队列大小，在linux内核中/proc/sys/net/core/somaxconn进行设置。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h1 id=&quot;fork导致的Redis延时增大&quot;&gt;&lt;a href=&quot;#fork导致的Redis延时增大&quot; class=&quot;headerlink&quot; title=&quot;fork导致的Redis延时增大&quot;&gt;&lt;/a&gt;fork导致的Redis延时增大&lt;/h1&gt;&lt;p&gt;Redis在进行RDB和AOF持久化时，为了使主进程继续提供读写服务，Redis就会fork一个子进程进行RDB和AOF持久化，子进程会拷贝Redis主进程的全量数据，此时Redis会阻塞执行读写服务，如果Redis中存储的数据量过大，那么在拷贝时耗时会增大，因为阻塞导致Redis的响应速度从几毫秒延迟到几百或者达到1秒。&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;解决方案：&lt;/strong&gt;单个Redis实例分配的内存空间不要大于10G，降低fork给Redis带来的延迟影响&lt;/p&gt;
-&lt;h1 id=&quot;一主多从导致的复制风暴问题&quot;&gt;&lt;a href=&quot;#一主多从导致的复制风暴问题&quot; class=&quot;headerlink&quot; title=&quot;一主多从导致的复制风暴问题&quot;&gt;&lt;/a&gt;一主多从导致的复制风暴问题&lt;/h1&gt;&lt;p&gt;如果一个Master带有n多个Slava，可能会出现Slave在某一个时间节点，同时对Master进行复制，那么就会导致网络带宽被复制数据占满，导致Redis服务不可用。&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;解决方案：&lt;/strong&gt;把围绕一个Master创建n个Slave的网络拓扑结构进行优化，减少1个Master的Slave节点。Redis集群只支持一层Slave，如果要使用更多的Slave节点，那么就不能使用集群，而使用Redis的主从复制能力进行纵向扩展，给Slave节点创建Slave节点，使Redis节点成树形结构。&lt;/p&gt;
-    
-    </summary>
-    
-    
-      <category term="Redis" scheme="http://www.forwardlee.com/tags/Redis/"/>
-    
-      <category term="Redis集群" scheme="http://www.forwardlee.com/tags/Redis%E9%9B%86%E7%BE%A4/"/>
     
   </entry>
   
