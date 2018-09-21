@@ -4,6 +4,27 @@
 
     
   <url>
+    <loc>http://www.forwardlee.com/2018/09/06/OpenResty%E7%94%9F%E4%BA%A7%E7%8E%AF%E5%A2%83%E4%B8%80%E8%87%B4%E6%80%A7hash%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E9%85%8D%E7%BD%AE%E7%AD%96%E7%95%A5/</loc>
+    <lastmod>2018-09-21T12:22:54.000Z</lastmod>
+    <data>
+        <display>
+        <title>OpenResty生产环境反向代理和七层负载均衡配置策略</title>
+        <pubTime>2018-09-05T23:42:16.000Z</pubTime>
+        
+        <tag>OpenResty</tag>
+         
+        <tag>Nginx</tag>
+         
+        <tag>负载均衡</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://www.forwardlee.com/2018/09/19/Nginx-keepalived%E5%AE%9E%E7%8E%B0%E9%AB%98%E5%8F%AF%E7%94%A8/</loc>
     <lastmod>2018-09-19T10:21:08.583Z</lastmod>
     <data>
@@ -33,25 +54,6 @@
         <tag>Redis</tag>
          
         <tag>Zookeeper</tag>
-         
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://www.forwardlee.com/2018/09/06/OpenResty%E7%94%9F%E4%BA%A7%E7%8E%AF%E5%A2%83%E4%B8%80%E8%87%B4%E6%80%A7hash%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E9%85%8D%E7%BD%AE%E7%AD%96%E7%95%A5/</loc>
-    <lastmod>2018-09-06T07:05:26.333Z</lastmod>
-    <data>
-        <display>
-        <title>OpenResty生产环境反向代理和七层负载均衡配置策略</title>
-        <pubTime>2018-09-05T23:42:16.000Z</pubTime>
-        
-        <tag>OpenResty</tag>
-         
-        <tag>负载均衡</tag>
          
          
            

@@ -108,18 +108,18 @@
 
 
 
-  <meta name="description" content="Nginx配置手册《Nginx配置手册》看这里 Nginx反向代理缓存配置降低上游服务器压力代理分为正向代理和反向代理，简言之，正向代理是指代理客户端请求，反向代理是指代理服务器端服务。Nginx作为七层负载均衡服务器，主要任务是分发从客户端到达的http请求到上游服务器集群。为了减少到达上游服务器的并发请求数量，可以在Nginx进行反向代理的缓存全局配置。 12345678910111213pr">
-<meta name="keywords" content="OpenResty,负载均衡">
+  <meta name="description" content="Nginx配置手册《Nginx配置手册》看这里 nginx.conf生产主配置项： 12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758#user  nobody;#cpu有n个核，就启用n个进程，例如4核处理器，就开启4个进程，最多配置">
+<meta name="keywords" content="OpenResty,Nginx,负载均衡">
 <meta property="og:type" content="article">
 <meta property="og:title" content="OpenResty生产环境反向代理和七层负载均衡配置策略">
 <meta property="og:url" content="http://www.forwardlee.com/2018/09/06/OpenResty生产环境一致性hash负载均衡配置策略/index.html">
 <meta property="og:site_name" content="不忘初心">
-<meta property="og:description" content="Nginx配置手册《Nginx配置手册》看这里 Nginx反向代理缓存配置降低上游服务器压力代理分为正向代理和反向代理，简言之，正向代理是指代理客户端请求，反向代理是指代理服务器端服务。Nginx作为七层负载均衡服务器，主要任务是分发从客户端到达的http请求到上游服务器集群。为了减少到达上游服务器的并发请求数量，可以在Nginx进行反向代理的缓存全局配置。 12345678910111213pr">
+<meta property="og:description" content="Nginx配置手册《Nginx配置手册》看这里 nginx.conf生产主配置项： 12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758#user  nobody;#cpu有n个核，就启用n个进程，例如4核处理器，就开启4个进程，最多配置">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-09-06T07:05:26.333Z">
+<meta property="og:updated_time" content="2018-09-21T12:22:54.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="OpenResty生产环境反向代理和七层负载均衡配置策略">
-<meta name="twitter:description" content="Nginx配置手册《Nginx配置手册》看这里 Nginx反向代理缓存配置降低上游服务器压力代理分为正向代理和反向代理，简言之，正向代理是指代理客户端请求，反向代理是指代理服务器端服务。Nginx作为七层负载均衡服务器，主要任务是分发从客户端到达的http请求到上游服务器集群。为了减少到达上游服务器的并发请求数量，可以在Nginx进行反向代理的缓存全局配置。 12345678910111213pr">
+<meta name="twitter:description" content="Nginx配置手册《Nginx配置手册》看这里 nginx.conf生产主配置项： 12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758#user  nobody;#cpu有n个核，就启用n个进程，例如4核处理器，就开启4个进程，最多配置">
 
 
 
@@ -384,12 +384,24 @@
                 
               
 
-              <time title="创建时间：2018-09-06 07:42:16 / 修改时间：15:05:26" itemprop="dateCreated datePublished" datetime="2018-09-06T07:42:16+08:00">2018-09-06</time>
+              <time title="创建时间：2018-09-06 07:42:16" itemprop="dateCreated datePublished" datetime="2018-09-06T07:42:16+08:00">2018-09-06</time>
             
 
             
               
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-09-21 20:22:54" itemprop="dateModified" datetime="2018-09-21T20:22:54+08:00">2018-09-21</time>
               
             
           </span>
@@ -433,6 +445,8 @@
 
       
         <h1><span id="nginx配置手册">Nginx配置手册</span></h1><p><a href="https://my.oschina.net/xianggao/blog/669497" target="_blank" rel="noopener">《Nginx配置手册》看这里</a></p>
+<p>nginx.conf生产主配置项：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span>user  nobody;</span><br><span class="line"><span class="meta">#</span>cpu有n个核，就启用n个进程，例如4核处理器，就开启4个进程，最多配置8个；</span><br><span class="line">worker_processes  2;</span><br><span class="line"><span class="meta">#</span>多核cpu配置，n核就用n位二进制数字表示哪个内核启用进程</span><br><span class="line">worker_cpu_affinity 01 10;</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span>error_log  logs/error.log;</span><br><span class="line"><span class="meta">#</span>error_log  logs/error.log  notice;</span><br><span class="line">error_log  /var/log/nginx/error.log  warn;</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span>pid        logs/nginx.pid;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span>nginx打开的最大文件句柄数</span><br><span class="line">worker_rlimit_nofile 10240;</span><br><span class="line"></span><br><span class="line">events &#123;</span><br><span class="line">    #nginx最大连接数，要&lt;=worker_rlimit_nofile，瓶颈会在cpu，设置太大会损耗cpu性能</span><br><span class="line">    worker_connections  10240;</span><br><span class="line">    #IO模型，linux默认用epoll性能较高</span><br><span class="line">    use epoll;</span><br><span class="line">    #多个请求到达nginx，设置加锁提高nginx性能，避免nginx进程worker争夺处理网络连接（惊群效应）on/off</span><br><span class="line">    accept_mutex on;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line">http &#123;</span><br><span class="line">    include       mime.types;</span><br><span class="line">    default_type  application/octet-stream;</span><br><span class="line">    charset utf-8;</span><br><span class="line"></span><br><span class="line">    lua_package_path "/opt/nginx_conf/lualib/?.lua;;";</span><br><span class="line">    lua_package_cpath "/opt/nginx_conf/lualib/?.so;;";</span><br><span class="line">    include /opt/nginx_conf/server_1.conf;</span><br><span class="line"></span><br><span class="line">    #log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '</span><br><span class="line">    #                  '$status $body_bytes_sent "$http_referer" '</span><br><span class="line">    #                  '"$http_user_agent" "$http_x_forwarded_for"';</span><br><span class="line"></span><br><span class="line">    #access_log  logs/access.log  main;</span><br><span class="line"></span><br><span class="line">    #高效传输</span><br><span class="line">    sendfile        on;</span><br><span class="line">    #tcp_nopush     on;</span><br><span class="line"></span><br><span class="line">    #keepalive_timeout  0;</span><br><span class="line">    keepalive_timeout  65;</span><br><span class="line"></span><br><span class="line">    gzip  on;</span><br><span class="line">    gzip_min_length 5k;</span><br><span class="line">    gzip_buffers 4 16k;</span><br><span class="line">    gzip_comp_level 8;</span><br><span class="line">    gzip_types text/css application/xml text/javascript image/jpeg image/png image/gif;</span><br><span class="line">    #http header有关，根据浏览器压缩策略进行压缩</span><br><span class="line">    gzip_vary on;</span><br><span class="line"></span><br><span class="line">    proxy_temp_path /tmp/data/nginx;</span><br><span class="line">    proxy_cache_path /data/nginx/cache/proxy_cache levels=1:2 keys_zone=ec:200m max_size=1g;</span><br></pre></td></tr></table></figure>
 <h1><span id="nginx反向代理缓存配置降低上游服务器压力">Nginx反向代理缓存配置降低上游服务器压力</span></h1><p>代理分为正向代理和反向代理，简言之，正向代理是指代理客户端请求，反向代理是指代理服务器端服务。Nginx作为七层负载均衡服务器，主要任务是分发从客户端到达的http请求到上游服务器集群。为了减少到达上游服务器的并发请求数量，可以在Nginx进行反向代理的缓存全局配置。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">proxy_buffering on;</span><br><span class="line">proxy_buffer_size 4k;</span><br><span class="line">proxy_buffers 512 4k;</span><br><span class="line">proxy_busy_buffers_size 64k;</span><br><span class="line">proxy_temp_file_write_size 256k;</span><br><span class="line">proxy_cache_lock on;</span><br><span class="line">proxy_cache_lock_timeout 200ms;</span><br><span class="line"><span class="meta">#</span>/tmpfs为内存文件系统</span><br><span class="line">proxy_temp_path /tmpfs/proxy_temp;</span><br><span class="line">proxy_cache_path /tmpfs/proxy_cache levels=1:2 keys_zone=cache:512m inactive=5m max_size=8g;</span><br><span class="line">proxy_connect_timeout 3s;</span><br><span class="line">proxy_read_timeout 5s;</span><br><span class="line">proxy_send_timeout 5s;</span><br></pre></td></tr></table></figure>
 <h1><span id="nginx常用的七层负载均衡配置策略">Nginx常用的七层负载均衡配置策略</span></h1><h2><span id="step1配置upstream上游服务器和负载均衡算法">Step1.配置upstream上游服务器和负载均衡算法</span></h2><p>要实现负载均衡，首先，要配置Nginx反向代理的上游服务器地址，并配置响应的负载均衡算法。Nginx支持的负载均衡算法有：轮询（round-robin）、IP哈希（ip_hash）、特定值哈希（hash <code>$key</code>）、特定值一致性哈希（hash   <code>$key</code> consistent）、最少活跃连接（least_conn），商业版Nginx还支持最少平均响应时间（least_time）。其次，Nginx负载均衡支持对每个代理服务器的请求权重（weight=n）、失败重试（max_fails=n）、连接超时（fail_timeout=ns）、备用（backup)、下线（down）、心跳检测的可选配置项，配合负载均衡算法，实现高可用、高性能的负载均衡。</p>
@@ -491,6 +505,8 @@
         <div class="post-tags">
           
             <a href="/tags/OpenResty/" rel="tag"># OpenResty</a>
+          
+            <a href="/tags/Nginx/" rel="tag"># Nginx</a>
           
             <a href="/tags/负载均衡/" rel="tag"># 负载均衡</a>
           
