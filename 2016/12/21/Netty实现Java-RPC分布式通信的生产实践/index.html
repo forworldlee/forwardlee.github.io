@@ -109,7 +109,7 @@
 
 
   <meta name="description" content="为什么要选择Netty转自《NIO框架详解：Netty的高性能之道》 1.1 惊人的性能数据一、概述最近一个圈内朋友通过私信告诉我，通过使用Netty4 + Thrift压缩二进制编解码技术，他们实现了10W TPS（1K的复杂POJO对象）的跨节点远程服务调用。相比于传统基于Java序列化+BIO（同步阻塞IO）的通信框架，性能提升了8倍多。 事实上，我对这个数据并不感到惊讶，根据我5年多的NI">
-<meta name="keywords" content="Netty,分布式通信,RPC">
+<meta name="keywords" content="Netty,RPC,分布式通信">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Netty实现Java RPC分布式通信的生产实践">
 <meta property="og:url" content="http://www.forwardlee.com/2016/12/21/Netty实现Java-RPC分布式通信的生产实践/index.html">
@@ -118,7 +118,7 @@
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://www.forwardlee.com/2016/12/21/Netty实现Java-RPC分布式通信的生产实践/160737i1ghywwvwwhh4yke.png">
 <meta property="og:image" content="http://www.forwardlee.com/2016/12/21/Netty实现Java-RPC分布式通信的生产实践/161037usasqpbrtttttkso.png">
-<meta property="og:image" content="http://www.forwardlee.com/2016/12/21/Netty实现Java-RPC分布式通信的生产实践/2016/12/21/Netty实现Java-RPC分布式通信的生产实践/161236ymtton5o7g8zjput.png">
+<meta property="og:image" content="http://www.forwardlee.com/2016/12/21/Netty实现Java-RPC分布式通信的生产实践/161236ymtton5o7g8zjput.png">
 <meta property="og:image" content="http://www.forwardlee.com/2016/12/21/Netty实现Java-RPC分布式通信的生产实践/161322pxftxslkaablktcx.png">
 <meta property="og:image" content="http://www.forwardlee.com/2016/12/21/Netty实现Java-RPC分布式通信的生产实践/161351hryx7s6m7oks3pze.png">
 <meta property="og:image" content="http://www.forwardlee.com/2016/12/21/Netty实现Java-RPC分布式通信的生产实践/161459dqkzqy2ke3y4yg3e.png">
@@ -137,7 +137,7 @@
 <meta property="og:image" content="http://www.forwardlee.com/2016/12/21/Netty实现Java-RPC分布式通信的生产实践/162247yfkz3kf66z61c563.png">
 <meta property="og:image" content="http://www.forwardlee.com/2016/12/21/Netty实现Java-RPC分布式通信的生产实践/162310vuu6cn5yctr2alt5.png">
 <meta property="og:image" content="http://www.forwardlee.com/2016/12/21/Netty实现Java-RPC分布式通信的生产实践/162338uabbdu41buuuuzdd.png">
-<meta property="og:image" content="http://www.forwardlee.com/2016/12/21/Netty实现Java-RPC分布式通信的生产实践/2016/12/21/Netty实现Java-RPC分布式通信的生产实践/162409e54ycs4skyet1h12.png">
+<meta property="og:image" content="http://www.forwardlee.com/2016/12/21/Netty实现Java-RPC分布式通信的生产实践/162409e54ycs4skyet1h12.png">
 <meta property="og:image" content="http://www.forwardlee.com/2016/12/21/Netty实现Java-RPC分布式通信的生产实践/162430vyw9vy5875yyy8l3.png">
 <meta property="og:image" content="http://www.forwardlee.com/2016/12/21/Netty实现Java-RPC分布式通信的生产实践/162719secxzxxbly5ya2zl.png">
 <meta property="og:image" content="http://www.forwardlee.com/2016/12/21/Netty实现Java-RPC分布式通信的生产实践/162853zsyba9z5a4bqfjuj.png">
@@ -145,7 +145,7 @@
 <meta property="og:image" content="http://www.forwardlee.com/2016/12/21/Netty实现Java-RPC分布式通信的生产实践/163027blxrzfz9sf7l7xwd.png">
 <meta property="og:image" content="http://www.forwardlee.com/2016/12/21/Netty实现Java-RPC分布式通信的生产实践/163306ro6ztcdr10drtrta.png">
 <meta property="og:image" content="http://www.forwardlee.com/2016/12/21/Netty实现Java-RPC分布式通信的生产实践/163450o9moo99mmsm88bpo.png">
-<meta property="og:updated_time" content="2018-10-19T05:04:03.292Z">
+<meta property="og:updated_time" content="2018-10-20T04:55:17.957Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Netty实现Java RPC分布式通信的生产实践">
 <meta name="twitter:description" content="为什么要选择Netty转自《NIO框架详解：Netty的高性能之道》 1.1 惊人的性能数据一、概述最近一个圈内朋友通过私信告诉我，通过使用Netty4 + Thrift压缩二进制编解码技术，他们实现了10W TPS（1K的复杂POJO对象）的跨节点远程服务调用。相比于传统基于Java序列化+BIO（同步阻塞IO）的通信框架，性能提升了8倍多。 事实上，我对这个数据并不感到惊讶，根据我5年多的NI">
@@ -486,7 +486,7 @@
 <h3><span id="三-netty的高性能之道详解">三、Netty的高性能之道详解</span></h3><h4><span id="31-异步非阻塞通信">3.1 异步非阻塞通信</span></h4><p>在IO编程过程中，当需要同时处理多个客户端接入请求时，可以利用多线程或者IO多路复用技术进行处理。IO多路复用技术通过把多个IO的阻塞复用到同一个select的阻塞上，从而使得系统在单线程的情况下可以同时处理多个客户端请求。与传统的多线程/多进程模型比，I/O多路复用的最大优势是系统开销小，系统不需要创建新的额外进程或者线程，也不需要维护这些进程和线程的运行，降低了系统的维护工作量，节省了系统资源。 </p>
 <p>JDK1.4提供了对非阻塞IO（NIO）的支持，JDK1.5_update10版本使用epoll替代了传统的select/poll，极大的提升了NIO通信的性能。</p>
 <p>JDK NIO通信模型如下所示：</p>
-<p><img src="2016/12/21/Netty实现Java-RPC分布式通信的生产实践/161236ymtton5o7g8zjput.png" alt="NIO框架详解：Netty的高性能之道_3.png"></p>
+<p><img src="/2016/12/21/Netty实现Java-RPC分布式通信的生产实践/161236ymtton5o7g8zjput.png" alt="NIO框架详解：Netty的高性能之道_3.png"></p>
 <p>与Socket类和ServerSocket类相对应，NIO也提供了SocketChannel和ServerSocketChannel两种不同的套接字通道实现。这两种新增的通道都支持阻塞和非阻塞两种模式。阻塞模式使用非常简单，但是性能和可靠性都不好，非阻塞模式正好相反。开发人员一般可以根据自己的需要来选择合适的模式，一般来说，低负载、低并发的应用程序可以选择同步阻塞IO以降低编程复杂度。但是对于高负载、高并发的网络应用，需要使用NIO的非阻塞模式进行开发。 </p>
 <p>Netty架构按照Reactor模式设计和实现，它的服务端通信序列图如下：</p>
 <p><img src="/2016/12/21/Netty实现Java-RPC分布式通信的生产实践/161322pxftxslkaablktcx.png" alt="NIO框架详解：Netty的高性能之道_4.png"></p>
@@ -540,7 +540,7 @@
 <p>我们重点分析newByteBuf的实现，它同样是个抽象方法，由子类DirectArena和HeapArena来实现不同类型的缓冲区分配，由于测试用例使用的是堆外内存：</p>
 <p><img src="/2016/12/21/Netty实现Java-RPC分布式通信的生产实践/162338uabbdu41buuuuzdd.png" alt="NIO框架详解：Netty的高性能之道_9.png"></p>
 <p>因此重点分析DirectArena的实现：如果没有开启使用sun的unsafe，则：</p>
-<p><img src="2016/12/21/Netty实现Java-RPC分布式通信的生产实践/162409e54ycs4skyet1h12.png" alt="NIO框架详解：Netty的高性能之道_10.png"></p>
+<p><img src="/2016/12/21/Netty实现Java-RPC分布式通信的生产实践/162409e54ycs4skyet1h12.png" alt="NIO框架详解：Netty的高性能之道_10.png"></p>
 <p>执行PooledDirectByteBuf的newInstance方法，代码如下：</p>
 <p><img src="/2016/12/21/Netty实现Java-RPC分布式通信的生产实践/162430vyw9vy5875yyy8l3.png" alt="NIO框架详解：Netty的高性能之道_11.png"></p>
 <p>通过RECYCLER的get方法循环使用ByteBuf对象，如果是非内存池实现，则直接创建一个新的ByteBuf对象。从缓冲池中获取ByteBuf之后，调用AbstractReferenceCountedByteBuf的setRefCnt方法设置引用计数器，用于对象的引用计数和内存回收（类似JVM垃圾回收机制）。</p>
@@ -674,9 +674,9 @@
           
             <a href="/tags/Netty/" rel="tag"># Netty</a>
           
-            <a href="/tags/分布式通信/" rel="tag"># 分布式通信</a>
-          
             <a href="/tags/RPC/" rel="tag"># RPC</a>
+          
+            <a href="/tags/分布式通信/" rel="tag"># 分布式通信</a>
           
         </div>
       
