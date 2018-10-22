@@ -444,6 +444,8 @@
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">storm logviewer &gt;/dev/null 2&gt;&amp;1 &amp;</span><br></pre></td></tr></table></figure>
 <p>（5）访问一下ui界面，8080端口</p>
 <p>浏览器访问<a href="http://192.168.1.232:8080" target="_blank" rel="noopener">http://192.168.1.232:8080</a></p>
+<p><img src="/2018/10/22/JAVA攻城狮玩转Storm并行计算/image-20181022160454042.png" alt="image-20181022160454042"></p>
+<p><img src="/2018/10/22/JAVA攻城狮玩转Storm并行计算/image-20181022160415302.png" alt="image-20181022160415302"></p>
 <p>（6）发布一个Topology<br>在nimbus节点发布Topology</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">storm jar ecourse_storm-0.0.1-SNAPSHOT.jar com.hledu.ecourse.storm.wordcount.WordCountTopology wordCountTopology</span><br></pre></td></tr></table></figure>
 <p>WordCountTopology内容见后文。<br>（7）杀掉Topology</p>

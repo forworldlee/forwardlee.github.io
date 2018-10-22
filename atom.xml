@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.forwardlee.com/"/>
-  <updated>2018-10-22T08:01:01.329Z</updated>
+  <updated>2018-10-22T08:05:38.272Z</updated>
   <id>http://www.forwardlee.com/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://www.forwardlee.com/2018/10/22/JAVA%E6%94%BB%E5%9F%8E%E7%8B%AE%E7%8E%A9%E8%BD%ACStorm%E5%B9%B6%E8%A1%8C%E8%AE%A1%E7%AE%97/"/>
     <id>http://www.forwardlee.com/2018/10/22/JAVA攻城狮玩转Storm并行计算/</id>
     <published>2018-10-22T07:56:52.000Z</published>
-    <updated>2018-10-22T08:01:01.329Z</updated>
+    <updated>2018-10-22T08:05:38.272Z</updated>
     
     <content type="html"><![CDATA[<h1><span id="部署一个storm集群">部署一个storm集群</span></h1><p>环境准备</p>
 <p>（1）安装Java 7和Pythong 2.6.6</p>
@@ -43,6 +43,8 @@
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">storm logviewer &gt;/dev/null 2&gt;&amp;1 &amp;</span><br></pre></td></tr></table></figure>
 <p>（5）访问一下ui界面，8080端口</p>
 <p>浏览器访问<a href="http://192.168.1.232:8080" target="_blank" rel="noopener">http://192.168.1.232:8080</a></p>
+<p><img src="/2018/10/22/JAVA攻城狮玩转Storm并行计算/image-20181022160454042.png" alt="image-20181022160454042"></p>
+<p><img src="/2018/10/22/JAVA攻城狮玩转Storm并行计算/image-20181022160415302.png" alt="image-20181022160415302"></p>
 <p>（6）发布一个Topology<br>在nimbus节点发布Topology</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">storm jar ecourse_storm-0.0.1-SNAPSHOT.jar com.hledu.ecourse.storm.wordcount.WordCountTopology wordCountTopology</span><br></pre></td></tr></table></figure>
 <p>WordCountTopology内容见后文。<br>（7）杀掉Topology</p>
