@@ -341,6 +341,146 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2018/07/24/Hystrix高并发请求合并处理/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ForwardLee">
+      <meta itemprop="description" content="总结学习方法，实践技术技能。">
+      <meta itemprop="image" content="/images/head.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="不忘初心">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/07/24/Hystrix高并发请求合并处理/" itemprop="url">
+                  Hystrix高并发请求合并处理
+                </a>
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-07-24 08:59:49" itemprop="dateCreated datePublished" datetime="2018-07-24T08:59:49+08:00">2018-07-24</time>
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="Hystrix处理单个或者数量较少的请求"><a href="#Hystrix处理单个或者数量较少的请求" class="headerlink" title="Hystrix处理单个或者数量较少的请求"></a>Hystrix处理单个或者数量较少的请求</h1><h2 id="创建HystrixCommand"><a href="#创建HystrixCommand" class="headerlink" title="创建HystrixCommand"></a>创建HystrixCommand</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Slf</span>4j</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GetProductInfoCmmd</span>  <span class="keyword">extends</span> <span class="title">HystrixCommand</span>&lt;<span class="title">ProductInfo</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> HystrixCommandKey KEY = HystrixCommandKey.Factory.asKey(<span class="string">"GetProductInfoCmmd"</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Long productId;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">GetProductInfoCmmd</span><span class="params">(Long productId)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//跨网络请求通常使用HystrixCommandProperties.ExecutionIsolationStrategy.THREAD</span></span><br><span class="line">        <span class="comment">// 线程池策略（默认最多并发10个线程请求）进行隔离限流，目的是用线程池可以获取线程执行的操作状态</span></span><br><span class="line">        <span class="comment">//GetProductInfoCmmdGroup定义了一个线程池专门执行run方法，这个线程池的大小就主动</span></span><br><span class="line">        <span class="comment">//限制住所有请求run方法中的http请求，防止http请求阻塞后整个web容器的线程资源都被耗尽</span></span><br><span class="line">        <span class="comment">//super(HystrixCommandGroupKey.Factory.asKey("GetProductInfoCmmdGroup"));</span></span><br><span class="line">        <span class="keyword">super</span>(</span><br><span class="line">                Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey(<span class="string">"GetProductInfoGroup"</span>))</span><br><span class="line">                        .andCommandKey(HystrixCommandKey.Factory.asKey(<span class="string">"GetProductInfoCmmd"</span>))</span><br><span class="line">                        .andThreadPoolKey(HystrixThreadPoolKey.Factory.asKey(<span class="string">"GetProductInfoThreadPool"</span>))</span><br><span class="line">                        .andCommandPropertiesDefaults(HystrixCommandProperties.Setter()</span><br><span class="line">                                .withExecutionIsolationStrategy(HystrixCommandProperties.ExecutionIsolationStrategy.THREAD)</span><br><span class="line">                                <span class="comment">//允许执行的最大并发数</span></span><br><span class="line">                                .withExecutionIsolationSemaphoreMaxConcurrentRequests(<span class="number">30</span>)</span><br><span class="line">                                <span class="comment">//请求超时</span></span><br><span class="line">                                .withExecutionTimeoutInMilliseconds(<span class="number">200</span>))</span><br><span class="line">                        .andThreadPoolPropertiesDefaults(HystrixThreadPoolProperties.Setter()</span><br><span class="line">                                <span class="comment">//default 10，默认线程池大小</span></span><br><span class="line">                                .withCoreSize(<span class="number">10</span>)</span><br><span class="line">                                <span class="comment">//default 5，没有被线程池执行的请求会放到队列中等待线程，如果队列已满，新来的请求会被降级被拒</span></span><br><span class="line">                                .withQueueSizeRejectionThreshold(<span class="number">10</span>)</span><br><span class="line">                                <span class="comment">//withQueueSizeRejectionThreshold和withMaxQueueSize比较，queueSize取较小值</span></span><br><span class="line">                                .withMaxQueueSize(<span class="number">8</span>))</span><br><span class="line">        );</span><br><span class="line">        <span class="keyword">this</span>.productId = productId;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> ProductInfo <span class="title">run</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        String url = <span class="string">"http://127.0.0.1:8082/product/get?productId="</span>+productId;</span><br><span class="line"></span><br><span class="line">        String s = HttpClientUtils.sendGetRequestWithException(url);</span><br><span class="line">        log.info(<span class="string">"product-ha response &#123;&#125;"</span>,s);</span><br><span class="line">        ProductInfo productInfo = JSONObject.parseObject(s, ProductInfo.class);</span><br><span class="line">        <span class="keyword">return</span> productInfo;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 从hystrix本地缓存中获取数据，而不是执行run方法</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> String <span class="title">getCacheKey</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"product_key_"</span>+productId;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 清理hystrix缓存的数据</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> productId</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">flushCache</span><span class="params">(Long productId)</span></span>&#123;</span><br><span class="line">        HystrixRequestCache.getInstance(KEY,HystrixConcurrencyStrategyDefault.getInstance()).clear(<span class="string">"product_key_"</span>+productId);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * hystrix执行降级请求时返回的数据</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> ProductInfo <span class="title">getFallback</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        String product = <span class="string">"&#123;\"id\": 111, \"name\": \"iphone7手机\", \"price\": 5599, \"pictureList\":\"a.jpg,b.jpg\", \"specification\": \"iphone7的规格\", \"service\": \"iphone7的售后服务\", \"color\": \"红色,白色,黑色\", \"size\": \"5.5\", \"shopId\": 1, \"modifiedTime\": \"2017-01-01 12:00:00\", \"cityId\":1&#125;"</span>;</span><br><span class="line">        log.info(<span class="string">"getFallback:&#123;&#125;"</span>,product);</span><br><span class="line">        ProductInfo productInfo = JSONObject.parseObject(product, ProductInfo.class);</span><br><span class="line">        <span class="keyword">return</span> productInfo;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/07/24/Hystrix高并发请求合并处理/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2018/07/23/图解hystrix请求降级条件和请求调用过程原理/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1726,157 +1866,11 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2018/06/14/redis-trib-rb工具的使用/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="ForwardLee">
-      <meta itemprop="description" content="总结学习方法，实践技术技能。">
-      <meta itemprop="image" content="/images/head.jpeg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="不忘初心">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/06/14/redis-trib-rb工具的使用/" itemprop="url">
-                  redis-trib.rb工具的使用
-                </a>
-              
-            
-          </h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2018-06-14 09:52:43" itemprop="dateCreated datePublished" datetime="2018-06-14T09:52:43+08:00">2018-06-14</time>
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>【转】<a href="https://www.jianshu.com/p/21f67bd739cc" target="_blank" rel="noopener">https://www.jianshu.com/p/21f67bd739cc</a><br>【官方】<a href="http://www.redis.cn/topics/cluster-tutorial.html" target="_blank" rel="noopener">http://www.redis.cn/topics/cluster-tutorial.html</a></p>
-<h1 id="参数配置"><a href="#参数配置" class="headerlink" title="参数配置"></a>参数配置</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">1、create：创建集群</span><br><span class="line">2、check：检查集群</span><br><span class="line">3、info：查看集群信息</span><br><span class="line">4、fix：修复集群</span><br><span class="line">5、reshard：在线迁移slot</span><br><span class="line">6、rebalance：平衡集群节点slot数量</span><br><span class="line">7、add-node：将新节点加入集群</span><br><span class="line">8、del-node：从集群中删除节点</span><br><span class="line">9、set-timeout：设置集群节点间心跳连接的超时时间</span><br><span class="line">10、call：在集群全部节点上执行命令</span><br><span class="line">11、import：将外部redis数据导入集群</span><br></pre></td></tr></table></figure>
-<h1 id="创建集群"><a href="#创建集群" class="headerlink" title="创建集群"></a>创建集群</h1><p>用户无需指定哪台节点为master，哪台节点为slave，因为redis内部算法帮我们实现了</p>
-<p>create<br>–replicas # 可选参数，replicas表示每个master需要有几个slave。<br> 只有master节点的创建方式</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./redis-trib.rb create  192.168.66.2:7000 192.168.66.2:7001 192.168.66.2:7002 192.168.66.3:7003 192.168.66.3:7004 192.168.66.3:7005</span><br></pre></td></tr></table></figure>
-<p>使用 –replicas 1 创建 每个master带一个 slave 指令</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./redis-trib.rb create --replicas 1  192.168.66.2:7000 192.168.66.2:7001 192.168.66.2:7002 192.168.66.3:7003 192.168.66.3:7004 192.168.66.3:7005</span><br></pre></td></tr></table></figure>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/06/14/redis-trib-rb工具的使用/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -1923,7 +1917,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">50</span>
+                    <span class="site-state-item-count">51</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -2020,7 +2014,11 @@
                     
                       
                     
-                    <span class="site-state-item-count">41</span>
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">43</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
