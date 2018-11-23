@@ -341,6 +341,306 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2018/10/28/基于protobuf序列化协议实现Netty-RPC分布式通信/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ForwardLee">
+      <meta itemprop="description" content="总结学习方法，实践技术技能。">
+      <meta itemprop="image" content="/images/head.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="不忘初心">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/10/28/基于protobuf序列化协议实现Netty-RPC分布式通信/" itemprop="url">
+                  基于protobuf序列化协议实现Netty RPC分布式通信
+                </a>
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-10-28 09:36:10" itemprop="dateCreated datePublished" datetime="2018-10-28T09:36:10+08:00">2018-10-28</time>
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1><span id="protobuf序列化">Protobuf序列化</span></h1><p>在RPC通信过程需要在网络上传递数据，那么数据大小会影响RPC通信的性能，通过数据序列化（编码）减少数据体积，并且数据反序列化（解码）也要足够高，才能保证RPC通信的整体性能。不同的协议在性能方面表现不同，而且有是否支持跨语言平台的特点。</p>
+<p>常见的序列化协议有JDK、XML、JSON、Protobuf、Thrift等。各种序列化协议之间的差异和性能对比，请参见<a href="https://tech.meituan.com/serialization_vs_deserialization.html" target="_blank" rel="noopener">《序列化和反序列化》</a>。Protobuf和Thrift都是高性能的、跨平台的序列化协议，Protobuf可以与任何一款RPC框架绑定使用，是一款纯粹的数据展示层的协议；而Thrift既包括序列化协议，也包括RPC框架。</p>
+<p>本文主要使用Protobuf作为序列化协议，Netty实现RPC通信框架。</p>
+<h1><span id="protobuf编译环境安装">Protobuf编译环境安装</span></h1><p>Protobuf协议需要安装编译环境，编译环境可以将同一份.protobuf文件编译成不同语言平台支持的客户端和服务端代码。</p>
+<p>从<a href="https://github.com/protocolbuffers/protobuf/releases下载Protobuf编译环境安装包，主要注意操作系统版本，本文以mac" target="_blank" rel="noopener">https://github.com/protocolbuffers/protobuf/releases下载Protobuf编译环境安装包，主要注意操作系统版本，本文以mac</a> os系统为例。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget https://github.com/protocolbuffers/protobuf/releases/download/v3.6.1/protoc-3.6.1-osx-x86_64.zip</span><br></pre></td></tr></table></figure>
+<p>解压缩后，得到protoc-3.6.1-osx-x86_64的绝对路径，放进环境变量中：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> vi ~/.bashrc</span><br><span class="line"></span><br><span class="line">export PROTOBUF_HOME=/soft/protoc-3.6.1-osx-x86_64</span><br><span class="line">export PATH=$PATH:$PROTOBUF_HOME/bin</span><br><span class="line">:wq</span><br><span class="line"></span><br><span class="line"><span class="meta">$</span> source ~/.bashrc</span><br></pre></td></tr></table></figure>
+<p>查看protobuf版本，验证环境变量配置成功。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> protoc --version</span><br><span class="line">libprotoc 3.6.1</span><br></pre></td></tr></table></figure>
+<h1><span id="添加java依赖包">添加JAVA依赖包</span></h1><p>通过protoc命令编译生成的JAVA客户端和服务端JAVA代码需要依赖google的jar包，所以在JAVA开发环境中需要添加依赖。<strong>依赖包版本要与编译环境的版本相同</strong>，Maven管理的项目添加如下依赖:</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.google.protobuf<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>protobuf-java<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.6.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h1><span id="编写proto文件">编写.proto文件</span></h1><p>在磁盘上创建一个rpc_serialize_data.protobuf文件，.proto文件定义要生成的客户端和服务端代码规则，同一份文件可以编译生成不同语言的客户端和服务端代码。</p>
+<figure class="highlight protobuf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//protobuf协议版本</span></span><br><span class="line">syntax = <span class="string">"proto2"</span>;</span><br><span class="line"><span class="comment">//protobuf工作的命名空间</span></span><br><span class="line"><span class="keyword">package</span> com.hledu.ns.rpc.protobuf.vo;</span><br><span class="line"><span class="comment">//优化选项</span></span><br><span class="line"><span class="comment">//SPEED生成的代码运行效率高，但是生成的代码会占用更多空间</span></span><br><span class="line"><span class="comment">//CODE_SIZE与SPEED正好相反</span></span><br><span class="line"><span class="comment">//LITE_RUNTIME适合mobile app，缺少某些特性，例如反射</span></span><br><span class="line"><span class="keyword">option</span> optimize_for = SPEED;</span><br><span class="line"><span class="comment">//生成的java代码命名空间</span></span><br><span class="line"><span class="keyword">option</span> java_package = <span class="string">"com.hledu.ns.rpc.protobuf.vo"</span>;</span><br><span class="line"><span class="comment">//生成的java类名称</span></span><br><span class="line"><span class="keyword">option</span> java_outer_classname = <span class="string">"RpcVO"</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//定义RpcVO中的内部类作为消息体</span></span><br><span class="line"><span class="class"><span class="keyword">message</span> <span class="title">RequestVO</span> </span>&#123;</span><br><span class="line">    <span class="class"><span class="keyword">enum</span> <span class="title">ParaType</span> </span>&#123;</span><br><span class="line">        P1_TYPE=<span class="number">1</span>;</span><br><span class="line">        P2_TYPE=<span class="number">2</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">optional</span> <span class="built_in">string</span> serviceName =<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">optional</span> <span class="built_in">string</span> param = <span class="number">2</span>;</span><br><span class="line">    oneof para &#123;</span><br><span class="line">        Para1 p1=<span class="number">3</span>;</span><br><span class="line">        Para2 p2=<span class="number">4</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">optional</span> ParaType paraTye=<span class="number">5</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">message</span> <span class="title">Para1</span> </span>&#123;</span><br><span class="line">    <span class="keyword">optional</span> <span class="built_in">string</span> p1=<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">optional</span> <span class="built_in">string</span> p2=<span class="number">2</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">message</span> <span class="title">Para2</span> </span>&#123;</span><br><span class="line">    <span class="keyword">optional</span> <span class="built_in">string</span> a1=<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">optional</span> <span class="built_in">string</span> a2=<span class="number">2</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//定义RpcVO中的内部类作为消息体</span></span><br><span class="line"><span class="class"><span class="keyword">message</span> <span class="title">ResponseVO</span> </span>&#123;</span><br><span class="line">    <span class="keyword">optional</span> <span class="built_in">string</span> status = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">optional</span> <span class="built_in">string</span> response = <span class="number">2</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2><span id="message中可以使用的字段标识">message中可以使用的字段标识</span></h2><p>optional 数据传输非必填项，官方建议使用。</p>
+<p>required 数据传输必填项，官方强烈不建议使用，因为生成并分发客户端代码后，再改成optional，客户端无法感知。</p>
+<p>repeated 数据传输定义一个数组</p>
+<p>oneof 数据传输需要选择其中一项</p>
+<h2><span id="message中可以使用的数据类型">message中可以使用的数据类型</span></h2><p>常用数据类型：string、bool、int32、int64、float、double、enum等数据类型，更多数据类型<a href="https://developers.google.com/protocol-buffers/docs/proto#optional" target="_blank" rel="noopener">看这</a>。</p>
+<h2><span id="生成protobuf客户端和服务端代码rpcvo">生成Protobuf客户端和服务端代码RpcVO</span></h2><p>在命令行执行：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">protoc --java_out=src/java/main src/protobuf/rpc_serialize_data.protobuf</span><br></pre></td></tr></table></figure>
+<p>在项目包目录com.hledu.ns.rpc.protobuf.vo中生成了一个RpcVO.java文件，RpcVO代码中包含内部类RequestVO、Para1、Para2、ResponseVO和枚举ParaType。下一步将是在netty项目中使用RpcVO。</p>
+<h1><span id="netty集成spring-el实现rpc通信">Netty集成Spring EL实现RPC通信</span></h1><h2><span id="编写rpcserver代码">编写RpcServer代码</span></h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@program</span>: netty_springboot</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@description</span>: 基于protobuf实现rpc server</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span>: Forwardlee</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@create</span>: 2018-10-27</span></span><br><span class="line"><span class="comment"> **/</span></span><br><span class="line"><span class="meta">@Slf</span>4j</span><br><span class="line"><span class="meta">@Component</span>(<span class="string">"rpcServerProtobuf"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RpcServer</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Resource</span></span><br><span class="line">    <span class="keyword">private</span> RpcServerConfig rpcServerConfig;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@PostConstruct</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">startRpcServer</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">new</span> Thread(()-&gt;&#123;</span><br><span class="line">            EventLoopGroup bossGroup = <span class="keyword">new</span> NioEventLoopGroup();</span><br><span class="line">            EventLoopGroup workerGroup = <span class="keyword">new</span> NioEventLoopGroup();</span><br><span class="line"></span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                ServerBootstrap bootstrap = <span class="keyword">new</span> ServerBootstrap();</span><br><span class="line">                bootstrap.group(bossGroup,workerGroup)</span><br><span class="line">                        .option(ChannelOption.SO_BACKLOG,<span class="number">128</span>)</span><br><span class="line">                        .childOption(ChannelOption.SO_KEEPALIVE,<span class="keyword">true</span>)</span><br><span class="line">                        .childOption(ChannelOption.TCP_NODELAY,<span class="keyword">true</span>)</span><br><span class="line">                        .channel(NioServerSocketChannel.class)</span><br><span class="line">                        .handler(<span class="keyword">new</span> LoggingHandler(LogLevel.INFO))</span><br><span class="line">                        .childHandler(<span class="keyword">new</span> RpcServerChannelInitionalizer());</span><br><span class="line">                SocketAddress adress = <span class="keyword">new</span> InetSocketAddress(rpcServerConfig.getHost(),rpcServerConfig.getPort2());</span><br><span class="line">                ChannelFuture future = bootstrap.bind(adress).sync();</span><br><span class="line">                future.channel().closeFuture().sync();</span><br><span class="line">            &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                log.error(<span class="string">"RPC Server 启动出错"</span>,e);</span><br><span class="line">            &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">                workerGroup.shutdownGracefully();</span><br><span class="line">                bossGroup.shutdownGracefully();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;).start();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@program</span>: netty_springboot</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@description</span>: 服务端channel pipeline初始化</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span>: Forwardlee</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@create</span>: 2018-10-27</span></span><br><span class="line"><span class="comment"> **/</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RpcServerChannelInitionalizer</span> <span class="keyword">extends</span> <span class="title">ChannelInitializer</span>&lt;<span class="title">SocketChannel</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">initChannel</span><span class="params">(SocketChannel ch)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        ChannelPipeline pipeline = ch.pipeline();</span><br><span class="line">        <span class="comment">//处理的拆包、粘包的解、编码器</span></span><br><span class="line">        pipeline.addLast(<span class="string">"frameDecoder"</span>,<span class="keyword">new</span> LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, <span class="number">0</span>, <span class="number">4</span>,<span class="number">0</span>,<span class="number">4</span>));</span><br><span class="line">        pipeline.addLast(<span class="string">"frameEncoder"</span>,<span class="keyword">new</span> LengthFieldPrepender(<span class="number">4</span>));</span><br><span class="line"></span><br><span class="line">        <span class="comment">//protobuf序列化编解码，使用RpcVO创建RPC通信传输的序列化对象，并使用protobuf协议进行编解码</span></span><br><span class="line">        pipeline.addLast(<span class="keyword">new</span> ProtobufDecoder(RpcVO.RequestVO.getDefaultInstance()));</span><br><span class="line">        pipeline.addLast(<span class="keyword">new</span> ProtobufEncoder());</span><br><span class="line">        pipeline.addLast(<span class="keyword">new</span> ProtobufVarint32FrameDecoder());</span><br><span class="line">        pipeline.addLast(<span class="keyword">new</span> ProtobufVarint32LengthFieldPrepender());</span><br><span class="line">        pipeline.addLast(<span class="keyword">new</span> RpcServerChannelHandler());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@program</span>: netty_springboot</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@description</span>: 接收rpc请求，spel接口处理protobuf序列数据，返回rpc序列化结果</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span>: Forwardlee</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@create</span>: 2018-10-27</span></span><br><span class="line"><span class="comment"> **/</span></span><br><span class="line"><span class="meta">@Slf</span>4j</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RpcServerChannelHandler</span> <span class="keyword">extends</span> <span class="title">ChannelInboundHandlerAdapter</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">channelRead</span><span class="params">(ChannelHandlerContext ctx, Object msg)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        log.info(<span class="string">"RPC Server 收到消息：&#123;&#125;"</span>,msg);</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (msg <span class="keyword">instanceof</span> RpcVO.RequestVO) &#123;</span><br><span class="line">                RpcVO.RequestVO requestVO = (RpcVO.RequestVO) msg;</span><br><span class="line">                String serviceName = requestVO.getServiceName();</span><br><span class="line">                Serializable param = requestVO.getParam();</span><br><span class="line">                SpelExpressionParser parser = <span class="keyword">new</span> SpelExpressionParser();</span><br><span class="line">                StandardEvaluationContext evaluationContext = <span class="keyword">new</span> StandardEvaluationContext();</span><br><span class="line">                evaluationContext.setBeanResolver(<span class="keyword">new</span> BeanFactoryResolver(SpringContext.getContext()));</span><br><span class="line">                evaluationContext.setVariable(<span class="string">"param"</span>, param);</span><br><span class="line">                Object responseVo = parser.parseExpression(serviceName).getValue(evaluationContext);</span><br><span class="line">                log.info(ctx.channel().remoteAddress()+<span class="string">"-RPC请求执行结果：&#123;&#125;"</span>,responseVo);</span><br><span class="line">                RpcVO.ResponseVO responseVO = (RpcVO.ResponseVO) responseVo;</span><br><span class="line">                ctx.writeAndFlush(responseVO);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            ReferenceCountUtil.release(msg);</span><br><span class="line">            ctx.close();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">exceptionCaught</span><span class="params">(ChannelHandlerContext ctx, Throwable cause)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        cause.printStackTrace();</span><br><span class="line">        ctx.close();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2><span id="编写rpcclient代码">编写RpcClient代码</span></h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@program</span>: netty_springboot</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@description</span>: 使用protobuf实现rpc client --rpc请求</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span>: Forwardlee</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@create</span>: 2018-10-27</span></span><br><span class="line"><span class="comment"> **/</span></span><br><span class="line"><span class="meta">@Slf</span>4j</span><br><span class="line"><span class="meta">@Component</span>(<span class="string">"rpcClientProtobuf"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RpcClient</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Resource</span></span><br><span class="line">    <span class="keyword">private</span> RpcClientConfig rpcClientConfig;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> RpcVO.<span class="function">ResponseVO <span class="title">submit</span><span class="params">(RpcVO.RequestVO requestVO)</span></span>&#123;</span><br><span class="line">        EventLoopGroup clientGroup = <span class="keyword">new</span> NioEventLoopGroup();</span><br><span class="line">        RpcClientChannelHandler rpcClientChannelHandler = <span class="keyword">new</span> RpcClientChannelHandler(requestVO);</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            Bootstrap bootstrap = <span class="keyword">new</span> Bootstrap();</span><br><span class="line">            bootstrap.group(clientGroup)</span><br><span class="line">                    .option(ChannelOption.TCP_NODELAY,<span class="keyword">true</span>)</span><br><span class="line">                    .channel(NioSocketChannel.class)</span><br><span class="line">                    .handler(<span class="keyword">new</span> RpcClientChannelHandlerInitializer(rpcClientChannelHandler));</span><br><span class="line">            SocketAddress address = <span class="keyword">new</span> InetSocketAddress(rpcClientConfig.getHost(),rpcClientConfig.getPort2());</span><br><span class="line">            ChannelFuture future = bootstrap.connect(address).sync();</span><br><span class="line">            future.channel().closeFuture().sync();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">            log.error(<span class="string">"RPC Client 连接 RPC Server 出错"</span>,e);</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            clientGroup.shutdownGracefully();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> rpcClientChannelHandler.getResponseVO();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@program</span>: netty_springboot</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@description</span>: channel初始化</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span>: Forwardlee</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@create</span>: 2018-10-27</span></span><br><span class="line"><span class="comment"> **/</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RpcClientChannelHandlerInitializer</span> <span class="keyword">extends</span> <span class="title">ChannelInitializer</span>&lt;<span class="title">SocketChannel</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> ChannelInboundHandlerAdapter channelInboundHandlerAdapter;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">RpcClientChannelHandlerInitializer</span><span class="params">(ChannelInboundHandlerAdapter channelInboundHandlerAdapter)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.channelInboundHandlerAdapter = channelInboundHandlerAdapter;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">initChannel</span><span class="params">(SocketChannel ch)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        ChannelPipeline pipeline = ch.pipeline();</span><br><span class="line"></span><br><span class="line">        <span class="comment">//处理的拆包、粘包的解、编码器</span></span><br><span class="line">        pipeline.addLast(<span class="string">"frameDecoder"</span>,<span class="keyword">new</span> LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, <span class="number">0</span>, <span class="number">4</span>,<span class="number">0</span>,<span class="number">4</span>));</span><br><span class="line">        pipeline.addLast(<span class="string">"frameEncoder"</span>,<span class="keyword">new</span> LengthFieldPrepender(<span class="number">4</span>));</span><br><span class="line"></span><br><span class="line">        <span class="comment">//protobuf序列化编解码</span></span><br><span class="line">        pipeline.addLast(<span class="keyword">new</span> ProtobufEncoder());</span><br><span class="line">        pipeline.addLast(<span class="keyword">new</span> ProtobufDecoder(RpcVO.ResponseVO.getDefaultInstance()));</span><br><span class="line">        pipeline.addLast(<span class="keyword">new</span> ProtobufVarint32FrameDecoder());</span><br><span class="line">        pipeline.addLast(<span class="keyword">new</span> ProtobufVarint32LengthFieldPrepender());</span><br><span class="line">        pipeline.addLast(channelInboundHandlerAdapter);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@program</span>: netty_springboot</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@description</span>: 处理protobuf序列化数据的请求和相应</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span>: Forwardlee</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@create</span>: 2018-10-27</span></span><br><span class="line"><span class="comment"> **/</span></span><br><span class="line"><span class="meta">@Slf</span>4j</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RpcClientChannelHandler</span> <span class="keyword">extends</span> <span class="title">ChannelInboundHandlerAdapter</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> RpcVO.ResponseVO responseVO;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> RpcVO.RequestVO requestVO;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">RpcClientChannelHandler</span><span class="params">(RpcVO.RequestVO requestVO)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.requestVO = requestVO;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">channelRead</span><span class="params">(ChannelHandlerContext ctx, Object msg)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        log.info(<span class="string">"收到RPC Server返回消息:&#123;&#125;"</span>,msg);</span><br><span class="line">        <span class="keyword">if</span> (msg <span class="keyword">instanceof</span> RpcVO.ResponseVO) &#123;</span><br><span class="line">            <span class="keyword">this</span>.responseVO = (RpcVO.ResponseVO) msg;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">channelActive</span><span class="params">(ChannelHandlerContext ctx)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        log.info(<span class="string">"RPC Client 发送消息:&#123;&#125;"</span>,requestVO);</span><br><span class="line">        ctx.writeAndFlush(requestVO);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">exceptionCaught</span><span class="params">(ChannelHandlerContext ctx, Throwable cause)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        cause.printStackTrace();</span><br><span class="line">        ctx.close();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> RpcVO.<span class="function">ResponseVO <span class="title">getResponseVO</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> responseVO;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2018/10/26/架构师之路-JVM-JAVA内存模型-一/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ForwardLee">
+      <meta itemprop="description" content="总结学习方法，实践技术技能。">
+      <meta itemprop="image" content="/images/head.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="不忘初心">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/10/26/架构师之路-JVM-JAVA内存模型-一/" itemprop="url">
+                  架构师之路-JVM-JAVA内存模型(一)
+                </a>
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-10-26 10:27:40" itemprop="dateCreated datePublished" datetime="2018-10-26T10:27:40+08:00">2018-10-26</time>
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1><span id="jvm是个什么鬼">JVM是个什么鬼？</span></h1><p>JVM（Java Virtual Machine）是运行编译JAVA语言程序生成的bytecode文件（.class文件）的运行时环境（JRE-Java Runtime Enviorment）。最早是Sun公司为了执行Java语言程序实现的配套环境，JVM通过屏蔽真实操作系统相关的运行指令，制定了一套关于处理器、堆栈、寄存器的指令执行和内存管理的标准。这套标准并非JAVA语言所独有，只要按照JVM定义的标准生成bytecode文件，任何开发语言都可以运行在JVM上。</p>
+<h1><span id="jvm内存管理">JVM内存管理</span></h1><p>程序语言都是由数据和执行数据逻辑的指令构成，数据是由</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2018/09/19/Nginx-keepalived实现高可用/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1524,288 +1824,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2018/07/24/Hystrix在实际应用中的多级降级策略/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="ForwardLee">
-      <meta itemprop="description" content="总结学习方法，实践技术技能。">
-      <meta itemprop="image" content="/images/head.jpeg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="不忘初心">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/07/24/Hystrix在实际应用中的多级降级策略/" itemprop="url">
-                  Hystrix在实际应用中的多级降级和手动降级策略
-                </a>
-              
-            
-          </h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2018-07-24 17:57:50" itemprop="dateCreated datePublished" datetime="2018-07-24T17:57:50+08:00">2018-07-24</time>
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="HystrixCommand嵌套实现多级降级"><a href="#HystrixCommand嵌套实现多级降级" class="headerlink" title="HystrixCommand嵌套实现多级降级"></a>HystrixCommand嵌套实现多级降级</h1><p>当HystrixCommand在执行跨网络请求接口时，可能因为接口服务不可用而导致接口服务降级，此时回调用HystrixCommand的fallback()方法返回数据。在实际应用中，网络服务接口要实现高可用，需要对接口进行主备的部署方案，主接口宕机，可以调用备用服务接口获取数据。此时在HystrixCommand的fallback()方法中再使用HystrixCommand调用备用服务接口，实现第一次降级；如果备用服务接口仍然不可用，那么进行第二次服务降级，返回Stubbed Fallback（残缺降级）数据。</p>
-<p><img src="/2018/07/24/Hystrix在实际应用中的多级降级策略/command嵌套.png" alt=""></p>
-<h1 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h1><p><strong>PS：</strong> GetProductInfoCmmd的GroupKey的值为GetProductInfoCmmdGroup，第一级降级fallback()中调用的GetProductInfoFallBackCmmd的GroupKey的值为GetProductInfoFallBackGroup，这两个GropKey值不能相同，因为第一级降级时GetProductInfoCmmdGroup线程池中的线程可能已经被耗尽，再使用这个GroupKey将无法从中获取空闲的线程执行降级的GetProductInfoFallBackCmmd。</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/07/24/Hystrix在实际应用中的多级降级策略/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2018/07/24/Hystrix高并发请求合并处理/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="ForwardLee">
-      <meta itemprop="description" content="总结学习方法，实践技术技能。">
-      <meta itemprop="image" content="/images/head.jpeg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="不忘初心">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/07/24/Hystrix高并发请求合并处理/" itemprop="url">
-                  Hystrix高并发请求合并处理
-                </a>
-              
-            
-          </h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2018-07-24 08:59:49" itemprop="dateCreated datePublished" datetime="2018-07-24T08:59:49+08:00">2018-07-24</time>
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="Hystrix处理单个或者数量较少的请求"><a href="#Hystrix处理单个或者数量较少的请求" class="headerlink" title="Hystrix处理单个或者数量较少的请求"></a>Hystrix处理单个或者数量较少的请求</h1><h2 id="创建HystrixCommand"><a href="#创建HystrixCommand" class="headerlink" title="创建HystrixCommand"></a>创建HystrixCommand</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Slf</span>4j</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GetProductInfoCmmd</span>  <span class="keyword">extends</span> <span class="title">HystrixCommand</span>&lt;<span class="title">ProductInfo</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> HystrixCommandKey KEY = HystrixCommandKey.Factory.asKey(<span class="string">"GetProductInfoCmmd"</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Long productId;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">GetProductInfoCmmd</span><span class="params">(Long productId)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//跨网络请求通常使用HystrixCommandProperties.ExecutionIsolationStrategy.THREAD</span></span><br><span class="line">        <span class="comment">// 线程池策略（默认最多并发10个线程请求）进行隔离限流，目的是用线程池可以获取线程执行的操作状态</span></span><br><span class="line">        <span class="comment">//GetProductInfoCmmdGroup定义了一个线程池专门执行run方法，这个线程池的大小就主动</span></span><br><span class="line">        <span class="comment">//限制住所有请求run方法中的http请求，防止http请求阻塞后整个web容器的线程资源都被耗尽</span></span><br><span class="line">        <span class="comment">//super(HystrixCommandGroupKey.Factory.asKey("GetProductInfoCmmdGroup"));</span></span><br><span class="line">        <span class="keyword">super</span>(</span><br><span class="line">                Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey(<span class="string">"GetProductInfoGroup"</span>))</span><br><span class="line">                        .andCommandKey(HystrixCommandKey.Factory.asKey(<span class="string">"GetProductInfoCmmd"</span>))</span><br><span class="line">                        .andThreadPoolKey(HystrixThreadPoolKey.Factory.asKey(<span class="string">"GetProductInfoThreadPool"</span>))</span><br><span class="line">                        .andCommandPropertiesDefaults(HystrixCommandProperties.Setter()</span><br><span class="line">                                .withExecutionIsolationStrategy(HystrixCommandProperties.ExecutionIsolationStrategy.THREAD)</span><br><span class="line">                                <span class="comment">//允许执行的最大并发数</span></span><br><span class="line">                                .withExecutionIsolationSemaphoreMaxConcurrentRequests(<span class="number">30</span>)</span><br><span class="line">                                <span class="comment">//请求超时</span></span><br><span class="line">                                .withExecutionTimeoutInMilliseconds(<span class="number">200</span>))</span><br><span class="line">                        .andThreadPoolPropertiesDefaults(HystrixThreadPoolProperties.Setter()</span><br><span class="line">                                <span class="comment">//default 10，默认线程池大小</span></span><br><span class="line">                                .withCoreSize(<span class="number">10</span>)</span><br><span class="line">                                <span class="comment">//default 5，没有被线程池执行的请求会放到队列中等待线程，如果队列已满，新来的请求会被降级被拒</span></span><br><span class="line">                                .withQueueSizeRejectionThreshold(<span class="number">10</span>)</span><br><span class="line">                                <span class="comment">//withQueueSizeRejectionThreshold和withMaxQueueSize比较，queueSize取较小值</span></span><br><span class="line">                                .withMaxQueueSize(<span class="number">8</span>))</span><br><span class="line">        );</span><br><span class="line">        <span class="keyword">this</span>.productId = productId;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> ProductInfo <span class="title">run</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        String url = <span class="string">"http://127.0.0.1:8082/product/get?productId="</span>+productId;</span><br><span class="line"></span><br><span class="line">        String s = HttpClientUtils.sendGetRequestWithException(url);</span><br><span class="line">        log.info(<span class="string">"product-ha response &#123;&#125;"</span>,s);</span><br><span class="line">        ProductInfo productInfo = JSONObject.parseObject(s, ProductInfo.class);</span><br><span class="line">        <span class="keyword">return</span> productInfo;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 从hystrix本地缓存中获取数据，而不是执行run方法</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> String <span class="title">getCacheKey</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"product_key_"</span>+productId;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 清理hystrix缓存的数据</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> productId</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">flushCache</span><span class="params">(Long productId)</span></span>&#123;</span><br><span class="line">        HystrixRequestCache.getInstance(KEY,HystrixConcurrencyStrategyDefault.getInstance()).clear(<span class="string">"product_key_"</span>+productId);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * hystrix执行降级请求时返回的数据</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> ProductInfo <span class="title">getFallback</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        String product = <span class="string">"&#123;\"id\": 111, \"name\": \"iphone7手机\", \"price\": 5599, \"pictureList\":\"a.jpg,b.jpg\", \"specification\": \"iphone7的规格\", \"service\": \"iphone7的售后服务\", \"color\": \"红色,白色,黑色\", \"size\": \"5.5\", \"shopId\": 1, \"modifiedTime\": \"2017-01-01 12:00:00\", \"cityId\":1&#125;"</span>;</span><br><span class="line">        log.info(<span class="string">"getFallback:&#123;&#125;"</span>,product);</span><br><span class="line">        ProductInfo productInfo = JSONObject.parseObject(product, ProductInfo.class);</span><br><span class="line">        <span class="keyword">return</span> productInfo;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/07/24/Hystrix高并发请求合并处理/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1857,7 +1875,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">52</span>
+                    <span class="site-state-item-count">54</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -1960,7 +1978,11 @@
                     
                       
                     
-                    <span class="site-state-item-count">44</span>
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">46</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>

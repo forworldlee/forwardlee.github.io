@@ -341,6 +341,288 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2018/07/24/Hystrix在实际应用中的多级降级策略/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ForwardLee">
+      <meta itemprop="description" content="总结学习方法，实践技术技能。">
+      <meta itemprop="image" content="/images/head.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="不忘初心">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/07/24/Hystrix在实际应用中的多级降级策略/" itemprop="url">
+                  Hystrix在实际应用中的多级降级和手动降级策略
+                </a>
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-07-24 17:57:50" itemprop="dateCreated datePublished" datetime="2018-07-24T17:57:50+08:00">2018-07-24</time>
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="HystrixCommand嵌套实现多级降级"><a href="#HystrixCommand嵌套实现多级降级" class="headerlink" title="HystrixCommand嵌套实现多级降级"></a>HystrixCommand嵌套实现多级降级</h1><p>当HystrixCommand在执行跨网络请求接口时，可能因为接口服务不可用而导致接口服务降级，此时回调用HystrixCommand的fallback()方法返回数据。在实际应用中，网络服务接口要实现高可用，需要对接口进行主备的部署方案，主接口宕机，可以调用备用服务接口获取数据。此时在HystrixCommand的fallback()方法中再使用HystrixCommand调用备用服务接口，实现第一次降级；如果备用服务接口仍然不可用，那么进行第二次服务降级，返回Stubbed Fallback（残缺降级）数据。</p>
+<p><img src="/2018/07/24/Hystrix在实际应用中的多级降级策略/command嵌套.png" alt=""></p>
+<h1 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h1><p><strong>PS：</strong> GetProductInfoCmmd的GroupKey的值为GetProductInfoCmmdGroup，第一级降级fallback()中调用的GetProductInfoFallBackCmmd的GroupKey的值为GetProductInfoFallBackGroup，这两个GropKey值不能相同，因为第一级降级时GetProductInfoCmmdGroup线程池中的线程可能已经被耗尽，再使用这个GroupKey将无法从中获取空闲的线程执行降级的GetProductInfoFallBackCmmd。</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/07/24/Hystrix在实际应用中的多级降级策略/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2018/07/24/Hystrix高并发请求合并处理/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ForwardLee">
+      <meta itemprop="description" content="总结学习方法，实践技术技能。">
+      <meta itemprop="image" content="/images/head.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="不忘初心">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/07/24/Hystrix高并发请求合并处理/" itemprop="url">
+                  Hystrix高并发请求合并处理
+                </a>
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-07-24 08:59:49" itemprop="dateCreated datePublished" datetime="2018-07-24T08:59:49+08:00">2018-07-24</time>
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="Hystrix处理单个或者数量较少的请求"><a href="#Hystrix处理单个或者数量较少的请求" class="headerlink" title="Hystrix处理单个或者数量较少的请求"></a>Hystrix处理单个或者数量较少的请求</h1><h2 id="创建HystrixCommand"><a href="#创建HystrixCommand" class="headerlink" title="创建HystrixCommand"></a>创建HystrixCommand</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Slf</span>4j</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GetProductInfoCmmd</span>  <span class="keyword">extends</span> <span class="title">HystrixCommand</span>&lt;<span class="title">ProductInfo</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> HystrixCommandKey KEY = HystrixCommandKey.Factory.asKey(<span class="string">"GetProductInfoCmmd"</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Long productId;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">GetProductInfoCmmd</span><span class="params">(Long productId)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//跨网络请求通常使用HystrixCommandProperties.ExecutionIsolationStrategy.THREAD</span></span><br><span class="line">        <span class="comment">// 线程池策略（默认最多并发10个线程请求）进行隔离限流，目的是用线程池可以获取线程执行的操作状态</span></span><br><span class="line">        <span class="comment">//GetProductInfoCmmdGroup定义了一个线程池专门执行run方法，这个线程池的大小就主动</span></span><br><span class="line">        <span class="comment">//限制住所有请求run方法中的http请求，防止http请求阻塞后整个web容器的线程资源都被耗尽</span></span><br><span class="line">        <span class="comment">//super(HystrixCommandGroupKey.Factory.asKey("GetProductInfoCmmdGroup"));</span></span><br><span class="line">        <span class="keyword">super</span>(</span><br><span class="line">                Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey(<span class="string">"GetProductInfoGroup"</span>))</span><br><span class="line">                        .andCommandKey(HystrixCommandKey.Factory.asKey(<span class="string">"GetProductInfoCmmd"</span>))</span><br><span class="line">                        .andThreadPoolKey(HystrixThreadPoolKey.Factory.asKey(<span class="string">"GetProductInfoThreadPool"</span>))</span><br><span class="line">                        .andCommandPropertiesDefaults(HystrixCommandProperties.Setter()</span><br><span class="line">                                .withExecutionIsolationStrategy(HystrixCommandProperties.ExecutionIsolationStrategy.THREAD)</span><br><span class="line">                                <span class="comment">//允许执行的最大并发数</span></span><br><span class="line">                                .withExecutionIsolationSemaphoreMaxConcurrentRequests(<span class="number">30</span>)</span><br><span class="line">                                <span class="comment">//请求超时</span></span><br><span class="line">                                .withExecutionTimeoutInMilliseconds(<span class="number">200</span>))</span><br><span class="line">                        .andThreadPoolPropertiesDefaults(HystrixThreadPoolProperties.Setter()</span><br><span class="line">                                <span class="comment">//default 10，默认线程池大小</span></span><br><span class="line">                                .withCoreSize(<span class="number">10</span>)</span><br><span class="line">                                <span class="comment">//default 5，没有被线程池执行的请求会放到队列中等待线程，如果队列已满，新来的请求会被降级被拒</span></span><br><span class="line">                                .withQueueSizeRejectionThreshold(<span class="number">10</span>)</span><br><span class="line">                                <span class="comment">//withQueueSizeRejectionThreshold和withMaxQueueSize比较，queueSize取较小值</span></span><br><span class="line">                                .withMaxQueueSize(<span class="number">8</span>))</span><br><span class="line">        );</span><br><span class="line">        <span class="keyword">this</span>.productId = productId;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> ProductInfo <span class="title">run</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        String url = <span class="string">"http://127.0.0.1:8082/product/get?productId="</span>+productId;</span><br><span class="line"></span><br><span class="line">        String s = HttpClientUtils.sendGetRequestWithException(url);</span><br><span class="line">        log.info(<span class="string">"product-ha response &#123;&#125;"</span>,s);</span><br><span class="line">        ProductInfo productInfo = JSONObject.parseObject(s, ProductInfo.class);</span><br><span class="line">        <span class="keyword">return</span> productInfo;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 从hystrix本地缓存中获取数据，而不是执行run方法</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> String <span class="title">getCacheKey</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"product_key_"</span>+productId;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 清理hystrix缓存的数据</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> productId</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">flushCache</span><span class="params">(Long productId)</span></span>&#123;</span><br><span class="line">        HystrixRequestCache.getInstance(KEY,HystrixConcurrencyStrategyDefault.getInstance()).clear(<span class="string">"product_key_"</span>+productId);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * hystrix执行降级请求时返回的数据</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> ProductInfo <span class="title">getFallback</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        String product = <span class="string">"&#123;\"id\": 111, \"name\": \"iphone7手机\", \"price\": 5599, \"pictureList\":\"a.jpg,b.jpg\", \"specification\": \"iphone7的规格\", \"service\": \"iphone7的售后服务\", \"color\": \"红色,白色,黑色\", \"size\": \"5.5\", \"shopId\": 1, \"modifiedTime\": \"2017-01-01 12:00:00\", \"cityId\":1&#125;"</span>;</span><br><span class="line">        log.info(<span class="string">"getFallback:&#123;&#125;"</span>,product);</span><br><span class="line">        ProductInfo productInfo = JSONObject.parseObject(product, ProductInfo.class);</span><br><span class="line">        <span class="keyword">return</span> productInfo;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/07/24/Hystrix高并发请求合并处理/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2018/07/23/图解hystrix请求降级条件和请求调用过程原理/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1603,289 +1885,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2018/06/20/Nginx请求分发层和应用层双层架构模式下的应用层数据静态化策略/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="ForwardLee">
-      <meta itemprop="description" content="总结学习方法，实践技术技能。">
-      <meta itemprop="image" content="/images/head.jpeg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="不忘初心">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/06/20/Nginx请求分发层和应用层双层架构模式下的应用层数据静态化策略/" itemprop="url">
-                  基于Nginx双层架构和数据缓存服务层组成的数据三级缓存策略
-                </a>
-              
-            
-          </h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2018-06-20 09:01:28" itemprop="dateCreated datePublished" datetime="2018-06-20T09:01:28+08:00">2018-06-20</time>
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>接续《<a href="http://www.forwardlee.com/2018/06/19/%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AENginx-LUA%E5%8F%8C%E5%B1%82Ngnix%E6%9E%B6%E6%9E%84/">基于OpenResty安装配置Nginx+LUA并实现请求分发的双层Nginx架构策略</a>》</p>
-<h1 id="应用架构设计"><a href="#应用架构设计" class="headerlink" title="应用架构设计"></a>应用架构设计</h1><p>Nginx请求分发层+Nginx应用层（nginx cache）+业务数据两级缓存服务接口（ehcache+redis）<br><img src="/2018/06/20/Nginx请求分发层和应用层双层架构模式下的应用层数据静态化策略/1.png" alt="架构设计"></p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/06/20/Nginx请求分发层和应用层双层架构模式下的应用层数据静态化策略/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2018/06/19/安装配置Nginx-LUA双层Ngnix架构/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="ForwardLee">
-      <meta itemprop="description" content="总结学习方法，实践技术技能。">
-      <meta itemprop="image" content="/images/head.jpeg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="不忘初心">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/06/19/安装配置Nginx-LUA双层Ngnix架构/" itemprop="url">
-                  基于OpenResty安装配置Nginx+LUA并实现请求分发的双层Nginx架构策略
-                </a>
-              
-            
-          </h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2018-06-19 17:20:51" itemprop="dateCreated datePublished" datetime="2018-06-19T17:20:51+08:00">2018-06-19</time>
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h1><p>台CentOS6.x<br>192.168.1.210<br>192.168.1.211<br>192.168.1.212<br>网络拓扑<br>210和211作为应用层web服务器<br>212作为网络请求分发代理服务器</p>
-<h1 id="Step1-安装Linux依赖"><a href="#Step1-安装Linux依赖" class="headerlink" title="Step1:安装Linux依赖"></a>Step1:安装Linux依赖</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install -y readline-devel pcre-devel openssl-devel gcc</span><br></pre></td></tr></table></figure>
-<h1 id="Step2-安装Nginx-Openresty"><a href="#Step2-安装Nginx-Openresty" class="headerlink" title="Step2:安装Nginx Openresty"></a>Step2:安装Nginx Openresty</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">wget http://openresty.org/download/ngx_openresty-1.7.7.2.tar.gz  </span><br><span class="line">tar -xzvf ngx_openresty-1.7.7.2.tar.gz  </span><br><span class="line">cd /usr/servers/ngx_openresty-1.7.7.2/</span><br><span class="line"></span><br><span class="line">cd bundle/LuaJIT-2.1-20150120/  </span><br><span class="line">make clean &amp;&amp; make &amp;&amp; make install  </span><br><span class="line">ln -sf luajit-2.1.0-alpha /usr/local/bin/luajit</span><br><span class="line"></span><br><span class="line">cd bundle  </span><br><span class="line">wget https://github.com/FRiCKLE/ngx_cache_purge/archive/2.3.tar.gz  </span><br><span class="line">tar -xvf 2.3.tar.gz  </span><br><span class="line"></span><br><span class="line">cd bundle  </span><br><span class="line">wget https://github.com/yaoweibin/nginx_upstream_check_module/archive/v0.3.0.tar.gz  </span><br><span class="line">tar -xvf v0.3.0.tar.gz  </span><br><span class="line"></span><br><span class="line">cd /usr/servers/ngx_openresty-1.7.7.2  </span><br><span class="line">./configure --prefix=/usr/servers --with-http_realip_module  --with-pcre  --with-luajit --add-module=./bundle/ngx_cache_purge-2.3/ --add-module=./bundle/nginx_upstream_check_module-0.3.0/ -j2  </span><br><span class="line">make &amp;&amp; make install</span><br></pre></td></tr></table></figure>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/06/19/安装配置Nginx-LUA双层Ngnix架构/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1937,7 +1936,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">52</span>
+                    <span class="site-state-item-count">54</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -2040,7 +2039,11 @@
                     
                       
                     
-                    <span class="site-state-item-count">44</span>
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">46</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>

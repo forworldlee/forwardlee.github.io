@@ -341,6 +341,294 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2018/05/29/Redis主从复制原理/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ForwardLee">
+      <meta itemprop="description" content="总结学习方法，实践技术技能。">
+      <meta itemprop="image" content="/images/head.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="不忘初心">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/05/29/Redis主从复制原理/" itemprop="url">
+                  Redis主从复制原理
+                </a>
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-05-29 14:37:15" itemprop="dateCreated datePublished" datetime="2018-05-29T14:37:15+08:00">2018-05-29</time>
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="主从复制原理"><a href="#主从复制原理" class="headerlink" title="主从复制原理"></a>主从复制原理</h1><p> <img src="/2018/05/29/Redis主从复制原理/Redis主从复制原理.jpg" alt="Redis主从复制原理"><br><strong> PS:</strong></p>
+<p> full resynchronization:新的slave节点连接master同步复制数据，是一个完整的数据同步过程，叫做full resynchronization操作。</p>
+<p> backlog：master在进行主从复制时，先在本机内存生成backlog，并且把要每次复制给slave的数据保存到backlog一份，目的是要记录数据同步的位置标识offset，以便于全量复制失败后，能够再次进行断点续传的增量复制。backlog的大小为1M。</p>
+<p> master run id：salve用来区分master节点是新数据同步还是已有数据同步，如果slave发现mater的run id发生了变化，那么slava就会进行全量数据复制。<br>在slave执行命令，查看master的run id：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; info server</span><br><span class="line"># Server</span><br><span class="line">redis_version:3.2.8</span><br><span class="line">redis_git_sha1:00000000</span><br><span class="line">redis_git_dirty:0</span><br><span class="line">redis_build_id:5da7c5438a3ad5de</span><br><span class="line">redis_mode:standalone</span><br><span class="line">os:Linux 2.6.32-431.el6.i686 i686</span><br><span class="line">arch_bits:32</span><br><span class="line">multiplexing_api:epoll</span><br><span class="line">gcc_version:4.4.7</span><br><span class="line">process_id:2119</span><br><span class="line">run_id:5b80bdc81f1624e2ee403c5ccfa0a542e99fbb3e</span><br><span class="line">tcp_port:6379</span><br><span class="line">uptime_in_seconds:62</span><br><span class="line">uptime_in_days:0</span><br><span class="line">hz:10</span><br><span class="line">lru_clock:562478</span><br><span class="line">executable:/usr/local/bin/redis-server</span><br><span class="line">config_file:/etc/redis/6379.conf</span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/05/29/Redis主从复制原理/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2018/05/28/Redis数据灾备和恢复过程中踩到的雷/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ForwardLee">
+      <meta itemprop="description" content="总结学习方法，实践技术技能。">
+      <meta itemprop="image" content="/images/head.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="不忘初心">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/05/28/Redis数据灾备和恢复过程中踩到的雷/" itemprop="url">
+                  Redis数据灾备和恢复过程中踩到的雷
+                </a>
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-05-28 16:35:45" itemprop="dateCreated datePublished" datetime="2018-05-28T16:35:45+08:00">2018-05-28</time>
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="生产环境配置策略"><a href="#生产环境配置策略" class="headerlink" title="生产环境配置策略"></a>生产环境配置策略</h1><p>RDB 生成快照的频率策略要在每分钟生成一次，但是有多少key发生变化可根据自身业务量配置。<br>save 60 1000</p>
+<p>AOF 在生产环境一定要打开，与RDB同时运行，fsync策略为everysec。</p>
+<h1 id="生产环境备份策略"><a href="#生产环境备份策略" class="headerlink" title="生产环境备份策略"></a>生产环境备份策略</h1><p>RDB主要做冷备，用craontab执行定时脚本，做数据备份。<br>备份数据保留48小时，脚本清理48小时以前的数据。<br>每天备份当日的数据，每天的数据保存一个月。<br>把所有数据再备份到远程云服务器上。</p>
+<p>每小时备份脚本</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash</span><br><span class="line"></span><br><span class="line">cur_date=`date +%Y%m%d%H`</span><br><span class="line">rm -rf /var/redis/6379/bak/hour/$cur_date</span><br><span class="line">cp /var/redis/6379/dump.rdb /var/redis/6379/bak/hour/$cur_date</span><br><span class="line"></span><br><span class="line">pre_date=`date -d -48hour +%Y%m%d%H`</span><br><span class="line">rm -rf /var/redis/6379/bak/hour/$pre_date</span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/05/28/Redis数据灾备和恢复过程中踩到的雷/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2018/05/25/Redis持久化方式RDB和AOF比较应用/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1604,318 +1892,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2018/05/16/为未来而学/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="ForwardLee">
-      <meta itemprop="description" content="总结学习方法，实践技术技能。">
-      <meta itemprop="image" content="/images/head.jpeg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="不忘初心">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/05/16/为未来而学/" itemprop="url">
-                  为未来而学
-                </a>
-              
-            
-          </h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2018-05-16 19:15:00" itemprop="dateCreated datePublished" datetime="2018-05-16T19:15:00+08:00">2018-05-16</time>
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">如果一个人只满足于完成别人所要求的事情，那么，他只能是个奴隶，只有当他超越了这个限度，才会成为一个自由人。</span><br><span class="line"></span><br><span class="line">——哈佛学习格言</span><br></pre></td></tr></table></figure>
-<p><strong>有关学习的两个困境</strong></p>
-<p><strong>一、学习是一场竞赛，我们凭什么才可以胜出？</strong></p>
-<p>大城市里面人们为了能够上一所“好的”小学，要选择购置学区房；</p>
-<p>大城市里面为了能够将来上好的中学，还要报各种课外班，什么奥数，英语，绘画，书法，钢琴，足球，篮球······；</p>
-<p>大城市里面孩子们每天不是在上学就是在上课外班，家长不是在送孩子去上学的路上就是在送孩子去课外班的路上。</p>
-<p>这一切正常吗，我们是选择了随大流还是经过了深思熟虑的思考？这样的学习方式和节奏是最有效的吗？这场学习的竞赛普通的家庭有竞争优势吗？哪些能力在我们未来会让我们更有竞争优势呢？哪些方面的学习对我们一生更加重要呢？</p>
-<p>不知道这些问题，朋友们有没有问过自己，有没有过深入的思考，有没有给自己一个答案。</p>
-<p>与此相反的是，小城市、农村、郊区的孩子们多数情况是玩玩玩，大好的青春真的就在玩耍中渡过啦，想必长大后会后悔吧。毕竟，人生中有许多事情是需要时间的积累的，而时间是不可以购买的，时间是一去不复返的，错过真的很难弥补上。阅读，就属于这样的事情。</p>
-<p>现在，城市与郊区的教育，重点学校与普通学校之间教育的差距越来越大，这种差距一方面体现在对教育的认知上，另一方面体现在优质的教育资源和用钱堆出来的课外兴趣班、优培班。</p>
-<p>好在，我们还有一种方法，能够缩小这种无法改变的学习资源和环境差距。是什么样的方法呢？</p>
-<p>俗话说，要用正确的方法做正确的事情。这一点最关键。我们要从学习的最根本出发，去探寻学习的本质，去掌握学习的方法，去洞察未来，这就是我们需要做的最正确的事情，它保证我们走在一条正确的道路上。而做这些事情，好的学校和富裕的家庭条件都不是必须的条件，需要的是我们的态度和行动。</p>
-<p><strong>二、学习是为了生活，生活是一辈子的事情，我们是否有终身学习的准备？</strong></p>
-<p>先不说，终身学习，就是学校里的学习，我们都无法很好地完成。这是为什么呢？</p>
-<p>说不爱学习的人，实际是没有发现好的学习方式、引人入胜的学习资源、让人体会到收获和成就感的学习成果。甚至，从更根本上来说，是没有找到或发现学习的意义。</p>
-<p>其实，人天生就是学习的好手，不仅具有好奇心，而且也爱学习。</p>
-<p>学习中往往会：</p>
-<p>因为不知道自己不知道，而没有思考；</p>
-<p>因为不知道学习目标是什么，不知道为什么而学，而没有动力；</p>
-<p>因为不知道学习方法，而无法采取行动；</p>
-<p>因为不知道学习需要经历的过程，而无法坚持。</p>
-<p>在这里，你将看清楚“学习”的样子，看清楚“学习的过程”，掌握“学习”的方法，知道并体会到“学习”带来的各种机会和可能性。</p>
-<p>从此，你会亲手为自己打开一扇通往未来的希望之门，你会走在通往未来的道路上，而且还站在巨人的肩膀上。慢慢地，你会发现你已经不是原来的你了，你能看的更远，也能看的更加清晰。终身学习也因此成为了你生活中形影不离的朋友！<br><img src="/images/erweima.png" alt="二维码"></p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2018/05/16/MySql分区操作（一）/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="ForwardLee">
-      <meta itemprop="description" content="总结学习方法，实践技术技能。">
-      <meta itemprop="image" content="/images/head.jpeg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="不忘初心">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/05/16/MySql分区操作（一）/" itemprop="url">
-                  MySql分区操作（一）
-                </a>
-              
-            
-          </h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2018-05-16 18:24:35" itemprop="dateCreated datePublished" datetime="2018-05-16T18:24:35+08:00">2018-05-16</time>
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>##分区类型<br>RANGE 连续的列值区间分区，有主键和唯一键必须使用，如果没有则可以指定任何一列；<br>LIST 类似RANGE分区，区别在于指定一系列的列值作为分区条件；<br>HASH 由函数表达式返回值决定所在分区，函数返回值必须为非负整数；<br>KEY 由mysql提供的HASH函数进行服务，==使用较少==。</p>
-<p>##创建表分区</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE tbl_users (</span><br><span class="line">  `pkid` INT NOT NULL AUTO_INCREMENT,</span><br><span class="line">  `username` VARCHAR(255) NOT NULL,</span><br><span class="line">  `password` VARCHAR(255) NOT NULL,</span><br><span class="line">  `email` VARCHAR(255) NULL,</span><br><span class="line">  `sex` CHAR(1) NULL,</span><br><span class="line">  PRIMARY KEY (`pkid`))</span><br><span class="line">ENGINE = InnoDB</span><br><span class="line">DEFAULT CHARACTER SET = utf8 </span><br><span class="line">PARTITION BY RANGE(pkid) PARTITIONS 3( </span><br><span class="line">PARTITION part0 VALUES LESS THAN (10000),  </span><br><span class="line">PARTITION part1 VALUES LESS THAN (20000),  </span><br><span class="line">PARTITION part2 VALUES LESS THAN (MAXVALUE)</span><br><span class="line">) ;</span><br></pre></td></tr></table></figure>
-<p>##查看分区</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select * from information_schema.partitions where table_schema=&apos;myblog&apos; and table_name=&apos;tbl_users&apos; \G;</span><br></pre></td></tr></table></figure>
-<p>得到如下结果</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br></pre></td><td class="code"><pre><span class="line">*************************** 1. row ***************************</span><br><span class="line">                TABLE_CATALOG: def</span><br><span class="line">                 TABLE_SCHEMA: myblog</span><br><span class="line">                   TABLE_NAME: tbl_users</span><br><span class="line">               PARTITION_NAME: part0</span><br><span class="line">            SUBPARTITION_NAME: NULL</span><br><span class="line">   PARTITION_ORDINAL_POSITION: 1</span><br><span class="line">SUBPARTITION_ORDINAL_POSITION: NULL</span><br><span class="line">             PARTITION_METHOD: RANGE</span><br><span class="line">          SUBPARTITION_METHOD: NULL</span><br><span class="line">         PARTITION_EXPRESSION: pkid</span><br><span class="line">      SUBPARTITION_EXPRESSION: NULL</span><br><span class="line">        PARTITION_DESCRIPTION: 10000</span><br><span class="line">                   TABLE_ROWS: 0</span><br><span class="line">               AVG_ROW_LENGTH: 0</span><br><span class="line">                  DATA_LENGTH: 16384</span><br><span class="line">              MAX_DATA_LENGTH: NULL</span><br><span class="line">                 INDEX_LENGTH: 0</span><br><span class="line">                    DATA_FREE: 0</span><br><span class="line">                  CREATE_TIME: 2018-05-16 18:21:08</span><br><span class="line">                  UPDATE_TIME: NULL</span><br><span class="line">                   CHECK_TIME: NULL</span><br><span class="line">                     CHECKSUM: NULL</span><br><span class="line">            PARTITION_COMMENT: </span><br><span class="line">                    NODEGROUP: default</span><br><span class="line">              TABLESPACE_NAME: NULL</span><br><span class="line">*************************** 2. row ***************************</span><br><span class="line">                TABLE_CATALOG: def</span><br><span class="line">                 TABLE_SCHEMA: myblog</span><br><span class="line">                   TABLE_NAME: tbl_users</span><br><span class="line">               PARTITION_NAME: part1</span><br><span class="line">            SUBPARTITION_NAME: NULL</span><br><span class="line">   PARTITION_ORDINAL_POSITION: 2</span><br><span class="line">SUBPARTITION_ORDINAL_POSITION: NULL</span><br><span class="line">             PARTITION_METHOD: RANGE</span><br><span class="line">          SUBPARTITION_METHOD: NULL</span><br><span class="line">         PARTITION_EXPRESSION: pkid</span><br><span class="line">      SUBPARTITION_EXPRESSION: NULL</span><br><span class="line">        PARTITION_DESCRIPTION: 20000</span><br><span class="line">                   TABLE_ROWS: 0</span><br><span class="line">               AVG_ROW_LENGTH: 0</span><br><span class="line">                  DATA_LENGTH: 16384</span><br><span class="line">              MAX_DATA_LENGTH: NULL</span><br><span class="line">                 INDEX_LENGTH: 0</span><br><span class="line">                    DATA_FREE: 0</span><br><span class="line">                  CREATE_TIME: 2018-05-16 18:21:08</span><br><span class="line">                  UPDATE_TIME: NULL</span><br><span class="line">                   CHECK_TIME: NULL</span><br><span class="line">                     CHECKSUM: NULL</span><br><span class="line">            PARTITION_COMMENT: </span><br><span class="line">                    NODEGROUP: default</span><br><span class="line">              TABLESPACE_NAME: NULL</span><br><span class="line">*************************** 3. row ***************************</span><br><span class="line">                TABLE_CATALOG: def</span><br><span class="line">                 TABLE_SCHEMA: myblog</span><br><span class="line">                   TABLE_NAME: tbl_users</span><br><span class="line">               PARTITION_NAME: part2</span><br><span class="line">            SUBPARTITION_NAME: NULL</span><br><span class="line">   PARTITION_ORDINAL_POSITION: 3</span><br><span class="line">SUBPARTITION_ORDINAL_POSITION: NULL</span><br><span class="line">             PARTITION_METHOD: RANGE</span><br><span class="line">          SUBPARTITION_METHOD: NULL</span><br><span class="line">         PARTITION_EXPRESSION: pkid</span><br><span class="line">      SUBPARTITION_EXPRESSION: NULL</span><br><span class="line">        PARTITION_DESCRIPTION: MAXVALUE</span><br><span class="line">                   TABLE_ROWS: 0</span><br><span class="line">               AVG_ROW_LENGTH: 0</span><br><span class="line">                  DATA_LENGTH: 16384</span><br><span class="line">              MAX_DATA_LENGTH: NULL</span><br><span class="line">                 INDEX_LENGTH: 0</span><br><span class="line">                    DATA_FREE: 0</span><br><span class="line">                  CREATE_TIME: 2018-05-16 18:21:08</span><br><span class="line">                  UPDATE_TIME: NULL</span><br><span class="line">                   CHECK_TIME: NULL</span><br><span class="line">                     CHECKSUM: NULL</span><br><span class="line">            PARTITION_COMMENT: </span><br><span class="line">                    NODEGROUP: default</span><br><span class="line">              TABLESPACE_NAME: NULL</span><br><span class="line">3 rows in set (0.01 sec)</span><br></pre></td></tr></table></figure>
-<p>##查看分区上的数据</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select * from tbl_users partition(p0)</span><br></pre></td></tr></table></figure>
-<p>##查看分区数据查询性能</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">explain partitions select * from tbl_users where pkid =2;</span><br></pre></td></tr></table></figure>
-<p>##其他分区类型<br>LIST类型</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE `myblog`.`tbl_blog` (</span><br><span class="line">  `pkid` INT NOT NULL AUTO_INCREMENT,</span><br><span class="line">  `title` VARCHAR(255) NOT NULL,</span><br><span class="line">  `content` VARCHAR(5000) NULL,</span><br><span class="line">  `create_time` DATETIME NULL,</span><br><span class="line">  PRIMARY KEY (`pkid`))</span><br><span class="line">ENGINE = InnoDB</span><br><span class="line">DEFAULT CHARACTER SET = utf8</span><br><span class="line">COMMENT = &apos;博客文章&apos; PARTITION BY LIST(pkid) PARTITIONS 3(</span><br><span class="line"> PARTITION part0 VALUES IN (1,2,3),  </span><br><span class="line">PARTITION part1 VALUES IN (4,5,6),  </span><br><span class="line">PARTITION part2 VALUES IN (7,8,9)</span><br><span class="line">) ;</span><br></pre></td></tr></table></figure>
-<p>HASH类型<br>利用分区字段除分区数量取余数，就把数据放到第余数个分区上。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE `myblog`.`tbl_user_friends` (</span><br><span class="line">  `pkid` INT NOT NULL AUTO_INCREMENT,</span><br><span class="line">  `user_id` INT NOT NULL,</span><br><span class="line">  `friend_id` INT NOT NULL,</span><br><span class="line">  `create_time` DATETIME NOT NULL,</span><br><span class="line">  PRIMARY KEY (`pki`))</span><br><span class="line">ENGINE = InnoDB</span><br><span class="line">DEFAULT CHARACTER SET = utf8</span><br><span class="line">COMMENT = &apos;用户好友&apos; PARTITION BY HASH(pkid) PARTITIONS 3 ;</span><br></pre></td></tr></table></figure>
-<p>插入数据</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">insert into tbl_user_friends values(1,2,3,NULL);</span><br><span class="line">insert into tbl_user_friends values(5,2,3,NULL);</span><br></pre></td></tr></table></figure>
-<p>得到结论</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">select * from tbl_user_friends partition(p1);</span><br><span class="line">+------+---------+-----------+-------------+</span><br><span class="line">| pkid | user_id | friend_id | create_time |</span><br><span class="line">+------+---------+-----------+-------------+</span><br><span class="line">|    1 |       2 |         3 | NULL        |</span><br><span class="line">+------+---------+-----------+-------------+</span><br><span class="line">1 row in set (0.00 sec)</span><br><span class="line">mysql&gt; select * from tbl_user_friends partition(p2);</span><br><span class="line">+------+---------+-----------+-------------+</span><br><span class="line">| pkid | user_id | friend_id | create_time |</span><br><span class="line">+------+---------+-----------+-------------+</span><br><span class="line">|    5 |       2 |         3 | NULL        |</span><br><span class="line">+------+---------+-----------+-------------+</span><br><span class="line">1 row in set (0.00 sec)</span><br></pre></td></tr></table></figure>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1967,7 +1943,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">52</span>
+                    <span class="site-state-item-count">54</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -2070,7 +2046,11 @@
                     
                       
                     
-                    <span class="site-state-item-count">44</span>
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">46</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
