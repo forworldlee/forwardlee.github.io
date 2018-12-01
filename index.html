@@ -341,160 +341,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2018/11/28/从ForkJoin到Stream，再到Storm学习并行计算/ForkJoinPool.execute(R r)/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="ForwardLee">
-      <meta itemprop="description" content="总结学习方法，实践技术技能。">
-      <meta itemprop="image" content="/images/head.jpeg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="不忘初心">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/11/28/从ForkJoin到Stream，再到Storm学习并行计算/ForkJoinPool.execute(R r)/" itemprop="url">
-                  未命名
-                </a>
-              
-            
-          </h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2018-11-28 16:17:02" itemprop="dateCreated datePublished" datetime="2018-11-28T16:17:02+08:00">2018-11-28</time>
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>new ForkJoinPool().invoke(ForkJoinTask f)</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//MAX_CAP = 32767 即"01111 1111 1111 1111"</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">ForkJoinPool</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>(Math.min(MAX_CAP, Runtime.getRuntime().availableProcessors()),</span><br><span class="line">             defaultForkJoinWorkerThreadFactory, <span class="keyword">null</span>, <span class="keyword">false</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">ForkJoinPool</span><span class="params">(<span class="keyword">int</span> parallelism,</span></span></span><br><span class="line"><span class="function"><span class="params">                        ForkJoinWorkerThreadFactory factory,</span></span></span><br><span class="line"><span class="function"><span class="params">                        UncaughtExceptionHandler handler,</span></span></span><br><span class="line"><span class="function"><span class="params">                        <span class="keyword">boolean</span> asyncMode)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>(checkParallelism(parallelism),</span><br><span class="line">             checkFactory(factory),</span><br><span class="line">             handler,</span><br><span class="line">             asyncMode ? FIFO_QUEUE : LIFO_QUEUE,</span><br><span class="line">             <span class="string">"ForkJoinPool-"</span> + nextPoolId() + <span class="string">"-worker-"</span>);</span><br><span class="line">        checkPermission();</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-<p>私有构造方法()</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//SMASK = 65535 即"1111 1111 1111 1111"</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="title">ForkJoinPool</span><span class="params">(<span class="keyword">int</span> parallelism,</span></span></span><br><span class="line"><span class="function"><span class="params">                         ForkJoinWorkerThreadFactory factory,</span></span></span><br><span class="line"><span class="function"><span class="params">                         UncaughtExceptionHandler handler,</span></span></span><br><span class="line"><span class="function"><span class="params">                         <span class="keyword">int</span> mode,</span></span></span><br><span class="line"><span class="function"><span class="params">                         String workerNamePrefix)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.workerNamePrefix = workerNamePrefix;</span><br><span class="line">        <span class="keyword">this</span>.factory = factory;</span><br><span class="line">        <span class="keyword">this</span>.ueh = handler;</span><br><span class="line">        <span class="keyword">this</span>.config = (parallelism &amp; SMASK) | mode;</span><br><span class="line">        <span class="keyword">long</span> np = (<span class="keyword">long</span>)(-parallelism); <span class="comment">// offset ctl counts</span></span><br><span class="line">        <span class="keyword">this</span>.ctl = ((np &lt;&lt; AC_SHIFT) &amp; AC_MASK) | ((np &lt;&lt; TC_SHIFT) &amp; TC_MASK);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-<p><img src="/Users/Cattlee/GitBlog/source/_posts/从ForkJoin到Stream，再到Storm学习并行计算/image-20181128153647554.png" alt="image-20181128153647554"></p>
-<p>CompletableFutre.supplyAsync(R r);</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> &lt;U&gt; <span class="function">CompletableFuture&lt;U&gt; <span class="title">supplyAsync</span><span class="params">(Supplier&lt;U&gt; supplier)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> asyncSupplyStage(asyncPool, supplier);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>asyncPool？</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Executor asyncPool = useCommonPool ?</span><br><span class="line">        ForkJoinPool.commonPool() : <span class="keyword">new</span> ThreadPerTaskExecutor();</span><br></pre></td></tr></table></figure>
-<p>useCommonPool?</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">boolean</span> useCommonPool =</span><br><span class="line">        (ForkJoinPool.getCommonPoolParallelism() &gt; <span class="number">1</span>);</span><br></pre></td></tr></table></figure>
-<p>ForkJoinPool.getCommonPoolParallelism()?</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">getCommonPoolParallelism</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> commonParallelism;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> &#123;</span><br><span class="line">     common = java.security.AccessController.doPrivileged</span><br><span class="line">            (<span class="keyword">new</span> java.security.PrivilegedAction&lt;ForkJoinPool&gt;() &#123;</span><br><span class="line">                <span class="function"><span class="keyword">public</span> ForkJoinPool <span class="title">run</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> makeCommonPool(); &#125;&#125;);</span><br><span class="line">        <span class="keyword">int</span> par = common.config &amp; SMASK; <span class="comment">// SMASK = 1111 1111 1111 1111</span></span><br><span class="line">        commonParallelism = par &gt; <span class="number">0</span> ? par : <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>commonParallelism值?</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> ForkJoinPool <span class="title">makeCommonPool</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> parallelism = -<span class="number">1</span>;</span><br><span class="line">       ...</span><br><span class="line">        <span class="keyword">try</span> &#123;  <span class="comment">// ignore exceptions in accessing/parsing properties</span></span><br><span class="line">            String pp = System.getProperty</span><br><span class="line">                (<span class="string">"java.util.concurrent.ForkJoinPool.common.parallelism"</span>);</span><br><span class="line">            ...</span><br><span class="line">                </span><br><span class="line">            <span class="keyword">if</span> (pp != <span class="keyword">null</span>)</span><br><span class="line">                parallelism = Integer.parseInt(pp);</span><br><span class="line">            </span><br><span class="line">            ...</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception ignore) &#123;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">    ...</span><br><span class="line">        </span><br><span class="line">    	<span class="comment">//计算完成后 parallelism = processors -1</span></span><br><span class="line">        <span class="keyword">if</span> (parallelism &lt; <span class="number">0</span> &amp;&amp; <span class="comment">// default 1 less than #cores</span></span><br><span class="line">            (parallelism = Runtime.getRuntime().availableProcessors() - <span class="number">1</span>) &lt;= <span class="number">0</span>)</span><br><span class="line">            parallelism = <span class="number">1</span>;</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    ....</span><br><span class="line">    </span><br><span class="line">    	<span class="comment">//此处调用私有构造方法 常数LIFO_QUEUE=0</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ForkJoinPool(parallelism, factory, handler, LIFO_QUEUE,</span><br><span class="line">                                <span class="string">"ForkJoinPool.commonPool-worker-"</span>);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-<p>@Async注解 要求返回类型是CompletableFuture 或者 ListenableFuture</p>
-<p>基于ForkJoin框架实现的Strem</p>
-<p><img src="/Users/Cattlee/GitBlog/source/_posts/从ForkJoin到Stream，再到Storm学习并行计算/image-20181128181404376.png" alt="image-20181128181404376"></p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2018/11/24/从ForkJoin到Stream，再到Storm学习并行计算/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1846,6 +1692,147 @@
 
 
     
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2018/07/25/Hystrix生产环境实践/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ForwardLee">
+      <meta itemprop="description" content="总结学习方法，实践技术技能。">
+      <meta itemprop="image" content="/images/head.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="不忘初心">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/07/25/Hystrix生产环境实践/" itemprop="url">
+                  Hystrix生产环境配置实践
+                </a>
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-07-25 15:28:43" itemprop="dateCreated datePublished" datetime="2018-07-25T15:28:43+08:00">2018-07-25</time>
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="线程池资源优化演进"><a href="#线程池资源优化演进" class="headerlink" title="线程池资源优化演进"></a>线程池资源优化演进</h1><p>在生产环境中部署一个短路器，一开始需要将一些关键配置设置的大一些，比如timeout超时时长，线程池大小，或信号量容量，然后逐渐优化这些配置，直到在一个生产系统中运作良好。</p>
+<p>（1）一开始先不要设置timeout超时时长，默认就是1000ms，也就是1s<br>（2）一开始也不要设置线程池大小，默认就是10<br>（3）直接部署hystrix到生产环境，如果运行的很良好，那么就让它这样运行好了<br>（4）让hystrix应用，24小时运行在生产环境中<br>（5）依赖标准的监控和报警机制来捕获到系统的异常运行情况<br>（6）在24小时之后，看一下调用延迟的占比，以及流量，来计算出让短路器生效的最小的配置数字<br>（7）直接对hystrix配置进行热修改，然后继续在hystrix dashboard上监控<br>（8）看看修改配置后的系统表现有没有改善</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/07/25/Hystrix生产环境实践/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
   </section>
 
   
@@ -1897,7 +1884,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">55</span>
+                    <span class="site-state-item-count">54</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>

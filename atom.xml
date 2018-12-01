@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.forwardlee.com/"/>
-  <updated>2018-11-28T10:17:51.470Z</updated>
+  <updated>2018-12-01T10:44:27.008Z</updated>
   <id>http://www.forwardlee.com/</id>
   
   <author>
@@ -14,44 +14,6 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
-  
-  <entry>
-    <title></title>
-    <link href="http://www.forwardlee.com/2018/11/28/%E4%BB%8EForkJoin%E5%88%B0Stream%EF%BC%8C%E5%86%8D%E5%88%B0Storm%E5%AD%A6%E4%B9%A0%E5%B9%B6%E8%A1%8C%E8%AE%A1%E7%AE%97/ForkJoinPool.execute(R%20r)/"/>
-    <id>http://www.forwardlee.com/2018/11/28/从ForkJoin到Stream，再到Storm学习并行计算/ForkJoinPool.execute(R r)/</id>
-    <published>2018-11-28T08:17:02.431Z</published>
-    <updated>2018-11-28T10:17:51.470Z</updated>
-    
-    <content type="html"><![CDATA[<p>new ForkJoinPool().invoke(ForkJoinTask f)</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//MAX_CAP = 32767 即"01111 1111 1111 1111"</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">ForkJoinPool</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>(Math.min(MAX_CAP, Runtime.getRuntime().availableProcessors()),</span><br><span class="line">             defaultForkJoinWorkerThreadFactory, <span class="keyword">null</span>, <span class="keyword">false</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">ForkJoinPool</span><span class="params">(<span class="keyword">int</span> parallelism,</span></span></span><br><span class="line"><span class="function"><span class="params">                        ForkJoinWorkerThreadFactory factory,</span></span></span><br><span class="line"><span class="function"><span class="params">                        UncaughtExceptionHandler handler,</span></span></span><br><span class="line"><span class="function"><span class="params">                        <span class="keyword">boolean</span> asyncMode)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>(checkParallelism(parallelism),</span><br><span class="line">             checkFactory(factory),</span><br><span class="line">             handler,</span><br><span class="line">             asyncMode ? FIFO_QUEUE : LIFO_QUEUE,</span><br><span class="line">             <span class="string">"ForkJoinPool-"</span> + nextPoolId() + <span class="string">"-worker-"</span>);</span><br><span class="line">        checkPermission();</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-<p>私有构造方法()</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//SMASK = 65535 即"1111 1111 1111 1111"</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="title">ForkJoinPool</span><span class="params">(<span class="keyword">int</span> parallelism,</span></span></span><br><span class="line"><span class="function"><span class="params">                         ForkJoinWorkerThreadFactory factory,</span></span></span><br><span class="line"><span class="function"><span class="params">                         UncaughtExceptionHandler handler,</span></span></span><br><span class="line"><span class="function"><span class="params">                         <span class="keyword">int</span> mode,</span></span></span><br><span class="line"><span class="function"><span class="params">                         String workerNamePrefix)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.workerNamePrefix = workerNamePrefix;</span><br><span class="line">        <span class="keyword">this</span>.factory = factory;</span><br><span class="line">        <span class="keyword">this</span>.ueh = handler;</span><br><span class="line">        <span class="keyword">this</span>.config = (parallelism &amp; SMASK) | mode;</span><br><span class="line">        <span class="keyword">long</span> np = (<span class="keyword">long</span>)(-parallelism); <span class="comment">// offset ctl counts</span></span><br><span class="line">        <span class="keyword">this</span>.ctl = ((np &lt;&lt; AC_SHIFT) &amp; AC_MASK) | ((np &lt;&lt; TC_SHIFT) &amp; TC_MASK);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-<p><img src="/Users/Cattlee/GitBlog/source/_posts/从ForkJoin到Stream，再到Storm学习并行计算/image-20181128153647554.png" alt="image-20181128153647554"></p>
-<p>CompletableFutre.supplyAsync(R r);</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> &lt;U&gt; <span class="function">CompletableFuture&lt;U&gt; <span class="title">supplyAsync</span><span class="params">(Supplier&lt;U&gt; supplier)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> asyncSupplyStage(asyncPool, supplier);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>asyncPool？</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Executor asyncPool = useCommonPool ?</span><br><span class="line">        ForkJoinPool.commonPool() : <span class="keyword">new</span> ThreadPerTaskExecutor();</span><br></pre></td></tr></table></figure>
-<p>useCommonPool?</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">boolean</span> useCommonPool =</span><br><span class="line">        (ForkJoinPool.getCommonPoolParallelism() &gt; <span class="number">1</span>);</span><br></pre></td></tr></table></figure>
-<p>ForkJoinPool.getCommonPoolParallelism()?</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">getCommonPoolParallelism</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> commonParallelism;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> &#123;</span><br><span class="line">     common = java.security.AccessController.doPrivileged</span><br><span class="line">            (<span class="keyword">new</span> java.security.PrivilegedAction&lt;ForkJoinPool&gt;() &#123;</span><br><span class="line">                <span class="function"><span class="keyword">public</span> ForkJoinPool <span class="title">run</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> makeCommonPool(); &#125;&#125;);</span><br><span class="line">        <span class="keyword">int</span> par = common.config &amp; SMASK; <span class="comment">// SMASK = 1111 1111 1111 1111</span></span><br><span class="line">        commonParallelism = par &gt; <span class="number">0</span> ? par : <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>commonParallelism值?</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> ForkJoinPool <span class="title">makeCommonPool</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> parallelism = -<span class="number">1</span>;</span><br><span class="line">       ...</span><br><span class="line">        <span class="keyword">try</span> &#123;  <span class="comment">// ignore exceptions in accessing/parsing properties</span></span><br><span class="line">            String pp = System.getProperty</span><br><span class="line">                (<span class="string">"java.util.concurrent.ForkJoinPool.common.parallelism"</span>);</span><br><span class="line">            ...</span><br><span class="line">                </span><br><span class="line">            <span class="keyword">if</span> (pp != <span class="keyword">null</span>)</span><br><span class="line">                parallelism = Integer.parseInt(pp);</span><br><span class="line">            </span><br><span class="line">            ...</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception ignore) &#123;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">    ...</span><br><span class="line">        </span><br><span class="line">    	<span class="comment">//计算完成后 parallelism = processors -1</span></span><br><span class="line">        <span class="keyword">if</span> (parallelism &lt; <span class="number">0</span> &amp;&amp; <span class="comment">// default 1 less than #cores</span></span><br><span class="line">            (parallelism = Runtime.getRuntime().availableProcessors() - <span class="number">1</span>) &lt;= <span class="number">0</span>)</span><br><span class="line">            parallelism = <span class="number">1</span>;</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    ....</span><br><span class="line">    </span><br><span class="line">    	<span class="comment">//此处调用私有构造方法 常数LIFO_QUEUE=0</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ForkJoinPool(parallelism, factory, handler, LIFO_QUEUE,</span><br><span class="line">                                <span class="string">"ForkJoinPool.commonPool-worker-"</span>);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-<p>@Async注解 要求返回类型是CompletableFuture 或者 ListenableFuture</p>
-<p>基于ForkJoin框架实现的Strem</p>
-<p><img src="/Users/Cattlee/GitBlog/source/_posts/从ForkJoin到Stream，再到Storm学习并行计算/image-20181128181404376.png" alt="image-20181128181404376"></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;new ForkJoinPool().invoke(ForkJoinTask f)&lt;/p&gt;
-&lt;figure class=&quot;highlight java&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/spa
-    
-    </summary>
-    
-    
-  </entry>
   
   <entry>
     <title>Future异步编程在ForkJoin、CompletableFutrue、Stream中的应用</title>
@@ -2279,6 +2241,56 @@
       <category term="Springcloud" scheme="http://www.forwardlee.com/tags/Springcloud/"/>
     
       <category term="微服务" scheme="http://www.forwardlee.com/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>CentOS7安装Docker-CE</title>
+    <link href="http://www.forwardlee.com/2018/06/27/CentOS7%E5%AE%89%E8%A3%85Docker-CE/"/>
+    <id>http://www.forwardlee.com/2018/06/27/CentOS7安装Docker-CE/</id>
+    <published>2018-06-27T08:26:53.000Z</published>
+    <updated>2018-06-27T09:00:19.337Z</updated>
+    
+    <content type="html"><![CDATA[<p>转【<a href="https://jkzhao.github.io/2017/08/28/CentOS%E5%AE%89%E8%A3%85Docker-CE/" target="_blank" rel="noopener">CentOS安装Docker CE</a>】</p>
+<h1><span id="环境要求">环境要求</span></h1><p>To install Docker CE, you need the 64-bit version of CentOS 7.<br>The centos-extras repository must be enabled. This repository is enabled by default, but if you have disabled it, you need to re-enable it.</p>
+<h1><span id="卸载安装的所有docker组件">卸载安装的所有Docker组件</span></h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@spark32 lib]# systemctl stop docker.service</span><br><span class="line">[root@spark32 lib]# yum remove docker docker-common docker-selinux docker-engine container-selinux</span><br><span class="line">[root@spark32 lib]# rm -rf docker/</span><br></pre></td></tr></table></figure>
+<h1><span id="通过仓库安装docker-ce">通过仓库安装Docker CE</span></h1><p>1.安装依赖包</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@spark32 ~]# yum install -y yum-utils device-mapper-persistent-data lvm2</span><br></pre></td></tr></table></figure>
+<p>2.下载docker yum源</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@spark32 ~]# yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo</span><br></pre></td></tr></table></figure>
+<p>3.更新软件缓存</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@spark32 ~]# yum makecache fast</span><br></pre></td></tr></table></figure>
+<p>4.安装Docker CE</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@spark32 ~]# yum install docker-ce -y</span><br></pre></td></tr></table></figure>
+<p>5.启动docker</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@spark32 ~]# systemctl start docker.service</span><br></pre></td></tr></table></figure>
+<p>6.查看docker版本信息</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[root@spark32 ~]# docker info</span><br><span class="line">Containers: 0</span><br><span class="line"> Running: 0</span><br><span class="line"> Paused: 0</span><br><span class="line"> Stopped: 0</span><br><span class="line">Images: 0</span><br><span class="line">Server Version: 17.06.1-ce</span><br><span class="line">Storage Driver: overlay</span><br><span class="line"> Backing Filesystem: extfs</span><br><span class="line"> Supports d_type: true</span><br><span class="line">Logging Driver: json-file</span><br><span class="line">Cgroup Driver: cgroupfs</span><br></pre></td></tr></table></figure>
+<p><strong>【注意】:在生产环境中，可能需要使用某一个特定版本的Docker，而不是使用最新的版本，我们可以先列出版本，然后安装指定版本：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@spark32 ~]# yum list docker-ce.x86_64  --showduplicates | sort -r</span><br><span class="line">[root@spark32 ~]# yum install docker-ce-&lt;VERSION&gt;</span><br></pre></td></tr></table></figure>
+<h1><span id="配置镜像加速">配置镜像加速</span></h1><p>国内访问 Docker Hub 有时会遇到困难，此时可以配置镜像加速器。国内很多云服务商都提供了加速器服务，例如：</p>
+<ul>
+<li>阿里云加速器</li>
+<li>DaoCloud 加速器</li>
+<li>灵雀云加速器</li>
+</ul>
+<p>以阿里云加速器为例<br>1.首先进入阿里云docker库首页<br>注册用户并登录，点击右上角“管理中心”。如果第一次，会提示“您还没有开通服务”，点击“确定”，然后会出现弹窗“初始化设置”，设置docker登录时使用的密码。</p>
+<p>2.点击左侧菜单“Docker Hub镜像站点”，可以看到“您的专属加速器地址：<a href="https://6101v8g5.mirror.aliyuncs.com”，我们需要将其配置到Docker" target="_blank" rel="noopener">https://6101v8g5.mirror.aliyuncs.com”，我们需要将其配置到Docker</a> 引擎。</p>
+<p>3.修改daemon配置文件/etc/docker/daemon.json来使用加速器：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@spark32 ~]# vim /etc/docker/daemon.json</span><br><span class="line">&#123;</span><br><span class="line">  &quot;registry-mirrors&quot;: [&quot;https://6101v8g5.mirror.aliyuncs.com&quot;]</span><br><span class="line">&#125;</span><br><span class="line">[root@spark32 ~]# systemctl daemon-reload</span><br><span class="line">[root@spark32 ~]# systemctl restart docker</span><br></pre></td></tr></table></figure>
+<p>也可以配置docker中国的镜像源</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;registry-mirrors&quot;: [&quot;https://registry.docker-cn.com&quot;]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1><span id="卸载docker-ce">卸载Docker CE</span></h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@spark32 ~]# yum remove docker-ce</span><br><span class="line">[root@spark32 ~]# rm -rf /var/lib/docker</span><br></pre></td></tr></table></figure>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;转【&lt;a href=&quot;https://jkzhao.github.io/2017/08/28/CentOS%E5%AE%89%E8%A3%85Docker-CE/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;CentOS安装Docker CE&lt;/a&gt;】&lt;
+    
+    </summary>
+    
+    
+      <category term="Docker" scheme="http://www.forwardlee.com/tags/Docker/"/>
     
   </entry>
   
