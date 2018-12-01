@@ -4,14 +4,14 @@
 
     
   <url>
-    <loc>http://www.forwardlee.com/2018/11/24/%E4%BB%8EForkJoin%E5%88%B0Stream%EF%BC%8C%E5%86%8D%E5%88%B0Storm%E5%AD%A6%E4%B9%A0%E5%B9%B6%E8%A1%8C%E8%AE%A1%E7%AE%97/</loc>
-    <lastmod>2018-12-01T10:44:27.008Z</lastmod>
+    <loc>http://www.forwardlee.com/2018/11/24/Future%E5%BA%94%E7%94%A8/</loc>
+    <lastmod>2018-12-01T10:52:26.713Z</lastmod>
     <data>
         <display>
         <title>Future异步编程在ForkJoin、CompletableFutrue、Stream中的应用</title>
         <pubTime>2018-11-23T23:35:52.000Z</pubTime>
         
-        <tag>Future、ForkJoin、Stream、Storm、并行计算</tag>
+        <tag>Future、ForkJoin、Stream、CompletableFuture</tag>
          
          
            
