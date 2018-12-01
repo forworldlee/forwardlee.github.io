@@ -4,6 +4,38 @@
 
     
   <url>
+    <loc>http://www.forwardlee.com/2018/11/24/%E4%BB%8EForkJoin%E5%88%B0Stream%EF%BC%8C%E5%86%8D%E5%88%B0Storm%E5%AD%A6%E4%B9%A0%E5%B9%B6%E8%A1%8C%E8%AE%A1%E7%AE%97/</loc>
+    <lastmod>2018-12-01T10:44:27.008Z</lastmod>
+    <data>
+        <display>
+        <title>Future异步编程在ForkJoin、CompletableFutrue、Stream中的应用</title>
+        <pubTime>2018-11-23T23:35:52.000Z</pubTime>
+        
+        <tag>Future、ForkJoin、Stream、Storm、并行计算</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.forwardlee.com/2018/11/28/%E4%BB%8EForkJoin%E5%88%B0Stream%EF%BC%8C%E5%86%8D%E5%88%B0Storm%E5%AD%A6%E4%B9%A0%E5%B9%B6%E8%A1%8C%E8%AE%A1%E7%AE%97/ForkJoinPool.execute(R%20r)/</loc>
+    <lastmod>2018-11-28T10:17:51.470Z</lastmod>
+    <data>
+        <display>
+        <title></title>
+        <pubTime>2018-11-28T08:17:02.431Z</pubTime>
+        
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://www.forwardlee.com/2018/10/28/%E5%9F%BA%E4%BA%8Eprotobuf%E5%BA%8F%E5%88%97%E5%8C%96%E5%8D%8F%E8%AE%AE%E5%AE%9E%E7%8E%B0Netty-RPC%E5%88%86%E5%B8%83%E5%BC%8F%E9%80%9A%E4%BF%A1/</loc>
     <lastmod>2018-10-28T08:48:55.029Z</lastmod>
     <data>
@@ -842,11 +874,11 @@
         <title>Docker Galera Cluster环境快速搭建</title>
         <pubTime>2018-05-22T03:12:14.000Z</pubTime>
         
-        <tag>Docker</tag>
-         
         <tag>MariaDB</tag>
          
         <tag>Galera</tag>
+         
+        <tag>Docker</tag>
          
          
            

@@ -1,0 +1,1389 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.3.0" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.3.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.3.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '6.3.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="ForkJoin框架ForkJoinPool的功能说明`作者是并发编程的大佬：Doung Lea 123456789101112131415161718192021222324252627282930313233343536/** * 执行ForkJoinTask的线程池 * An &amp;#123;@link ExecutorService&amp;#125; for running &amp;#123;@link">
+<meta name="keywords" content="Future、ForkJoin、Stream、Storm、并行计算">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Future异步编程在ForkJoin、CompletableFutrue、Stream中的应用">
+<meta property="og:url" content="http://www.forwardlee.com/2018/11/24/从ForkJoin到Stream，再到Storm学习并行计算/index.html">
+<meta property="og:site_name" content="不忘初心">
+<meta property="og:description" content="ForkJoin框架ForkJoinPool的功能说明`作者是并发编程的大佬：Doung Lea 123456789101112131415161718192021222324252627282930313233343536/** * 执行ForkJoinTask的线程池 * An &amp;#123;@link ExecutorService&amp;#125; for running &amp;#123;@link">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://www.forwardlee.com/2018/11/28/从ForkJoin到Stream，再到Storm学习并行计算/image-20181128153647554.png">
+<meta property="og:image" content="http://www.forwardlee.com/2018/11/28/从ForkJoin到Stream，再到Storm学习并行计算/image-20181128185615070.png">
+<meta property="og:image" content="http://www.forwardlee.com/2018/11/28/从ForkJoin到Stream，再到Storm学习并行计算/ForkJoin框架执行原理.png">
+<meta property="og:image" content="http://www.forwardlee.com/2018/11/28/从ForkJoin到Stream，再到Storm学习并行计算/image-20181128234357038.png">
+<meta property="og:updated_time" content="2018-12-01T10:44:27.008Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Future异步编程在ForkJoin、CompletableFutrue、Stream中的应用">
+<meta name="twitter:description" content="ForkJoin框架ForkJoinPool的功能说明`作者是并发编程的大佬：Doung Lea 123456789101112131415161718192021222324252627282930313233343536/** * 执行ForkJoinTask的线程池 * An &amp;#123;@link ExecutorService&amp;#125; for running &amp;#123;@link">
+<meta name="twitter:image" content="http://www.forwardlee.com/2018/11/28/从ForkJoin到Stream，再到Storm学习并行计算/image-20181128153647554.png">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="不忘初心" type="application/atom+xml" />
+
+
+
+
+  <link rel="canonical" href="http://www.forwardlee.com/2018/11/24/从ForkJoin到Stream，再到Storm学习并行计算/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Future异步编程在ForkJoin、CompletableFutrue、Stream中的应用 | 不忘初心</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">不忘初心</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <h1 class="site-subtitle" itemprop="description">李奉华的个人博客</h1>
+      
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+    <a href="/about/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-user"></i> <br />关于</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-commonweal">
+    <a href="/404/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />公益 404</a>
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2018/11/24/从ForkJoin到Stream，再到Storm学习并行计算/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ForwardLee">
+      <meta itemprop="description" content="总结学习方法，实践技术技能。">
+      <meta itemprop="image" content="/images/head.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="不忘初心">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">Future异步编程在ForkJoin、CompletableFutrue、Stream中的应用
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-11-24 07:35:52" itemprop="dateCreated datePublished" datetime="2018-11-24T07:35:52+08:00">2018-11-24</time>
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/11/24/从ForkJoin到Stream，再到Storm学习并行计算/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count gitment-comments-count" data-xid="/2018/11/24/从ForkJoin到Stream，再到Storm学习并行计算/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1><span id="forkjoin框架">ForkJoin框架</span></h1><h2><span id="forkjoinpool的功能说明">ForkJoinPool的功能说明</span></h2><p>`<strong>作者是并发编程的大佬：Doung Lea</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 执行ForkJoinTask的线程池</span></span><br><span class="line"><span class="comment"> * An &#123;<span class="doctag">@link</span> ExecutorService&#125; for running &#123;<span class="doctag">@link</span> ForkJoinTask&#125;s.</span></span><br><span class="line"><span class="comment"> * A &#123;<span class="doctag">@code</span> ForkJoinPool&#125; provides the entry point for submissions</span></span><br><span class="line"><span class="comment"> * from non-&#123;<span class="doctag">@code</span> ForkJoinTask&#125; clients, as well as management and</span></span><br><span class="line"><span class="comment"> * monitoring operations.</span></span><br><span class="line"><span class="comment"> *	...</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@since</span> 1.7</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> Doug Lea</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@sun</span>.misc.Contended</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ForkJoinPool</span> <span class="keyword">extends</span> <span class="title">AbstractExecutorService</span> </span>&#123;</span><br><span class="line">	<span class="comment">/*</span></span><br><span class="line"><span class="comment">     * Implementation Overview</span></span><br><span class="line"><span class="comment">     * 这个类的简介</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * This class and its nested classes provide the main</span></span><br><span class="line"><span class="comment">     * functionality and control for a set of worker threads:</span></span><br><span class="line"><span class="comment">     * 这个类和它的内部类实现并管理调度工作线程池的功能：</span></span><br><span class="line"><span class="comment">     * Submissions from non-FJ threads enter into submission queues.</span></span><br><span class="line"><span class="comment">     * 它把非ForkJoin线程中的任务放进一系列的任务提交队列中</span></span><br><span class="line"><span class="comment">     * Workers take these tasks and typically split them into subtasks</span></span><br><span class="line"><span class="comment">     * that may be stolen by other workers. </span></span><br><span class="line"><span class="comment">     * 任务执行者拿到要执行的任务后，通常会把任务再分解成更细小的子任务，其他</span></span><br><span class="line"><span class="comment">     * 执行者也可能会偷取任务执行。（工作窃取算法）</span></span><br><span class="line"><span class="comment">     * Preference rules give </span></span><br><span class="line"><span class="comment">     * first priority to processing tasks from their own queues (LIFO</span></span><br><span class="line"><span class="comment">     * or FIFO, depending on mode), then to randomized FIFO steals of</span></span><br><span class="line"><span class="comment">     * tasks in other queues. </span></span><br><span class="line"><span class="comment">     * 优先从自己的工作队列（LIFO或者FIFO,默认是LIFO，）中获取任务执行，然后按照FIFO</span></span><br><span class="line"><span class="comment">     * 的方式随机地从其他工作队列中窃取任务执行。</span></span><br><span class="line"><span class="comment">     * This framework began as vehicle for</span></span><br><span class="line"><span class="comment">     * supporting tree-structured parallelism using work-stealing.</span></span><br><span class="line"><span class="comment">     * 这个框架是一种利用工作窃取算法实现树型结构数据的并行计算实现方式。</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2><span id="forkjoinpool的继承关系">ForkJoinPool的继承关系</span></h2><p>ForkJoinPool实现了Executor和ExecutorService接口，说明ForkJoinPool是一个线程池管理类。</p>
+<p><img src="/2018/11/28/从ForkJoin到Stream，再到Storm学习并行计算/image-20181128153647554.png" alt="image-20181128153647554"></p>
+<h2><span id="forjointask的功能">ForJoinTask的功能</span></h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 在ForkJoinPool中执行的任务抽象基类，ForkJoinTask是一种比线程还要轻量级的类似线程</span></span><br><span class="line"><span class="comment"> * 实体对象。在一定的限制条件下，ForkJoinPool可以使用一小部分线程执行大量的任务和子任务。</span></span><br><span class="line"><span class="comment"> * Abstract base class for tasks that run within a &#123;<span class="doctag">@link</span> ForkJoinPool&#125;.</span></span><br><span class="line"><span class="comment"> * A &#123;<span class="doctag">@code</span> ForkJoinTask&#125; is a thread-like entity that is much</span></span><br><span class="line"><span class="comment"> * lighter weight than a normal thread.  Huge numbers of tasks and</span></span><br><span class="line"><span class="comment"> * subtasks may be hosted by a small number of actual threads in a</span></span><br><span class="line"><span class="comment"> * ForkJoinPool, at the price of some usage limitations.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@since</span> 1.7</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> Doug Lea</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">ForkJoinTask</span>&lt;<span class="title">V</span>&gt; <span class="keyword">implements</span> <span class="title">Future</span>&lt;<span class="title">V</span>&gt;, <span class="title">Serializable</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2><span id="forkjointask的继承关系">ForkJoinTask的继承关系</span></h2><p>ForkJoinTask实现了Future接口，实现异步计算任务。Future接口能够把结果异步返回给调用者，把调用者线程从耗时的操作中解放出来，不需要等待异步接口返回结果就可以继续执行。</p>
+<p><img src="/2018/11/28/从ForkJoin到Stream，再到Storm学习并行计算/image-20181128185615070.png" alt="image-20181128185615070"></p>
+<a id="more"></a>
+<h2><span id="forkjoin调用逻辑">ForkJoin调用逻辑</span></h2><p>ForkJoin框架采用一种高效的双端队列deque（dubbo-ended queue），既有栈LIFO特性，又具有队列FIFO的特性。ForkJoin框架默认把查分的子任务按照LIFO的方式放到deque中，按照FIFO的方式从队列末尾随机从其他工作队列中窃取任务执行。</p>
+<p><img src="/2018/11/28/从ForkJoin到Stream，再到Storm学习并行计算/ForkJoin框架执行原理.png" alt="image-20181124090826646"></p>
+<h1><span id="forkjoin怎么用">ForkJoin怎么用</span></h1><p>使用<code>ForkJoinPool.execute(F t)</code>、<code>ForkJoinPool.invoke(F t)</code>、<code>ForkJoinPool.submit(C t)</code>三种方式提交并行任务。</p>
+<h2><span id="forkjoinpool执行任务的三种方式">ForkJoinPool执行任务的三种方式</span></h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/** 异步执行，无返回结果 **/</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">execute</span><span class="params">(ForkJoinTask&lt;?&gt; task)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (task == <span class="keyword">null</span>)</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> NullPointerException();</span><br><span class="line">        externalPush(task);</span><br><span class="line">    &#125;</span><br><span class="line"><span class="comment">/** 同步，返回计算结果 （会阻塞）**/</span></span><br><span class="line"><span class="keyword">public</span> &lt;T&gt; <span class="function">T <span class="title">invoke</span><span class="params">(ForkJoinTask&lt;T&gt; task)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (task == <span class="keyword">null</span>)</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> NullPointerException();</span><br><span class="line">        externalPush(task);</span><br><span class="line">        <span class="keyword">return</span> task.join();</span><br><span class="line">    &#125;</span><br><span class="line"><span class="comment">/** 异步，有Future返回结果 **/</span></span><br><span class="line"><span class="keyword">public</span> &lt;T&gt; <span class="function">ForkJoinTask&lt;T&gt; <span class="title">submit</span><span class="params">(Callable&lt;T&gt; task)</span> </span>&#123;</span><br><span class="line">        ForkJoinTask&lt;T&gt; job = <span class="keyword">new</span> ForkJoinTask.AdaptedCallable&lt;T&gt;(task);</span><br><span class="line">        externalPush(job);</span><br><span class="line">        <span class="keyword">return</span> job;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h2><span id="forkjoinpool构造方法">ForkJoinPool构造方法</span></h2><p>构造方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//MAX_CAP = 32767</span></span><br><span class="line"><span class="comment">//创建一个跟计算机内核数相等的并行度，默认为LIFO的队列</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">ForkJoinPool</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>(Math.min(MAX_CAP, Runtime.getRuntime().availableProcessors()),</span><br><span class="line">             defaultForkJoinWorkerThreadFactory, <span class="keyword">null</span>, <span class="keyword">false</span>);</span><br><span class="line">    &#125;</span><br><span class="line"><span class="comment">//parallelism 并行度</span></span><br><span class="line"><span class="comment">//asyncMode ? FIFO_QUEUE : LIFO_QUEUE,设置任务队列的模式是FIFO还是LIFO</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">ForkJoinPool</span><span class="params">(<span class="keyword">int</span> parallelism,</span></span></span><br><span class="line"><span class="function"><span class="params">                        ForkJoinWorkerThreadFactory factory,</span></span></span><br><span class="line"><span class="function"><span class="params">                        UncaughtExceptionHandler handler,</span></span></span><br><span class="line"><span class="function"><span class="params">                        <span class="keyword">boolean</span> asyncMode)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>(checkParallelism(parallelism),</span><br><span class="line">             checkFactory(factory),</span><br><span class="line">             handler,</span><br><span class="line">             asyncMode ? FIFO_QUEUE : LIFO_QUEUE,</span><br><span class="line">             <span class="string">"ForkJoinPool-"</span> + nextPoolId() + <span class="string">"-worker-"</span>);</span><br><span class="line">        checkPermission();</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h2><span id="forkjointask定义">ForkJoinTask定义</span></h2><p>可以集成抽象类<code>ForkJoinTask</code>重写<code>exec()</code>抽象方法实现计算逻辑，也可以实现<code>ForkJoinTask</code>的子类例如<code>RecursiveTask</code>或者<code>RecursiveAction</code>抽象类实现异步任务。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LongArrayCounterRecursiveTask</span> <span class="keyword">extends</span> <span class="title">RecursiveTask</span>&lt;<span class="title">Long</span>&gt;</span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         * 要计算的Long数组</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">long</span>[] nums;</span><br><span class="line"></span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         * 数组开始计算的开始下标</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        <span class="keyword">private</span> Integer start;</span><br><span class="line"></span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         * 数组开始计算的结束下标</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        <span class="keyword">private</span> Integer end;</span><br><span class="line"></span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         * 要计算数组区间内的元素加和，最小区间长度设置为3，大于3则拆分出子任务执行。</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">int</span> min = <span class="number">3</span>;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">LongArrayCounterRecursiveTask</span><span class="params">(<span class="keyword">long</span>[] nums, Integer start, Integer end)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">this</span>.nums = nums;</span><br><span class="line">            <span class="keyword">this</span>.start = start;</span><br><span class="line">            <span class="keyword">this</span>.end = end;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">protected</span> Long <span class="title">compute</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">if</span> ((end-start)&gt;min) &#123;</span><br><span class="line">                LongArrayCounterRecursiveTask lCnt = <span class="keyword">new</span> LongArrayCounterRecursiveTask(nums, start, (end+start) / <span class="number">2</span>);</span><br><span class="line">                <span class="comment">/**</span></span><br><span class="line"><span class="comment">                 * 利用另一个ForkJoinPool异步执行lCnt子任务,而不是直接调用compute()进行计算</span></span><br><span class="line"><span class="comment">                 * fork调用后不需要等待结算结果返回，知道调用join方法，计算结果才会返回</span></span><br><span class="line"><span class="comment">                 */</span></span><br><span class="line">                lCnt.fork();</span><br><span class="line">                LongArrayCounterRecursiveTask rCnt = <span class="keyword">new</span> LongArrayCounterRecursiveTask(nums, (end + start) / <span class="number">2</span> + <span class="number">1</span>, end);</span><br><span class="line">                <span class="comment">/**</span></span><br><span class="line"><span class="comment">                 * 利用当前ForkJoinPool执行rCnt子任务</span></span><br><span class="line"><span class="comment">                 */</span></span><br><span class="line">                Long rResult = rCnt.compute();</span><br><span class="line">                <span class="comment">/**</span></span><br><span class="line"><span class="comment">                 * 等待lCnt子任务执行完，得到结果；</span></span><br><span class="line"><span class="comment">                 * 注意这一句的位置，.join()操作会使主线程阻塞等待子线程返回结果</span></span><br><span class="line"><span class="comment">                 */</span></span><br><span class="line">                Long lResult = lCnt.join();</span><br><span class="line">                <span class="comment">/**</span></span><br><span class="line"><span class="comment">                 * 返回两个结果集的和</span></span><br><span class="line"><span class="comment">                 */</span></span><br><span class="line">                <span class="keyword">return</span> rResult + lResult;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">long</span> sum = <span class="number">0L</span>;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = start; i &lt; end+<span class="number">1</span>; i++) &#123;</span><br><span class="line">                sum +=nums[i];</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> sum;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h1><span id="completablefuture异步操作">CompletableFuture异步操作</span></h1><h2><span id="completable提交执行任务">Completable提交执行任务</span></h2><p><strong>这样提交异步任务：</strong><code>Future futureResult = CompletableFutre.supplyAsync(Callable r,Executor e);</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//asyncPool指定了默认ForkJoinPool作为Executor执行异步并行任务</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> &lt;U&gt; <span class="function">CompletableFuture&lt;U&gt; <span class="title">supplyAsync</span><span class="params">(Supplier&lt;U&gt; supplier)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> asyncSupplyStage(asyncPool, supplier);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//指定一个Executor，自定义线程池大小。</span></span><br><span class="line"><span class="comment">//调整线程池的大小的原则</span></span><br><span class="line"><span class="comment">//线程池中线程的数量过多，会竞争稀缺的处理器和内存资源，浪费大量的时间在上下文切换上。</span></span><br><span class="line"><span class="comment">//反之，如果线程的数目过少，处理器的一些核可能就无法充分利用。</span></span><br><span class="line"><span class="comment">// 最佳线程数目 = （（线程等待时间+线程CPU时间）/线程CPU时间 ）* CPU数目 </span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> &lt;U&gt; <span class="function">CompletableFuture&lt;U&gt; <span class="title">supplyAsync</span><span class="params">(Supplier&lt;U&gt; supplier,</span></span></span><br><span class="line"><span class="function"><span class="params">                                                       Executor executor)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> asyncSupplyStage(screenExecutor(executor), supplier);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>在不提供执行异步任务的线程池参数Executor时，使用CompletableFuture通过下面这段代码创建线程池：ForkJoinPool.commonPool()创建一个计算机内核数Processors-1个线程大小的ForkJoinPool线程池，具有并行计算能力；或者是只有一个线程的普通线程池。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Executor asyncPool = useCommonPool ?</span><br><span class="line">        ForkJoinPool.commonPool() : <span class="keyword">new</span> ThreadPerTaskExecutor();</span><br></pre></td></tr></table></figure>
+<h1><span id="strem流操作">Strem流操作</span></h1><p>Stream的sort、foreach、reduce、find操作底层实现也是依赖ForkJoin框架，Stream接口中提供了parallel()方法，可以把Stream转换成并行流，并行流使用ForkJoin框架进行计算。Stream没有提供修改执行任务的线程数大小的方法和参数，建议使用默认值（系统内核数），充分利用计算机CPU资源执行计算密集型操作。</p>
+<p><strong>Stream并行计算需谨慎：</strong></p>
+<p>Stream在进行并行计算时应避免元素之间的相互影响，处理当前元素时如果需要等待另一个元素的处理结果，那么并行处理反而会因为线程切换降低性能。<strong>通过大量的数据测试时保证Stream性能的重要手段。</strong></p>
+<h2><span id="parallel并行计算对性能的影响">parallel并行计算对性能的影响</span></h2><p>执行并行计算不一定能提高性能，举例：</p>
+<p><strong>Stream.iterate产生流元素时上一个元素存在后才能产生下一个元素，如果使用并行流多线程产生元素时会出现线程等待正在产生元素的线程结束操作后才能继续执行，造成了不必要的线程切换和资源竞争，导致性能下降。</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ForkJoinTest</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> ParseException </span>&#123;</span><br><span class="line"></span><br><span class="line">        System.out.println(<span class="string">"sequentialSum:"</span>+<span class="keyword">new</span> ForkJoinTest().measureSumPerf(ForkJoinTest::sequentialSum, <span class="number">10000000</span>)+<span class="string">"ms"</span>);</span><br><span class="line">        System.out.println(<span class="string">"parallelSum:"</span>+<span class="keyword">new</span> ForkJoinTest().measureSumPerf(ForkJoinTest::parallelSum, <span class="number">10000000</span>)+<span class="string">"ms"</span>);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//sequential计算</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">long</span> <span class="title">sequentialSum</span><span class="params">(<span class="keyword">long</span> n)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> Stream.iterate(<span class="number">1L</span>, i -&gt; i + <span class="number">1</span>)</span><br><span class="line">                .limit(n)</span><br><span class="line">                .reduce(<span class="number">0L</span>, Long::sum);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//parallel计算</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">long</span> <span class="title">parallelSum</span><span class="params">(<span class="keyword">long</span> n)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> Stream.iterate(<span class="number">1L</span>, i -&gt; i + <span class="number">1</span>)</span><br><span class="line">                .limit(n)</span><br><span class="line">                .parallel() <span class="comment">//转换成并行流</span></span><br><span class="line">                .reduce(<span class="number">0L</span>, Long::sum);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    、、</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">long</span> <span class="title">measureSumPerf</span><span class="params">(Function&lt;Long, Long&gt; adder, <span class="keyword">long</span> n)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">long</span> fastest = Long.MAX_VALUE;</span><br><span class="line">        <span class="keyword">long</span> start = System.currentTimeMillis();</span><br><span class="line">        <span class="keyword">long</span> sum = adder.apply(n);</span><br><span class="line">        <span class="keyword">long</span> duration = (System.currentTimeMillis() - start);</span><br><span class="line">        <span class="keyword">if</span> (duration &lt; fastest)</span><br><span class="line">        &#123;</span><br><span class="line">            fastest = duration;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> fastest;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>测试结果：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sequentialSum:<span class="number">297</span>ms</span><br><span class="line">parallelSum:<span class="number">3596</span>msStream</span><br></pre></td></tr></table></figure>
+<h1><span id="stream和completablefuture如何选择">Stream和CompletableFuture如何选择</span></h1><p><strong><em>引用JAVA8实战：</em></strong></p>
+<p>如果你进行的是计算密集型的操作，那么推荐使用Stream接口，因为实现简单，同时效率也可能是最高的，使用Stream默认的处理器核数作为线程池大小，充分利用CPU资源。</p>
+<p>如果并行工作单元是I/O密集型操作(包括文件、网络IO等)，那么使用 CompletableFuture灵活性更好，可以根据最佳线程数计算公式设置线程数，充分利用内存资源。</p>
+<h1><span id="loop-forkjoin-stream计算性能测试">Loop、ForkJoin、Stream计算性能测试</span></h1><p><strong>在计算量很小时三者区别不大，随着计算量的增大Stream的性能优势越明显，自己编码实现ForkJoin并行计算受制于对资源的Fork算法、Join算法和计算逻辑的最优化实现，执行性能会比Stream要差一些。</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> ParseException </span>&#123;</span><br><span class="line">       <span class="comment">/**</span></span><br><span class="line"><span class="comment">         * Loop Sequential Parrallel ForkJoin并行计算测试</span></span><br><span class="line"><span class="comment">         * 数据源</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        <span class="keyword">long</span>[] longs = LongStream.rangeClosed(<span class="number">1L</span>, <span class="number">150000000L</span>).toArray();</span><br><span class="line"></span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         * loop</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        <span class="keyword">long</span> startTime = System.currentTimeMillis();</span><br><span class="line">        <span class="keyword">long</span> result = loopCompute(longs);</span><br><span class="line">        <span class="keyword">long</span> end = System.currentTimeMillis();</span><br><span class="line">        System.out.println(<span class="string">"loop计算结果：result:"</span>+result+<span class="string">",耗时:"</span>+(end-startTime)+<span class="string">"ms"</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         * sequential</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        LongStream longStream = LongStream.rangeClosed(<span class="number">1L</span>, <span class="number">150000000L</span>);</span><br><span class="line">        startTime = System.currentTimeMillis();</span><br><span class="line">        result = longStream.reduce(<span class="number">0</span>, Long::sum);</span><br><span class="line">        end = System.currentTimeMillis();</span><br><span class="line">        System.out.println(<span class="string">"sequential stream计算结果：result:"</span>+result+<span class="string">",耗时:"</span>+(end-startTime)+<span class="string">"ms"</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         * parallel</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        longStream = LongStream.rangeClosed(<span class="number">1L</span>, <span class="number">150000000L</span>);</span><br><span class="line">        startTime = System.currentTimeMillis();</span><br><span class="line">        result = longStream.parallel().reduce(<span class="number">0</span>, Long::sum);</span><br><span class="line">        end = System.currentTimeMillis();</span><br><span class="line">        System.out.println(<span class="string">" parallel stream计算结果：result:"</span>+result+<span class="string">",耗时:"</span>+(end-startTime)+<span class="string">"ms"</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         * forkjoin</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        startTime = System.currentTimeMillis();</span><br><span class="line">        result = <span class="keyword">new</span> ForkJoinPool().invoke(<span class="keyword">new</span> LongArrayCounterRecursiveTask(longs, <span class="number">0</span>, longs.length-<span class="number">1</span>));</span><br><span class="line">        System.out.println(<span class="string">"forkjoin计算结果：result:"</span>+result+<span class="string">",耗时:"</span>+(System.currentTimeMillis()-startTime)+<span class="string">"ms"</span>);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>执行结果：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">loop计算结果：result:<span class="number">11250000075000000</span>,耗时:<span class="number">132</span>ms</span><br><span class="line">sequential stream计算结果：result:<span class="number">11250000075000000</span>,耗时:<span class="number">325</span>ms</span><br><span class="line"> parallel stream计算结果：result:<span class="number">11250000075000000</span>,耗时:<span class="number">69</span>ms</span><br><span class="line">forkjoin计算结果：result:<span class="number">11250000075000000</span>,耗时:<span class="number">127</span>ms</span><br></pre></td></tr></table></figure>
+<h1><span id="springframework的async异步操作">SpringFramework的@Async异步操作</span></h1><p>@Async注解要发挥作用，首先要使用@EnableAsync启用异步计算。通过引入<code>AsyncConfigurationSelector</code>的AOP拦截实现方法异步执行。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Target</span>(ElementType.TYPE)</span><br><span class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)</span><br><span class="line"><span class="meta">@Documented</span></span><br><span class="line"><span class="meta">@Import</span>(AsyncConfigurationSelector.class)</span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> EnableAsync &#123;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2><span id="async注解原理">@Async注解原理</span></h2><p>@Async通过AOP实现代理对象的方法拦截实现异步执行.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* 方法的参数可以是任何类型，但是返回值要限定在void或者Future类型，Future类型的返回值可以声明为更具体的</span></span><br><span class="line"><span class="comment">* ListenableFuture 或者 CompletableFuture，这样能够从异步任务得到更多交互状态和处理过程的细节。</span></span><br><span class="line"><span class="comment">* In terms of target method signatures, any parameter types are supported. However, the return      * type is constrained to either void or Future. In the latter case, you may declare the more </span></span><br><span class="line"><span class="comment">* specific ListenableFuture or CompletableFuture types which allow for richer interaction with the </span></span><br><span class="line"><span class="comment">* asynchronous task and for immediate composition with further processing steps.</span></span><br><span class="line"><span class="comment">*</span></span><br><span class="line"><span class="comment">* AOP切面定义、MethodInterceptor实现代理对象的注解方法的异步执行</span></span><br><span class="line"><span class="comment">* See Also:</span></span><br><span class="line"><span class="comment">* AnnotationAsyncExecutionInterceptor, AsyncAnnotationAdvisor</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="meta">@Target</span>(&#123;ElementType.METHOD, ElementType.TYPE&#125;)</span><br><span class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)</span><br><span class="line"><span class="meta">@Documented</span></span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> Async &#123;</span><br><span class="line">    <span class="comment">//value指定要执行异步任务的Executor BeanName</span></span><br><span class="line">    <span class="function">String <span class="title">value</span><span class="params">()</span> <span class="keyword">default</span> ""</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2><span id="async-aop实现">@Async AOP实现</span></h2><p><code>AsyncConfigurationSelector</code>实现</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AsyncConfigurationSelector</span> <span class="keyword">extends</span> <span class="title">AdviceModeImportSelector</span>&lt;<span class="title">EnableAsync</span>&gt; </span>&#123;</span><br><span class="line"> Override</span><br><span class="line">	<span class="meta">@Nullable</span></span><br><span class="line">	<span class="keyword">public</span> String[] selectImports(AdviceMode adviceMode) &#123;</span><br><span class="line">		<span class="keyword">switch</span> (adviceMode) &#123;</span><br><span class="line">			<span class="keyword">case</span> PROXY:</span><br><span class="line">				<span class="keyword">return</span> <span class="keyword">new</span> String[] &#123;ProxyAsyncConfiguration.class.getName()&#125;;</span><br><span class="line">			<span class="keyword">case</span> ASPECTJ:</span><br><span class="line">				<span class="keyword">return</span> <span class="keyword">new</span> String[] &#123;ASYNC_EXECUTION_ASPECT_CONFIGURATION_CLASS_NAME&#125;;</span><br><span class="line">			<span class="keyword">default</span>:</span><br><span class="line">				<span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;   </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3><span id="proxyasyncconfiguration实现"><code>ProxyAsyncConfiguration</code>实现</span></h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@Role</span>(BeanDefinition.ROLE_INFRASTRUCTURE)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ProxyAsyncConfiguration</span> <span class="keyword">extends</span> <span class="title">AbstractAsyncConfiguration</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Bean</span>(name = TaskManagementConfigUtils.ASYNC_ANNOTATION_PROCESSOR_BEAN_NAME)</span><br><span class="line">	<span class="meta">@Role</span>(BeanDefinition.ROLE_INFRASTRUCTURE)</span><br><span class="line">	<span class="function"><span class="keyword">public</span> AsyncAnnotationBeanPostProcessor <span class="title">asyncAdvisor</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		Assert.notNull(<span class="keyword">this</span>.enableAsync, <span class="string">"@EnableAsync annotation metadata was not injected"</span>);</span><br><span class="line">		AsyncAnnotationBeanPostProcessor bpp = <span class="keyword">new</span> AsyncAnnotationBeanPostProcessor()<span class="comment">//这句是重点</span></span><br><span class="line">		bpp.configure(<span class="keyword">this</span>.executor, <span class="keyword">this</span>.exceptionHandler);</span><br><span class="line">		Class&lt;? extends Annotation&gt; customAsyncAnnotation = <span class="keyword">this</span>.enableAsync.getClass(<span class="string">"annotation"</span>);</span><br><span class="line">		<span class="keyword">if</span> (customAsyncAnnotation != AnnotationUtils.getDefaultValue(EnableAsync.class, <span class="string">"annotation"</span>)) &#123;</span><br><span class="line">			bpp.setAsyncAnnotationType(customAsyncAnnotation);</span><br><span class="line">		&#125;</span><br><span class="line">		bpp.setProxyTargetClass(<span class="keyword">this</span>.enableAsync.getBoolean(<span class="string">"proxyTargetClass"</span>));</span><br><span class="line">		bpp.setOrder(<span class="keyword">this</span>.enableAsync.&lt;Integer&gt;getNumber(<span class="string">"order"</span>));</span><br><span class="line">		<span class="keyword">return</span> bpp;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3><span id="asyncannotationbeanpostprocessor实现"><code>AsyncAnnotationBeanPostProcessor</code>实现</span></h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AsyncAnnotationBeanPostProcessor</span> <span class="keyword">extends</span> <span class="title">AbstractBeanFactoryAwareAdvisingPostProcessor</span> </span>&#123;</span><br><span class="line">    ....</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setBeanFactory</span><span class="params">(BeanFactory beanFactory)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">super</span>.setBeanFactory(beanFactory);</span><br><span class="line"></span><br><span class="line">		AsyncAnnotationAdvisor advisor = <span class="keyword">new</span> AsyncAnnotationAdvisor(<span class="keyword">this</span>.executor, <span class="keyword">this</span>.exceptionHandler);<span class="comment">//这句是重点</span></span><br><span class="line">		<span class="keyword">if</span> (<span class="keyword">this</span>.asyncAnnotationType != <span class="keyword">null</span>) &#123;</span><br><span class="line">			advisor.setAsyncAnnotationType(<span class="keyword">this</span>.asyncAnnotationType);</span><br><span class="line">		&#125;</span><br><span class="line">		advisor.setBeanFactory(beanFactory);</span><br><span class="line">		<span class="keyword">this</span>.advisor = advisor;</span><br><span class="line">	&#125;   </span><br><span class="line">        </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3><span id="asyncannotationadvisor实现"><code>AsyncAnnotationAdvisor</code>实现</span></h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AsyncAnnotationAdvisor</span> <span class="keyword">extends</span> <span class="title">AbstractPointcutAdvisor</span> <span class="keyword">implements</span> <span class="title">BeanFactoryAware</span> </span>&#123;</span><br><span class="line">    ...</span><br><span class="line">        <span class="comment">//构造切面</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">AsyncAnnotationAdvisor</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">			@Nullable Supplier&lt;Executor&gt; executor, @Nullable Supplier&lt;AsyncUncaughtExceptionHandler&gt; exceptionHandler)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">		Set&lt;Class&lt;? extends Annotation&gt;&gt; asyncAnnotationTypes = <span class="keyword">new</span> LinkedHashSet&lt;&gt;(<span class="number">2</span>);</span><br><span class="line">		asyncAnnotationTypes.add(Async.class);<span class="comment">//这句是重点</span></span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			asyncAnnotationTypes.add((Class&lt;? extends Annotation&gt;)</span><br><span class="line">					ClassUtils.forName(<span class="string">"javax.ejb.Asynchronous"</span>, AsyncAnnotationAdvisor.class.getClassLoader()));</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">catch</span> (ClassNotFoundException ex) &#123;</span><br><span class="line">			<span class="comment">// If EJB 3.1 API not present, simply ignore.</span></span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">this</span>.advice = buildAdvice(executor, exceptionHandler);<span class="comment">//这句是重点</span></span><br><span class="line">		<span class="keyword">this</span>.pointcut = buildPointcut(asyncAnnotationTypes);<span class="comment">//这句是重点</span></span><br><span class="line">	&#125;</span><br><span class="line">        <span class="comment">//返回advice增强逻辑</span></span><br><span class="line">        <span class="function"><span class="keyword">protected</span> Advice <span class="title">buildAdvice</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">			@Nullable Supplier&lt;Executor&gt; executor, @Nullable Supplier&lt;AsyncUncaughtExceptionHandler&gt; exceptionHandler)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">		AnnotationAsyncExecutionInterceptor interceptor = <span class="keyword">new</span> AnnotationAsyncExecutionInterceptor(<span class="keyword">null</span>);<span class="comment">//这句是重点</span></span><br><span class="line">		interceptor.configure(executor, exceptionHandler);</span><br><span class="line">		<span class="keyword">return</span> interceptor;</span><br><span class="line">	&#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//返回切点</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> Pointcut <span class="title">buildPointcut</span><span class="params">(Set&lt;Class&lt;? extends Annotation&gt;&gt; asyncAnnotationTypes)</span> </span>&#123;</span><br><span class="line">		ComposablePointcut result = <span class="keyword">null</span>;</span><br><span class="line">		<span class="keyword">for</span> (Class&lt;? extends Annotation&gt; asyncAnnotationType : asyncAnnotationTypes) &#123;</span><br><span class="line">			Pointcut cpc = <span class="keyword">new</span> AnnotationMatchingPointcut(asyncAnnotationType, <span class="keyword">true</span>);</span><br><span class="line">			Pointcut mpc = <span class="keyword">new</span> AnnotationMatchingPointcut(<span class="keyword">null</span>, asyncAnnotationType, <span class="keyword">true</span>);</span><br><span class="line">			<span class="keyword">if</span> (result == <span class="keyword">null</span>) &#123;</span><br><span class="line">				result = <span class="keyword">new</span> ComposablePointcut(cpc);</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">else</span> &#123;</span><br><span class="line">				result.union(cpc);</span><br><span class="line">			&#125;</span><br><span class="line">			result = result.union(mpc);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> (result != <span class="keyword">null</span> ? result : Pointcut.TRUE);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3><span id="annotationasyncexecutioninterceptor实现"><code>AnnotationAsyncExecutionInterceptor</code>实现</span></h3><p><img src="/2018/11/28/从ForkJoin到Stream，再到Storm学习并行计算/image-20181128234357038.png" alt="image-20181128234357038"></p>
+<h3><span id="asyncexecutioninterceptor逻辑增强"><code>AsyncExecutionInterceptor</code>逻辑增强</span></h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Nullable</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">invoke</span><span class="params">(MethodInvocation invocation)</span> <span class="keyword">throws</span> Throwable </span>&#123;</span><br><span class="line">        Class&lt;?&gt; targetClass = invocation.getThis() != <span class="keyword">null</span> ? AopUtils.getTargetClass(invocation.getThis()) : <span class="keyword">null</span>;</span><br><span class="line">        Method specificMethod = ClassUtils.getMostSpecificMethod(invocation.getMethod(), targetClass);</span><br><span class="line">        Method userDeclaredMethod = BridgeMethodResolver.findBridgedMethod(specificMethod);</span><br><span class="line">        AsyncTaskExecutor executor = <span class="keyword">this</span>.determineAsyncExecutor(userDeclaredMethod);</span><br><span class="line">        <span class="keyword">if</span> (executor == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(<span class="string">"No executor specified and no default executor set on AsyncExecutionInterceptor either"</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            Callable&lt;Object&gt; task = () -&gt; &#123;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    Object result = invocation.proceed();</span><br><span class="line">                    <span class="keyword">if</span> (result <span class="keyword">instanceof</span> Future) &#123;</span><br><span class="line">                        <span class="keyword">return</span> ((Future)result).get();</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125; <span class="keyword">catch</span> (ExecutionException var4) &#123;</span><br><span class="line">                    <span class="keyword">this</span>.handleError(var4.getCause(), userDeclaredMethod, invocation.getArguments());</span><br><span class="line">                &#125; <span class="keyword">catch</span> (Throwable var5) &#123;</span><br><span class="line">                    <span class="keyword">this</span>.handleError(var5, userDeclaredMethod, invocation.getArguments());</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">            &#125;;</span><br><span class="line">          <span class="keyword">return</span> <span class="keyword">this</span>.doSubmit(task, executor, invocation.getMethod().getReturnType());<span class="comment">//这句是重点</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h3><span id="asyncexecutionaspectsupport异步任务执行"><code>AsyncExecutionAspectSupport</code>异步任务执行</span></h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Nullable</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> Object <span class="title">doSubmit</span><span class="params">(Callable&lt;Object&gt; task, AsyncTaskExecutor executor, Class&lt;?&gt; returnType)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (CompletableFuture.class.isAssignableFrom(returnType)) &#123;</span><br><span class="line">            <span class="comment">//这里使用CompletableFuture实现异步任务执行的逻辑</span></span><br><span class="line">            <span class="keyword">return</span> CompletableFuture.supplyAsync(() -&gt; &#123;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    <span class="keyword">return</span> task.call();</span><br><span class="line">                &#125; <span class="keyword">catch</span> (Throwable var2) &#123;</span><br><span class="line">                    <span class="keyword">throw</span> <span class="keyword">new</span> CompletionException(var2);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;, executor);</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (ListenableFuture.class.isAssignableFrom(returnType)) &#123;</span><br><span class="line">            <span class="keyword">return</span> ((AsyncListenableTaskExecutor)executor).submitListenable(task);</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (Future.class.isAssignableFrom(returnType)) &#123;</span><br><span class="line">            <span class="keyword">return</span> executor.submit(task);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            executor.submit(task);</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>谢谢你请我吃糖果</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wxcode.jpeg" alt="ForwardLee 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Future、ForkJoin、Stream、Storm、并行计算/" rel="tag"># Future、ForkJoin、Stream、Storm、并行计算</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/10/28/基于protobuf序列化协议实现Netty-RPC分布式通信/" rel="next" title="基于protobuf序列化协议实现Netty RPC分布式通信">
+                <i class="fa fa-chevron-left"></i> 基于protobuf序列化协议实现Netty RPC分布式通信
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/11/28/从ForkJoin到Stream，再到Storm学习并行计算/ForkJoinPool.execute(R r)/" rel="prev" title="">
+                 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+      
+        <div id="gitment-container"></div>
+      
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/head.jpeg"
+                alt="ForwardLee" />
+            
+              <p class="site-author-name" itemprop="name">ForwardLee</p>
+              <p class="site-description motion-element" itemprop="description">总结学习方法，实践技术技能。</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">55</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">46</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/forworldlee" target="_blank" title="GitHub" rel="external nofollow"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="mailto:279079608@qq.com" target="_blank" title="E-Mail" rel="external nofollow"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://ifeve.com/" title="并发编程" target="_blank">并发编程</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.laruence.com/" title="鸟哥" target="_blank">鸟哥</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://lvwenhan.com/" title="岁寒" target="_blank">岁寒</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">1.</span> <span class="nav-text">ForkJoin框架</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">1.1.</span> <span class="nav-text">ForkJoinPool的功能说明</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">1.2.</span> <span class="nav-text">ForkJoinPool的继承关系</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">1.3.</span> <span class="nav-text">ForJoinTask的功能</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">1.4.</span> <span class="nav-text">ForkJoinTask的继承关系</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">1.5.</span> <span class="nav-text">ForkJoin调用逻辑</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">2.</span> <span class="nav-text">ForkJoin怎么用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">2.1.</span> <span class="nav-text">ForkJoinPool执行任务的三种方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">2.2.</span> <span class="nav-text">ForkJoinPool构造方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">2.3.</span> <span class="nav-text">ForkJoinTask定义</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">3.</span> <span class="nav-text">CompletableFuture异步操作</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">3.1.</span> <span class="nav-text">Completable提交执行任务</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">4.</span> <span class="nav-text">Strem流操作</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">4.1.</span> <span class="nav-text">parallel并行计算对性能的影响</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">5.</span> <span class="nav-text">Stream和CompletableFuture如何选择</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">6.</span> <span class="nav-text">Loop、ForkJoin、Stream计算性能测试</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">7.</span> <span class="nav-text">SpringFramework的@Async异步操作</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">7.1.</span> <span class="nav-text">@Async注解原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">7.2.</span> <span class="nav-text">@Async AOP实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#undefined"><span class="nav-number">7.2.1.</span> <span class="nav-text">ProxyAsyncConfiguration实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#undefined"><span class="nav-number">7.2.2.</span> <span class="nav-text">AsyncAnnotationBeanPostProcessor实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#undefined"><span class="nav-number">7.2.3.</span> <span class="nav-text">AsyncAnnotationAdvisor实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#undefined"><span class="nav-number">7.2.4.</span> <span class="nav-text">AnnotationAsyncExecutionInterceptor实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#undefined"><span class="nav-number">7.2.5.</span> <span class="nav-text">AsyncExecutionInterceptor逻辑增强</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#undefined"><span class="nav-number">7.2.6.</span> <span class="nav-text">AsyncExecutionAspectSupport异步任务执行</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">forworldlee</span>
+
+  
+
+  
+</div>
+
+
+  
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" rel="external nofollow" href="https://hexo.io">Hexo</a> 强力驱动 v3.7.1</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" rel="external nofollow" href="https://github.com/theme-next/hexo-theme-next">NexT.Gemini</a> v6.3.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.3.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.3.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.3.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.3.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.3.0"></script>
+
+
+
+  
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+<!-- LOCAL: You can save these files to your site and update links -->
+    
+        
+        <link rel="stylesheet" href="https://aimingoo.github.io/gitmint/style/default.css">
+        <script src="https://aimingoo.github.io/gitmint/dist/gitmint.browser.js"></script>
+    
+<!-- END LOCAL -->
+
+    
+
+    
+      <script type="text/javascript">
+      function renderGitment(){
+        var gitment = new Gitmint({
+            id: 'page_s_blog_2018-11-24 07:35:52',
+            owner: 'forworldlee',
+            repo: 'forworldlee.github.io',
+            
+            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
+            
+            oauth: {
+            
+            
+                client_secret: 'e84ed43a122ffe38e55a2372f27e4639ec673564',
+            
+                client_id: '38b9430818b98ed8d839'
+            }});
+        gitment.render('gitment-container');
+      }
+
+      
+      renderGitment();
+      
+      </script>
+    
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

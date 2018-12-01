@@ -1,0 +1,96 @@
+<p>new ForkJoinPool().invoke(ForkJoinTask f)</p>
+<pre><code class="java"><span class="comment">//MAX_CAP = 32767 即"01111 1111 1111 1111"</span>
+<span class="function"><span class="keyword">public</span> <span class="title">ForkJoinPool</span><span class="params">()</span> </span>{
+        <span class="keyword">this</span>(Math.min(MAX_CAP, Runtime.getRuntime().availableProcessors()),
+             defaultForkJoinWorkerThreadFactory, <span class="keyword">null</span>, <span class="keyword">false</span>);
+    }
+
+<span class="function"><span class="keyword">public</span> <span class="title">ForkJoinPool</span><span class="params">(<span class="keyword">int</span> parallelism,</span></span>
+<span class="function"><span class="params">                        ForkJoinWorkerThreadFactory factory,</span></span>
+<span class="function"><span class="params">                        UncaughtExceptionHandler handler,</span></span>
+<span class="function"><span class="params">                        <span class="keyword">boolean</span> asyncMode)</span> </span>{
+        <span class="keyword">this</span>(checkParallelism(parallelism),
+             checkFactory(factory),
+             handler,
+             asyncMode ? FIFO_QUEUE : LIFO_QUEUE,
+             <span class="string">"ForkJoinPool-"</span> + nextPoolId() + <span class="string">"-worker-"</span>);
+        checkPermission();
+    }
+</code></pre>
+<p>私有构造方法()</p>
+<pre><code class="java"><span class="comment">//SMASK = 65535 即"1111 1111 1111 1111"</span>
+<span class="function"><span class="keyword">private</span> <span class="title">ForkJoinPool</span><span class="params">(<span class="keyword">int</span> parallelism,</span></span>
+<span class="function"><span class="params">                         ForkJoinWorkerThreadFactory factory,</span></span>
+<span class="function"><span class="params">                         UncaughtExceptionHandler handler,</span></span>
+<span class="function"><span class="params">                         <span class="keyword">int</span> mode,</span></span>
+<span class="function"><span class="params">                         String workerNamePrefix)</span> </span>{
+        <span class="keyword">this</span>.workerNamePrefix = workerNamePrefix;
+        <span class="keyword">this</span>.factory = factory;
+        <span class="keyword">this</span>.ueh = handler;
+        <span class="keyword">this</span>.config = (parallelism &amp; SMASK) | mode;
+        <span class="keyword">long</span> np = (<span class="keyword">long</span>)(-parallelism); <span class="comment">// offset ctl counts</span>
+        <span class="keyword">this</span>.ctl = ((np &lt;&lt; AC_SHIFT) &amp; AC_MASK) | ((np &lt;&lt; TC_SHIFT) &amp; TC_MASK);
+    }
+</code></pre>
+<p><img src="/Users/Cattlee/GitBlog/source/_posts/从ForkJoin到Stream，再到Storm学习并行计算/image-20181128153647554.png" alt="image-20181128153647554"></p>
+<p>CompletableFutre.supplyAsync(R r);</p>
+<pre><code class="java"><span class="keyword">public</span> <span class="keyword">static</span> &lt;U&gt; <span class="function">CompletableFuture&lt;U&gt; <span class="title">supplyAsync</span><span class="params">(Supplier&lt;U&gt; supplier)</span> </span>{
+    <span class="keyword">return</span> asyncSupplyStage(asyncPool, supplier);
+}
+</code></pre>
+<p>asyncPool？</p>
+<pre><code class="java"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Executor asyncPool = useCommonPool ?
+        ForkJoinPool.commonPool() : <span class="keyword">new</span> ThreadPerTaskExecutor();
+</code></pre>
+<p>useCommonPool?</p>
+<pre><code class="java"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">boolean</span> useCommonPool =
+        (ForkJoinPool.getCommonPoolParallelism() &gt; <span class="number">1</span>);
+</code></pre>
+<p>ForkJoinPool.getCommonPoolParallelism()?</p>
+<pre><code class="java"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">getCommonPoolParallelism</span><span class="params">()</span> </span>{
+        <span class="keyword">return</span> commonParallelism;
+    }
+</code></pre>
+<pre><code class="java"><span class="keyword">static</span> {
+     common = java.security.AccessController.doPrivileged
+            (<span class="keyword">new</span> java.security.PrivilegedAction&lt;ForkJoinPool&gt;() {
+                <span class="function"><span class="keyword">public</span> ForkJoinPool <span class="title">run</span><span class="params">()</span> </span>{ <span class="keyword">return</span> makeCommonPool(); }});
+        <span class="keyword">int</span> par = common.config &amp; SMASK; <span class="comment">// SMASK = 1111 1111 1111 1111</span>
+        commonParallelism = par &gt; <span class="number">0</span> ? par : <span class="number">1</span>;
+}
+
+</code></pre>
+<p>commonParallelism值?</p>
+<pre><code class="java"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> ForkJoinPool <span class="title">makeCommonPool</span><span class="params">()</span> </span>{
+        <span class="keyword">int</span> parallelism = -<span class="number">1</span>;
+       ...
+        <span class="keyword">try</span> {  <span class="comment">// ignore exceptions in accessing/parsing properties</span>
+            String pp = System.getProperty
+                (<span class="string">"java.util.concurrent.ForkJoinPool.common.parallelism"</span>);
+            ...
+
+            <span class="keyword">if</span> (pp != <span class="keyword">null</span>)
+                parallelism = Integer.parseInt(pp);
+
+            ...
+        } <span class="keyword">catch</span> (Exception ignore) {
+        }
+
+    ...
+
+        <span class="comment">//计算完成后 parallelism = processors -1</span>
+        <span class="keyword">if</span> (parallelism &lt; <span class="number">0</span> &amp;&amp; <span class="comment">// default 1 less than #cores</span>
+            (parallelism = Runtime.getRuntime().availableProcessors() - <span class="number">1</span>) &lt;= <span class="number">0</span>)
+            parallelism = <span class="number">1</span>;
+
+
+    ....
+
+        <span class="comment">//此处调用私有构造方法 常数LIFO_QUEUE=0</span>
+        <span class="keyword">return</span> <span class="keyword">new</span> ForkJoinPool(parallelism, factory, handler, LIFO_QUEUE,
+                                <span class="string">"ForkJoinPool.commonPool-worker-"</span>);
+    }
+</code></pre>
+<p>@Async注解 要求返回类型是CompletableFuture 或者 ListenableFuture</p>
+<p>基于ForkJoin框架实现的Strem</p>
+<p><img src="/Users/Cattlee/GitBlog/source/_posts/从ForkJoin到Stream，再到Storm学习并行计算/image-20181128181404376.png" alt="image-20181128181404376"></p>
