@@ -109,9 +109,9 @@
 
 
   <meta name="description" content="前言SpringCloud-Sleuth是SpringCloud分布式服务追踪解决方案的一种实现方式。它借鉴了Google的分布式服务追踪技术Dapper的学术术语。 Span是分布式追踪服务的基本工作单元，发送一个RPC请求并得到一个response响应是一个Span，一个Span由64位长度的字符串标识，其中包含描述信息、时间戳、由K-V构成的Tags、触发Span事件的相关Span-ID、I">
-<meta name="keywords" content="SpringCloud,Sleuth,Zipkin,RabbitMQ">
+<meta name="keywords" content="SpringCloud,Sleuth,Zipkin,RabbitMQ,ELK">
 <meta property="og:type" content="article">
-<meta property="og:title" content="SpringCloud Finchley.SR2配置Sleuth+Rabbit+Zipkin链路追踪">
+<meta property="og:title" content="SpringCloud Finchley.SR2配置Sleuth+Rabbit+Zipkin+ELK链路追踪">
 <meta property="og:url" content="http://www.forwardlee.com/2019/01/08/SpringCloud-Finchley-SR2配置Sleuth-Rabbit-Zipkin链路追踪/index.html">
 <meta property="og:site_name" content="不忘初心">
 <meta property="og:description" content="前言SpringCloud-Sleuth是SpringCloud分布式服务追踪解决方案的一种实现方式。它借鉴了Google的分布式服务追踪技术Dapper的学术术语。 Span是分布式追踪服务的基本工作单元，发送一个RPC请求并得到一个response响应是一个Span，一个Span由64位长度的字符串标识，其中包含描述信息、时间戳、由K-V构成的Tags、触发Span事件的相关Span-ID、I">
@@ -126,9 +126,9 @@
 <meta property="og:image" content="http://www.forwardlee.com/2019/01/08/SpringCloud-Finchley-SR2配置Sleuth-Rabbit-Zipkin链路追踪/zipkin-svc-3.png">
 <meta property="og:image" content="http://www.forwardlee.com/2019/01/08/SpringCloud-Finchley-SR2配置Sleuth-Rabbit-Zipkin链路追踪/kibana-index-pattern.png">
 <meta property="og:image" content="http://www.forwardlee.com/2019/01/08/SpringCloud-Finchley-SR2配置Sleuth-Rabbit-Zipkin链路追踪/kibana-discover.png">
-<meta property="og:updated_time" content="2019-03-14T06:45:47.237Z">
+<meta property="og:updated_time" content="2019-03-14T06:46:49.832Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="SpringCloud Finchley.SR2配置Sleuth+Rabbit+Zipkin链路追踪">
+<meta name="twitter:title" content="SpringCloud Finchley.SR2配置Sleuth+Rabbit+Zipkin+ELK链路追踪">
 <meta name="twitter:description" content="前言SpringCloud-Sleuth是SpringCloud分布式服务追踪解决方案的一种实现方式。它借鉴了Google的分布式服务追踪技术Dapper的学术术语。 Span是分布式追踪服务的基本工作单元，发送一个RPC请求并得到一个response响应是一个Span，一个Span由64位长度的字符串标识，其中包含描述信息、时间戳、由K-V构成的Tags、触发Span事件的相关Span-ID、I">
 <meta name="twitter:image" content="http://www.forwardlee.com/2019/01/08/SpringCloud-Finchley-SR2配置Sleuth-Rabbit-Zipkin链路追踪/trace-id.png">
 
@@ -149,7 +149,7 @@
   };
 </script>
 
-  <title>SpringCloud Finchley.SR2配置Sleuth+Rabbit+Zipkin链路追踪 | 不忘初心</title>
+  <title>SpringCloud Finchley.SR2配置Sleuth+Rabbit+Zipkin+ELK链路追踪 | 不忘初心</title>
   
 
 
@@ -370,7 +370,7 @@
 
         
         
-          <h2 class="post-title" itemprop="name headline">SpringCloud Finchley.SR2配置Sleuth+Rabbit+Zipkin链路追踪
+          <h2 class="post-title" itemprop="name headline">SpringCloud Finchley.SR2配置Sleuth+Rabbit+Zipkin+ELK链路追踪
               
             
           </h2>
@@ -633,6 +633,8 @@
           
             <a href="/tags/RabbitMQ/" rel="tag"># RabbitMQ</a>
           
+            <a href="/tags/ELK/" rel="tag"># ELK</a>
+          
         </div>
       
 
@@ -858,7 +860,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">53</span>
+                      
+                    
+                    <span class="site-state-item-count">54</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>

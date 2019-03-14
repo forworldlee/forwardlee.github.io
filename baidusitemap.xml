@@ -5,10 +5,10 @@
     
   <url>
     <loc>http://www.forwardlee.com/2019/01/08/SpringCloud-Finchley-SR2%E9%85%8D%E7%BD%AESleuth-Rabbit-Zipkin%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA/</loc>
-    <lastmod>2019-03-14T06:45:47.237Z</lastmod>
+    <lastmod>2019-03-14T06:46:49.832Z</lastmod>
     <data>
         <display>
-        <title>SpringCloud Finchley.SR2配置Sleuth+Rabbit+Zipkin链路追踪</title>
+        <title>SpringCloud Finchley.SR2配置Sleuth+Rabbit+Zipkin+ELK链路追踪</title>
         <pubTime>2019-01-08T09:07:38.000Z</pubTime>
         
         <tag>SpringCloud</tag>
@@ -18,6 +18,8 @@
         <tag>Zipkin</tag>
          
         <tag>RabbitMQ</tag>
+         
+        <tag>ELK</tag>
          
          
            
@@ -175,9 +177,9 @@
         
         <tag>OpenResty</tag>
          
-        <tag>负载均衡</tag>
-         
         <tag>Nginx</tag>
+         
+        <tag>负载均衡</tag>
          
          
            
@@ -888,11 +890,11 @@
         <title>Docker Galera Cluster环境快速搭建</title>
         <pubTime>2018-05-22T03:12:14.000Z</pubTime>
         
+        <tag>Docker</tag>
+         
         <tag>MariaDB</tag>
          
         <tag>Galera</tag>
-         
-        <tag>Docker</tag>
          
          
            

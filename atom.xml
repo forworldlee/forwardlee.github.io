@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.forwardlee.com/"/>
-  <updated>2019-03-14T06:45:47.237Z</updated>
+  <updated>2019-03-14T06:46:49.832Z</updated>
   <id>http://www.forwardlee.com/</id>
   
   <author>
@@ -16,11 +16,11 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>SpringCloud Finchley.SR2配置Sleuth+Rabbit+Zipkin链路追踪</title>
+    <title>SpringCloud Finchley.SR2配置Sleuth+Rabbit+Zipkin+ELK链路追踪</title>
     <link href="http://www.forwardlee.com/2019/01/08/SpringCloud-Finchley-SR2%E9%85%8D%E7%BD%AESleuth-Rabbit-Zipkin%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA/"/>
     <id>http://www.forwardlee.com/2019/01/08/SpringCloud-Finchley-SR2配置Sleuth-Rabbit-Zipkin链路追踪/</id>
     <published>2019-01-08T09:07:38.000Z</published>
-    <updated>2019-03-14T06:45:47.237Z</updated>
+    <updated>2019-03-14T06:46:49.832Z</updated>
     
     <content type="html"><![CDATA[<h1><span id="前言">前言</span></h1><p>SpringCloud-Sleuth是SpringCloud分布式服务追踪解决方案的一种实现方式。它借鉴了Google的分布式服务追踪技术Dapper的学术术语。</p>
 <p>Span是分布式追踪服务的基本工作单元，发送一个RPC请求并得到一个response响应是一个Span，一个Span由64位长度的字符串标识，其中包含描述信息、时间戳、由K-V构成的Tags、触发Span事件的相关Span-ID、IP地址信息组成。Span有start和stop两个动作，start一个Span，就必须在追踪处理完成后stop这个Span。在初始化一个Span时，创建一个root-span，它的Span-ID也是服务追踪的Trace-ID。</p>
@@ -181,6 +181,8 @@
       <category term="Zipkin" scheme="http://www.forwardlee.com/tags/Zipkin/"/>
     
       <category term="RabbitMQ" scheme="http://www.forwardlee.com/tags/RabbitMQ/"/>
+    
+      <category term="ELK" scheme="http://www.forwardlee.com/tags/ELK/"/>
     
   </entry>
   
@@ -429,9 +431,9 @@
     
       <category term="OpenResty" scheme="http://www.forwardlee.com/tags/OpenResty/"/>
     
-      <category term="负载均衡" scheme="http://www.forwardlee.com/tags/%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/"/>
-    
       <category term="Nginx" scheme="http://www.forwardlee.com/tags/Nginx/"/>
+    
+      <category term="负载均衡" scheme="http://www.forwardlee.com/tags/%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/"/>
     
   </entry>
   
