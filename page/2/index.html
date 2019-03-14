@@ -341,6 +341,147 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2018/07/25/Hystrix生产环境实践/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ForwardLee">
+      <meta itemprop="description" content="总结学习方法，实践技术技能。">
+      <meta itemprop="image" content="/images/head.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="不忘初心">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/07/25/Hystrix生产环境实践/" itemprop="url">
+                  Hystrix生产环境配置实践
+                </a>
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-07-25 15:28:43" itemprop="dateCreated datePublished" datetime="2018-07-25T15:28:43+08:00">2018-07-25</time>
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="线程池资源优化演进"><a href="#线程池资源优化演进" class="headerlink" title="线程池资源优化演进"></a>线程池资源优化演进</h1><p>在生产环境中部署一个短路器，一开始需要将一些关键配置设置的大一些，比如timeout超时时长，线程池大小，或信号量容量，然后逐渐优化这些配置，直到在一个生产系统中运作良好。</p>
+<p>（1）一开始先不要设置timeout超时时长，默认就是1000ms，也就是1s<br>（2）一开始也不要设置线程池大小，默认就是10<br>（3）直接部署hystrix到生产环境，如果运行的很良好，那么就让它这样运行好了<br>（4）让hystrix应用，24小时运行在生产环境中<br>（5）依赖标准的监控和报警机制来捕获到系统的异常运行情况<br>（6）在24小时之后，看一下调用延迟的占比，以及流量，来计算出让短路器生效的最小的配置数字<br>（7）直接对hystrix配置进行热修改，然后继续在hystrix dashboard上监控<br>（8）看看修改配置后的系统表现有没有改善</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/07/25/Hystrix生产环境实践/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2018/07/24/Hystrix在实际应用中的多级降级策略/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1720,171 +1861,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.forwardlee.com/2018/06/27/CentOS7安装Docker-CE/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="ForwardLee">
-      <meta itemprop="description" content="总结学习方法，实践技术技能。">
-      <meta itemprop="image" content="/images/head.jpeg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="不忘初心">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/06/27/CentOS7安装Docker-CE/" itemprop="url">
-                  CentOS7安装Docker-CE
-                </a>
-              
-            
-          </h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2018-06-27 16:26:53" itemprop="dateCreated datePublished" datetime="2018-06-27T16:26:53+08:00">2018-06-27</time>
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>转【<a href="https://jkzhao.github.io/2017/08/28/CentOS%E5%AE%89%E8%A3%85Docker-CE/" target="_blank" rel="noopener">CentOS安装Docker CE</a>】</p>
-<h1><span id="环境要求">环境要求</span></h1><p>To install Docker CE, you need the 64-bit version of CentOS 7.<br>The centos-extras repository must be enabled. This repository is enabled by default, but if you have disabled it, you need to re-enable it.</p>
-<h1><span id="卸载安装的所有docker组件">卸载安装的所有Docker组件</span></h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@spark32 lib]# systemctl stop docker.service</span><br><span class="line">[root@spark32 lib]# yum remove docker docker-common docker-selinux docker-engine container-selinux</span><br><span class="line">[root@spark32 lib]# rm -rf docker/</span><br></pre></td></tr></table></figure>
-<h1><span id="通过仓库安装docker-ce">通过仓库安装Docker CE</span></h1><p>1.安装依赖包</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@spark32 ~]# yum install -y yum-utils device-mapper-persistent-data lvm2</span><br></pre></td></tr></table></figure>
-<p>2.下载docker yum源</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@spark32 ~]# yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo</span><br></pre></td></tr></table></figure>
-<p>3.更新软件缓存</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@spark32 ~]# yum makecache fast</span><br></pre></td></tr></table></figure>
-<p>4.安装Docker CE</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@spark32 ~]# yum install docker-ce -y</span><br></pre></td></tr></table></figure>
-<p>5.启动docker</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@spark32 ~]# systemctl start docker.service</span><br></pre></td></tr></table></figure>
-<p>6.查看docker版本信息</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[root@spark32 ~]# docker info</span><br><span class="line">Containers: 0</span><br><span class="line"> Running: 0</span><br><span class="line"> Paused: 0</span><br><span class="line"> Stopped: 0</span><br><span class="line">Images: 0</span><br><span class="line">Server Version: 17.06.1-ce</span><br><span class="line">Storage Driver: overlay</span><br><span class="line"> Backing Filesystem: extfs</span><br><span class="line"> Supports d_type: true</span><br><span class="line">Logging Driver: json-file</span><br><span class="line">Cgroup Driver: cgroupfs</span><br></pre></td></tr></table></figure>
-<p><strong>【注意】:在生产环境中，可能需要使用某一个特定版本的Docker，而不是使用最新的版本，我们可以先列出版本，然后安装指定版本：</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@spark32 ~]# yum list docker-ce.x86_64  --showduplicates | sort -r</span><br><span class="line">[root@spark32 ~]# yum install docker-ce-&lt;VERSION&gt;</span><br></pre></td></tr></table></figure>
-<h1><span id="配置镜像加速">配置镜像加速</span></h1><p>国内访问 Docker Hub 有时会遇到困难，此时可以配置镜像加速器。国内很多云服务商都提供了加速器服务，例如：</p>
-<ul>
-<li>阿里云加速器</li>
-<li>DaoCloud 加速器</li>
-<li>灵雀云加速器</li>
-</ul>
-<p>以阿里云加速器为例<br>1.首先进入阿里云docker库首页<br>注册用户并登录，点击右上角“管理中心”。如果第一次，会提示“您还没有开通服务”，点击“确定”，然后会出现弹窗“初始化设置”，设置docker登录时使用的密码。</p>
-<p>2.点击左侧菜单“Docker Hub镜像站点”，可以看到“您的专属加速器地址：<a href="https://6101v8g5.mirror.aliyuncs.com”，我们需要将其配置到Docker" target="_blank" rel="noopener">https://6101v8g5.mirror.aliyuncs.com”，我们需要将其配置到Docker</a> 引擎。</p>
-<p>3.修改daemon配置文件/etc/docker/daemon.json来使用加速器：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@spark32 ~]# vim /etc/docker/daemon.json</span><br><span class="line">&#123;</span><br><span class="line">  &quot;registry-mirrors&quot;: [&quot;https://6101v8g5.mirror.aliyuncs.com&quot;]</span><br><span class="line">&#125;</span><br><span class="line">[root@spark32 ~]# systemctl daemon-reload</span><br><span class="line">[root@spark32 ~]# systemctl restart docker</span><br></pre></td></tr></table></figure>
-<p>也可以配置docker中国的镜像源</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;registry-mirrors&quot;: [&quot;https://registry.docker-cn.com&quot;]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h1><span id="卸载docker-ce">卸载Docker CE</span></h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@spark32 ~]# yum remove docker-ce</span><br><span class="line">[root@spark32 ~]# rm -rf /var/lib/docker</span><br></pre></td></tr></table></figure>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1936,7 +1912,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">54</span>
+                    <span class="site-state-item-count">55</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -2049,7 +2025,15 @@
                     
                       
                     
-                    <span class="site-state-item-count">49</span>
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">53</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
@@ -2132,7 +2116,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
   <span class="with-love" id="animate">
     <i class="fa fa-user"></i>
   </span>

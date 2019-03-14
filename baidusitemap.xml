@@ -4,6 +4,29 @@
 
     
   <url>
+    <loc>http://www.forwardlee.com/2019/01/08/SpringCloud-Finchley-SR2%E9%85%8D%E7%BD%AESleuth-Rabbit-Zipkin%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA/</loc>
+    <lastmod>2019-03-14T06:45:47.237Z</lastmod>
+    <data>
+        <display>
+        <title>SpringCloud Finchley.SR2配置Sleuth+Rabbit+Zipkin链路追踪</title>
+        <pubTime>2019-01-08T09:07:38.000Z</pubTime>
+        
+        <tag>SpringCloud</tag>
+         
+        <tag>Sleuth</tag>
+         
+        <tag>Zipkin</tag>
+         
+        <tag>RabbitMQ</tag>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://www.forwardlee.com/2018/12/01/Future%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B%E5%BA%94%E7%94%A8/</loc>
     <lastmod>2018-12-01T11:03:02.080Z</lastmod>
     <data>
@@ -152,9 +175,9 @@
         
         <tag>OpenResty</tag>
          
-        <tag>Nginx</tag>
-         
         <tag>负载均衡</tag>
+         
+        <tag>Nginx</tag>
          
          
            
