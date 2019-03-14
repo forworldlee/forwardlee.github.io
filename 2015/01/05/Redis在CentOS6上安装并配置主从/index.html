@@ -428,11 +428,11 @@
       
 
       
-        <h1><span id="安装redis">安装Redis</span></h1><p>step1：tcl工具包安装</p>
+        <h1 id="安装Redis"><a href="#安装Redis" class="headerlink" title="安装Redis"></a>安装Redis</h1><p>step1：tcl工具包安装</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install -y install tcl</span><br></pre></td></tr></table></figure>
 <p>step2：Redis安装</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">wget http://download.redis.io/releases/redis-2.8.13.tar.gz</span><br><span class="line">tar -zvxf redis-2.8.13.tar.gz</span><br><span class="line">cd redis-2.8.13</span><br><span class="line">make &amp; make install</span><br></pre></td></tr></table></figure>
-<h1><span id="redis启动和主从配置">Redis启动和主从配置</span></h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mkdir /etc/redis</span><br><span class="line">mkdir -pv /var/redis/6379</span><br><span class="line">mv redis.conf /etc/redis/6379.conf</span><br><span class="line">vi /etc/redis/6379.conf</span><br></pre></td></tr></table></figure>
+<h1 id="Redis启动和主从配置"><a href="#Redis启动和主从配置" class="headerlink" title="Redis启动和主从配置"></a>Redis启动和主从配置</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mkdir /etc/redis</span><br><span class="line">mkdir -pv /var/redis/6379</span><br><span class="line">mv redis.conf /etc/redis/6379.conf</span><br><span class="line">vi /etc/redis/6379.conf</span><br></pre></td></tr></table></figure>
 <p>单机启动配置</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">#守护进程启动</span><br><span class="line">daemonize yes</span><br><span class="line">#进程id文件</span><br><span class="line">pidfile /var/run/redis_6379.pid</span><br><span class="line">#数据文件目录</span><br><span class="line">dir /var/redis/6379</span><br><span class="line">#redis节点绑定ip访问</span><br><span class="line">bind 192.168.1.212</span><br><span class="line">#redis节点访问端口</span><br><span class="line">port 6379</span><br></pre></td></tr></table></figure>
 <p>设置redis随系统自启动</p>
@@ -797,7 +797,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">1.</span> <span class="nav-text">安装Redis</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">2.</span> <span class="nav-text">Redis启动和主从配置</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#安装Redis"><span class="nav-number">1.</span> <span class="nav-text">安装Redis</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Redis启动和主从配置"><span class="nav-number">2.</span> <span class="nav-text">Redis启动和主从配置</span></a></li></ol></div>
             
 
           </div>

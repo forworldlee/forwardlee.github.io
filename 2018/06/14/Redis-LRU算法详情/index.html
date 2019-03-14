@@ -428,11 +428,11 @@
       
 
       
-        <h1><span id="什么是lru算法">什么是LRU算法</span></h1><p>LRU-Leaste Recently Use，最近使用最少。算法原理略。</p>
-<h1><span id="redis-lru算法">Redis LRU算法</span></h1><p>redis在存储数据时达到最大内存设置maxmemory后，自身会清理数据，以减少内存使用量，保证Reids服务的正常状态。<br>Redis 内存使用策略maxmemory-policy可配置项：</p>
+        <h1 id="什么是LRU算法"><a href="#什么是LRU算法" class="headerlink" title="什么是LRU算法"></a>什么是LRU算法</h1><p>LRU-Leaste Recently Use，最近使用最少。算法原理略。</p>
+<h1 id="Redis-LRU算法"><a href="#Redis-LRU算法" class="headerlink" title="Redis LRU算法"></a>Redis LRU算法</h1><p>redis在存储数据时达到最大内存设置maxmemory后，自身会清理数据，以减少内存使用量，保证Reids服务的正常状态。<br>Redis 内存使用策略maxmemory-policy可配置项：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">noeviction 如果内存使用达到了maxmemory，client继续写入数据，那么Redis就直接报错给客户端</span><br><span class="line">allkeys-lru 移除掉最近最少使用的那些key对应的数据</span><br><span class="line">volatile-lru 仅对设置了过期时间的key进行LRU清理</span><br><span class="line">allkeys-random 随机删除一些key的数据</span><br><span class="line">volatile-random 随机删除一些设置了过期时间的key对应的数据</span><br><span class="line">volatile-ttl 删除哪些过期时间比较短的key对应的数据</span><br></pre></td></tr></table></figure>
 <p>配置项多个，但实际应用场景中大多使用allkeys-lru策略</p>
-<h1><span id="maxmemory-sample配置">maxmemory-sample配置</span></h1><p>Redis在进行LRU算法清理数据时，需要对多个key进行采样，选出采样key中最近使用最少的key进行数据清理，maxmemory-sample选项就是用来配置采样大小的。Redis给出了3\5\10三个可配置的值，配置为3执行LRU速度更快，但是精确率不高，5是一个速度和精确率适中的配置，10使得LRU算法精确率更高，但是会消耗更多的CPU</p>
+<h1 id="maxmemory-sample配置"><a href="#maxmemory-sample配置" class="headerlink" title="maxmemory-sample配置"></a>maxmemory-sample配置</h1><p>Redis在进行LRU算法清理数据时，需要对多个key进行采样，选出采样key中最近使用最少的key进行数据清理，maxmemory-sample选项就是用来配置采样大小的。Redis给出了3\5\10三个可配置的值，配置为3执行LRU速度更快，但是精确率不高，5是一个速度和精确率适中的配置，10使得LRU算法精确率更高，但是会消耗更多的CPU</p>
 <p><strong>在实际应用中，会选择配置10，消耗更多CPU以获得更精确的LRU数据清理</strong></p>
 
       
@@ -790,7 +790,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">1.</span> <span class="nav-text">什么是LRU算法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">2.</span> <span class="nav-text">Redis LRU算法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">3.</span> <span class="nav-text">maxmemory-sample配置</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#什么是LRU算法"><span class="nav-number">1.</span> <span class="nav-text">什么是LRU算法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Redis-LRU算法"><span class="nav-number">2.</span> <span class="nav-text">Redis LRU算法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#maxmemory-sample配置"><span class="nav-number">3.</span> <span class="nav-text">maxmemory-sample配置</span></a></li></ol></div>
             
 
           </div>

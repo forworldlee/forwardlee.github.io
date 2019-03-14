@@ -428,14 +428,14 @@
       
 
       
-        <h1><span id="线程池资源优化演进">线程池资源优化演进</span></h1><p>在生产环境中部署一个短路器，一开始需要将一些关键配置设置的大一些，比如timeout超时时长，线程池大小，或信号量容量，然后逐渐优化这些配置，直到在一个生产系统中运作良好。</p>
+        <h1 id="线程池资源优化演进"><a href="#线程池资源优化演进" class="headerlink" title="线程池资源优化演进"></a>线程池资源优化演进</h1><p>在生产环境中部署一个短路器，一开始需要将一些关键配置设置的大一些，比如timeout超时时长，线程池大小，或信号量容量，然后逐渐优化这些配置，直到在一个生产系统中运作良好。</p>
 <p>（1）一开始先不要设置timeout超时时长，默认就是1000ms，也就是1s<br>（2）一开始也不要设置线程池大小，默认就是10<br>（3）直接部署hystrix到生产环境，如果运行的很良好，那么就让它这样运行好了<br>（4）让hystrix应用，24小时运行在生产环境中<br>（5）依赖标准的监控和报警机制来捕获到系统的异常运行情况<br>（6）在24小时之后，看一下调用延迟的占比，以及流量，来计算出让短路器生效的最小的配置数字<br>（7）直接对hystrix配置进行热修改，然后继续在hystrix dashboard上监控<br>（8）看看修改配置后的系统表现有没有改善</p>
 <a id="more"></a>
-<h1><span id="hystrixthreadpool线程数量设定计算公式">HystrixThreadPool线程数量设定计算公式</span></h1><p><strong>每秒的高峰访问次数 * 99%的访问延时 + 缓冲数量</strong></p>
+<h1 id="HystrixThreadPool线程数量设定计算公式"><a href="#HystrixThreadPool线程数量设定计算公式" class="headerlink" title="HystrixThreadPool线程数量设定计算公式"></a>HystrixThreadPool线程数量设定计算公式</h1><p><strong>每秒的高峰访问次数 * 99%的访问延时 + 缓冲数量</strong></p>
 <p>假设一个依赖的服务的高峰访问次数30QPS，99%的请求延时实践在200ms，那么我们可以设定的线程数量=30*0.2+4=10个线程。</p>
-<h1><span id="hystrixcommand线程超时timeout设定">HystrixCommand线程超时timeout设定</span></h1><p><strong>结合线程池数量配置，设置能够完成执行高峰时QPS任务的timeout数值。</strong></p>
+<h1 id="HystrixCommand线程超时timeout设定"><a href="#HystrixCommand线程超时timeout设定" class="headerlink" title="HystrixCommand线程超时timeout设定"></a>HystrixCommand线程超时timeout设定</h1><p><strong>结合线程池数量配置，设置能够完成执行高峰时QPS任务的timeout数值。</strong></p>
 <p>默认线程超时为1s。假设一个依赖服务的高峰访问时，99.5%的请求延时在250ms，假设再允许服务重试一次消耗50ms，那么这个依赖服务的延时设置为300ms就可以了，这样一个线程最多延时300ms，也就是这个线程每秒能执行三次依赖服务，线程池中10个线程，整好能处理30QPS。如果把延时设置为400ms，那么一个线程每秒最多执行2次请求，10个线程在1s内最多执行20个请求，剩余的10个请求就会被线程池阻塞住，再来新的请求也继续会被阻塞住，如果等待队列已满，那么新来的请求就会被直接Reject。所以400ms的超时设置就不能满足30QPS的请求次数要求。</p>
-<h1><span id="生产环境中动态分配线程池资源">生产环境中动态分配线程池资源</span></h1><p><strong>线程池动态配置选项</strong></p>
+<h1 id="生产环境中动态分配线程池资源"><a href="#生产环境中动态分配线程池资源" class="headerlink" title="生产环境中动态分配线程池资源"></a>生产环境中动态分配线程池资源</h1><p><strong>线程池动态配置选项</strong></p>
 <p>//允许线程池自动从coreSize扩容到maximumSize</p>
 <p> .withAllowMaximumSizeToDivergeFromCoreSize(true) </p>
 <p>//default 10，默认线程池大小</p>
@@ -801,7 +801,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">1.</span> <span class="nav-text">线程池资源优化演进</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">2.</span> <span class="nav-text">HystrixThreadPool线程数量设定计算公式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">3.</span> <span class="nav-text">HystrixCommand线程超时timeout设定</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">4.</span> <span class="nav-text">生产环境中动态分配线程池资源</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#线程池资源优化演进"><span class="nav-number">1.</span> <span class="nav-text">线程池资源优化演进</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#HystrixThreadPool线程数量设定计算公式"><span class="nav-number">2.</span> <span class="nav-text">HystrixThreadPool线程数量设定计算公式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#HystrixCommand线程超时timeout设定"><span class="nav-number">3.</span> <span class="nav-text">HystrixCommand线程超时timeout设定</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#生产环境中动态分配线程池资源"><span class="nav-number">4.</span> <span class="nav-text">生产环境中动态分配线程池资源</span></a></li></ol></div>
             
 
           </div>

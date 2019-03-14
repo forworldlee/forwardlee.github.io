@@ -430,7 +430,7 @@
       
 
       
-        <h2><span id="在浏览器中展示创建的article列表">在浏览器中展示创建的Article列表</span></h2><p>在浏览器中展示创建的Article数据，需要使用Http请求Web服务器，Web服务器接收请求并将Article数据在视图页面中展示，即MVC。完成上述操作，离不开Laravel的路由功能，所谓路由就是请求的控制转发。Laravel把所有的请求地址预先配置在路由列表文件中learnlaravel5/app/Http/routes.php。描述路由的基本格式是：</p>
+        <h2 id="在浏览器中展示创建的Article列表"><a href="#在浏览器中展示创建的Article列表" class="headerlink" title="在浏览器中展示创建的Article列表"></a>在浏览器中展示创建的Article列表</h2><p>在浏览器中展示创建的Article数据，需要使用Http请求Web服务器，Web服务器接收请求并将Article数据在视图页面中展示，即MVC。完成上述操作，离不开Laravel的路由功能，所谓路由就是请求的控制转发。Laravel把所有的请求地址预先配置在路由列表文件中learnlaravel5/app/Http/routes.php。描述路由的基本格式是：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Route::get(&apos;/home&apos;, &apos;HomeController@index&apos;);</span><br></pre></td></tr></table></figure>
 <p>Route类（\Illuminate\Support\Facades\Route）是Laravel框架提供的路由配置工具类，get标识http请求的Method（get/post/put/patch…），get函数的第一个参数是url格式定义，第二个参数用@分割成两部分，第一部分是Http请求的Controller类，第二部分标识Controller的具体执行方法，具体看HomeController类的内容描述：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line"></span><br><span class="line">namespace App\Http\Controllers;</span><br><span class="line"></span><br><span class="line">use App\Article;</span><br><span class="line">use App\Http\Requests;</span><br><span class="line">use Illuminate\Http\Request;</span><br><span class="line"></span><br><span class="line">class HomeController extends \Illuminate\Routing\Controller</span><br><span class="line">&#123;</span><br><span class="line">    /**</span><br><span class="line">     * Create a new controller instance.</span><br><span class="line">     *</span><br><span class="line">     * @return void</span><br><span class="line">     */</span><br><span class="line">    public function __construct()</span><br><span class="line">    &#123;</span><br><span class="line">        $this-&gt;middleware(&apos;auth&apos;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * Show the application dashboard.</span><br><span class="line">     *</span><br><span class="line">     * @return \Illuminate\Http\Response</span><br><span class="line">     */</span><br><span class="line">    public function index()</span><br><span class="line">    &#123;</span><br><span class="line">        return view(&apos;home&apos;)-&gt;withArticles(Article::all());;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -496,8 +496,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/08/01/p/Laravel5.x进阶笔记（一）/" rel="next" title="Laravel 5.x进阶笔记（一）">
-                <i class="fa fa-chevron-left"></i> Laravel 5.x进阶笔记（一）
+              <a href="/2017/08/01/p/Laravel5.x进阶笔记（三）/" rel="next" title="Laravel 5.x进阶笔记（二）">
+                <i class="fa fa-chevron-left"></i> Laravel 5.x进阶笔记（二）
               </a>
             
           </div>
@@ -795,7 +795,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#undefined"><span class="nav-number">1.</span> <span class="nav-text">在浏览器中展示创建的Article列表</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#在浏览器中展示创建的Article列表"><span class="nav-number">1.</span> <span class="nav-text">在浏览器中展示创建的Article列表</span></a></li></ol></div>
             
 
           </div>

@@ -696,11 +696,11 @@
         
           
             <p>github使用手册【转】<a href="http://www.runoob.com/w3cnote/git-guide.html" target="_blank" rel="noopener">http://www.runoob.com/w3cnote/git-guide.html</a></p>
-<h1><span id="step1在github网站创建仓库">Step1：在github网站创建仓库</span></h1><p>创建完，找到仓库地址：<br><a href="https://github.com/forworldlee/abc.git" target="_blank" rel="noopener">https://github.com/forworldlee/abc.git</a></p>
-<h1><span id="step2同步仓库">Step2：同步仓库</span></h1><p>在本地创建一个abc的目录，或者从github上克隆abc仓库到本地目录。<br>代码同步</p>
+<h1 id="Step1：在github网站创建仓库"><a href="#Step1：在github网站创建仓库" class="headerlink" title="Step1：在github网站创建仓库"></a>Step1：在github网站创建仓库</h1><p>创建完，找到仓库地址：<br><a href="https://github.com/forworldlee/abc.git" target="_blank" rel="noopener">https://github.com/forworldlee/abc.git</a></p>
+<h1 id="Step2：同步仓库"><a href="#Step2：同步仓库" class="headerlink" title="Step2：同步仓库"></a>Step2：同步仓库</h1><p>在本地创建一个abc的目录，或者从github上克隆abc仓库到本地目录。<br>代码同步</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">cd abc</span><br><span class="line"></span><br><span class="line">git init</span><br><span class="line">git add README.md</span><br><span class="line">git commit -m &quot;first commit&quot;</span><br><span class="line">git remote add origin git@github.com:forworldlee/abc.git</span><br><span class="line">git push -u origin master</span><br></pre></td></tr></table></figure>
 <p>本地目录中已经存在文件，可以使用git add . 代替git add README.md增加所有文件。</p>
-<h1><span id="step3提交新文件">Step3：提交新文件</span></h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git add xxx</span><br><span class="line">git commit -m &quot;提交描述&quot;</span><br><span class="line">git push -u orign master</span><br></pre></td></tr></table></figure>
+<h1 id="Step3：提交新文件"><a href="#Step3：提交新文件" class="headerlink" title="Step3：提交新文件"></a>Step3：提交新文件</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git add xxx</span><br><span class="line">git commit -m &quot;提交描述&quot;</span><br><span class="line">git push -u orign master</span><br></pre></td></tr></table></figure>
 
           
         
@@ -836,11 +836,11 @@
       
         
           
-            <h1><span id="master重要配置">master重要配置</span></h1><p>min-slaves-to-write 1<br>min-slaves-max-lag 10</p>
+            <h1 id="master重要配置"><a href="#master重要配置" class="headerlink" title="master重要配置"></a>master重要配置</h1><p>min-slaves-to-write 1<br>min-slaves-max-lag 10</p>
 <p>两个配置一起解释，至少有一个slave节点的数据同步延迟不能超过10s，否则master将暂停接收新数据的写入操作。这样能保证在主从复制过程中出现问题，master节点丢失的数据量可控。</p>
-<h1><span id="场景一主从异步复制导致的数据丢失">场景一：主从异步复制导致的数据丢失</span></h1><p>场景：master接收到新数据，还没有把新数据异步传输给slave，此时master宕机，那么master在内存中接收到的新数据将会丢失。</p>
-<h1><span id="场景二哨兵机制下sentinel集群主从节点发生脑裂">场景二：哨兵机制下（Sentinel）集群主从节点发生脑裂</span></h1><p>场景：master节点与slave节点断开网络连接，但是master的client端依然与master正常通信，此时数据还一直往master节点写入，哨兵（Sentinel）认为master已经挂掉，哨兵会进行主从转换，选举出一个slave节点转换为master节点接收数据，而原来的master在恢复网络连接后会变成slave从新的master中同步数据，那么这就导致原来master在断开与slave的连接后，接收到client端的新数据被丢弃，造成数据丢失。</p>
-<h1><span id="解决方案">解决方案</span></h1><p>依赖以上两个配置，控制数据丢失的数量。如果发生master暂停写入新数据，那么redis的client端可以进行如下操作，保证服务的可用性：<br>（1）client端做降级处理，把数据写入本地磁盘，等master能够写操作时写入master；然后对client对外提供服务的接口做降级处理，减少client接收到的请求数量，降低redis的并发写入量。<br>（2）client端将数据写入异步消息队列，每隔一段时间把数据从消息队列中取出，再写回到master当中。</p>
+<h1 id="场景一：主从异步复制导致的数据丢失"><a href="#场景一：主从异步复制导致的数据丢失" class="headerlink" title="场景一：主从异步复制导致的数据丢失"></a>场景一：主从异步复制导致的数据丢失</h1><p>场景：master接收到新数据，还没有把新数据异步传输给slave，此时master宕机，那么master在内存中接收到的新数据将会丢失。</p>
+<h1 id="场景二：哨兵机制下（Sentinel）集群主从节点发生脑裂"><a href="#场景二：哨兵机制下（Sentinel）集群主从节点发生脑裂" class="headerlink" title="场景二：哨兵机制下（Sentinel）集群主从节点发生脑裂"></a>场景二：哨兵机制下（Sentinel）集群主从节点发生脑裂</h1><p>场景：master节点与slave节点断开网络连接，但是master的client端依然与master正常通信，此时数据还一直往master节点写入，哨兵（Sentinel）认为master已经挂掉，哨兵会进行主从转换，选举出一个slave节点转换为master节点接收数据，而原来的master在恢复网络连接后会变成slave从新的master中同步数据，那么这就导致原来master在断开与slave的连接后，接收到client端的新数据被丢弃，造成数据丢失。</p>
+<h1 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h1><p>依赖以上两个配置，控制数据丢失的数量。如果发生master暂停写入新数据，那么redis的client端可以进行如下操作，保证服务的可用性：<br>（1）client端做降级处理，把数据写入本地磁盘，等master能够写操作时写入master；然后对client对外提供服务的接口做降级处理，减少client接收到的请求数量，降低redis的并发写入量。<br>（2）client端将数据写入异步消息队列，每隔一段时间把数据从消息队列中取出，再写回到master当中。</p>
 
           
         
@@ -976,11 +976,11 @@
       
         
           
-            <h1><span id="安装redis">安装Redis</span></h1><p>step1：tcl工具包安装</p>
+            <h1 id="安装Redis"><a href="#安装Redis" class="headerlink" title="安装Redis"></a>安装Redis</h1><p>step1：tcl工具包安装</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install -y install tcl</span><br></pre></td></tr></table></figure>
 <p>step2：Redis安装</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">wget http://download.redis.io/releases/redis-2.8.13.tar.gz</span><br><span class="line">tar -zvxf redis-2.8.13.tar.gz</span><br><span class="line">cd redis-2.8.13</span><br><span class="line">make &amp; make install</span><br></pre></td></tr></table></figure>
-<h1><span id="redis启动和主从配置">Redis启动和主从配置</span></h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mkdir /etc/redis</span><br><span class="line">mkdir -pv /var/redis/6379</span><br><span class="line">mv redis.conf /etc/redis/6379.conf</span><br><span class="line">vi /etc/redis/6379.conf</span><br></pre></td></tr></table></figure>
+<h1 id="Redis启动和主从配置"><a href="#Redis启动和主从配置" class="headerlink" title="Redis启动和主从配置"></a>Redis启动和主从配置</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mkdir /etc/redis</span><br><span class="line">mkdir -pv /var/redis/6379</span><br><span class="line">mv redis.conf /etc/redis/6379.conf</span><br><span class="line">vi /etc/redis/6379.conf</span><br></pre></td></tr></table></figure>
 <p>单机启动配置</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">#守护进程启动</span><br><span class="line">daemonize yes</span><br><span class="line">#进程id文件</span><br><span class="line">pidfile /var/run/redis_6379.pid</span><br><span class="line">#数据文件目录</span><br><span class="line">dir /var/redis/6379</span><br><span class="line">#redis节点绑定ip访问</span><br><span class="line">bind 192.168.1.212</span><br><span class="line">#redis节点访问端口</span><br><span class="line">port 6379</span><br></pre></td></tr></table></figure>
 <p>设置redis随系统自启动</p>

@@ -428,11 +428,11 @@
       
 
       
-        <h1><span id="删除哨兵节点">删除哨兵节点</span></h1><p>step1：停掉哨兵进程<br>ps -ef  | grep redis-sentinel<br>kill -9 PROCESSID<br>step2：过一会，在其他哨兵节点执行哨兵重置，清理旧哨兵的状态。</p>
+        <h1 id="删除哨兵节点"><a href="#删除哨兵节点" class="headerlink" title="删除哨兵节点"></a>删除哨兵节点</h1><p>step1：停掉哨兵进程<br>ps -ef  | grep redis-sentinel<br>kill -9 PROCESSID<br>step2：过一会，在其他哨兵节点执行哨兵重置，清理旧哨兵的状态。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@eshop-cache01 ~]# redis-cli -h 192.168.1.210 -p 5000</span><br><span class="line">192.168.1.210:5000&gt; sentinel reset * </span><br><span class="line">(integer) 1</span><br></pre></td></tr></table></figure>
 <p>step3：在所有哨兵节点上执行以下命令，查看所有的哨兵数量是否一致。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sentinel master mymaster</span><br></pre></td></tr></table></figure>
-<h1><span id="redis的slave节点下线">Redis的slave节点下线</span></h1><p>停掉或删除Redis服务后，停掉哨兵节点，在其他所有哨兵节点上执行sentinel reset mymaster。</p>
+<h1 id="Redis的slave节点下线"><a href="#Redis的slave节点下线" class="headerlink" title="Redis的slave节点下线"></a>Redis的slave节点下线</h1><p>停掉或删除Redis服务后，停掉哨兵节点，在其他所有哨兵节点上执行sentinel reset mymaster。</p>
 
       
     </div>
@@ -791,7 +791,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">1.</span> <span class="nav-text">删除哨兵节点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number">2.</span> <span class="nav-text">Redis的slave节点下线</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#删除哨兵节点"><span class="nav-number">1.</span> <span class="nav-text">删除哨兵节点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Redis的slave节点下线"><span class="nav-number">2.</span> <span class="nav-text">Redis的slave节点下线</span></a></li></ol></div>
             
 
           </div>
