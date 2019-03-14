@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.forwardlee.com/"/>
-  <updated>2019-03-14T06:46:49.832Z</updated>
+  <updated>2019-03-14T06:48:58.066Z</updated>
   <id>http://www.forwardlee.com/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://www.forwardlee.com/2019/01/08/SpringCloud-Finchley-SR2%E9%85%8D%E7%BD%AESleuth-Rabbit-Zipkin%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA/"/>
     <id>http://www.forwardlee.com/2019/01/08/SpringCloud-Finchley-SR2配置Sleuth-Rabbit-Zipkin链路追踪/</id>
     <published>2019-01-08T09:07:38.000Z</published>
-    <updated>2019-03-14T06:46:49.832Z</updated>
+    <updated>2019-03-14T06:48:58.066Z</updated>
     
     <content type="html"><![CDATA[<h1><span id="前言">前言</span></h1><p>SpringCloud-Sleuth是SpringCloud分布式服务追踪解决方案的一种实现方式。它借鉴了Google的分布式服务追踪技术Dapper的学术术语。</p>
 <p>Span是分布式追踪服务的基本工作单元，发送一个RPC请求并得到一个response响应是一个Span，一个Span由64位长度的字符串标识，其中包含描述信息、时间戳、由K-V构成的Tags、触发Span事件的相关Span-ID、IP地址信息组成。Span有start和stop两个动作，start一个Span，就必须在追踪处理完成后stop这个Span。在初始化一个Span时，创建一个root-span，它的Span-ID也是服务追踪的Trace-ID。</p>
@@ -34,6 +34,7 @@
 <p><img src="/2019/01/08/SpringCloud-Finchley-SR2配置Sleuth-Rabbit-Zipkin链路追踪/trace-id.png" alt="Trace Info propagation"></p>
 <p>Zipkin展示服务追踪痕迹</p>
 <p><img src="/2019/01/08/SpringCloud-Finchley-SR2配置Sleuth-Rabbit-Zipkin链路追踪/zipkin-ui.png" alt="Traces Info propagation"></p>
+<a id="more"></a>
 <h1><span id="sleuth-zipkin-elk架构图">Sleuth、Zipkin、ELK架构图</span></h1><p>SpringCloud-Sleuth、Zipkin、ELK通常三者一起配合使用，Zipkin负责对链路追踪的调用链依赖关系和服务之间请求等待时间信息进行监控，ELK可以对Sleuth日志进行存储、查询、分析。</p>
 <p><img src="/2019/01/08/SpringCloud-Finchley-SR2配置Sleuth-Rabbit-Zipkin链路追踪/springcloud-sleuth-zipkin-elk.png" alt=""></p>
 <h1><span id="sleuthzipkin实现服务追踪">Sleuth+Zipkin实现服务追踪</span></h1><p>示例使用springcloud实现的微服务应用3个，创建eureka-server、eureka-service-1、eureka-service-2三个微服务分布式应用，eureka-service-1中实现一个restcontroller接口，接口中eureka-service-1使用feignclient调用eureka-service-2的服务接口。痕迹数据发送给Zipkin有两种方式：HTTP和MQ。</p>
@@ -168,8 +169,18 @@
     
     <summary type="html">
     
-      &lt;h1&gt;&lt;span id=&quot;前言&quot;&gt;前言&lt;/span&gt;&lt;/h1&gt;&lt;p&gt;SpringCloud-Sleuth是SpringCloud分布式服务追踪解决方案的一种实现方式。它借鉴了Google的分布式服务追踪技术Dapper的学术术语。&lt;/p&gt;
-&lt;p&gt;Span是分布式追踪服务的基本工
+      &lt;h1 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h1&gt;&lt;p&gt;SpringCloud-Sleuth是SpringCloud分布式服务追踪解决方案的一种实现方式。它借鉴了Google的分布式服务追踪技术Dapper的学术术语。&lt;/p&gt;
+&lt;p&gt;Span是分布式追踪服务的基本工作单元，发送一个RPC请求并得到一个response响应是一个Span，一个Span由64位长度的字符串标识，其中包含描述信息、时间戳、由K-V构成的Tags、触发Span事件的相关Span-ID、IP地址信息组成。Span有start和stop两个动作，start一个Span，就必须在追踪处理完成后stop这个Span。在初始化一个Span时，创建一个root-span，它的Span-ID也是服务追踪的Trace-ID。&lt;/p&gt;
+&lt;p&gt;Trace是由一系列的Span组成的树状结构。&lt;/p&gt;
+&lt;p&gt;Annotation是用来记录事件的发生过的痕迹。每次发起请求，哪个是客户端，哪个是服务端，请求从哪里发起，从哪里结束都要通过指定具体的事件通知Zipkin（Zipkin负责对收集的服务追踪痕迹数据进行解析展示），从SpringCloud-Sleuth-2.0.x版本开始使用Brave框架收集事件痕迹数据，而不用像之前的版本那样指定事件就可以让Zipkin图形化的把事件展示出来。Annoatation包含以下几种内容：&lt;/p&gt;
+&lt;p&gt;cs（Client Sent）：客户端发起一个请求，cs标识一个Span的开始。&lt;/p&gt;
+&lt;p&gt;sr（Server Received）：服务端收到请求，并开始处理请求。当前的时间戳减去cs的时间戳，从而获取网络等待时间。&lt;/p&gt;
+&lt;p&gt;ss（Server Sent）：标记服务端处理完请求，当前时间宠减去sr时间戳，得到服务端处理请求的时间。&lt;/p&gt;
+&lt;p&gt;cr（Client Received）：标记Span结束完成，客户端已经成功接收到服务端的响应。减去cs时间戳，得到整个请求从发起到接收到服务端响应整个过程的耗时。&lt;/p&gt;
+&lt;p&gt;下图展示了在一个应用系统中，Anotation、Span、Trace信息在系统的微服务中的创建和传递过程。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/2019/01/08/SpringCloud-Finchley-SR2配置Sleuth-Rabbit-Zipkin链路追踪/trace-id.png&quot; alt=&quot;Trace Info propagation&quot;&gt;&lt;/p&gt;
+&lt;p&gt;Zipkin展示服务追踪痕迹&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/2019/01/08/SpringCloud-Finchley-SR2配置Sleuth-Rabbit-Zipkin链路追踪/zipkin-ui.png&quot; alt=&quot;Traces Info propagation&quot;&gt;&lt;/p&gt;
     
     </summary>
     

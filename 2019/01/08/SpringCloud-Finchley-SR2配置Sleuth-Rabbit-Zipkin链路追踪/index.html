@@ -126,7 +126,7 @@
 <meta property="og:image" content="http://www.forwardlee.com/2019/01/08/SpringCloud-Finchley-SR2配置Sleuth-Rabbit-Zipkin链路追踪/zipkin-svc-3.png">
 <meta property="og:image" content="http://www.forwardlee.com/2019/01/08/SpringCloud-Finchley-SR2配置Sleuth-Rabbit-Zipkin链路追踪/kibana-index-pattern.png">
 <meta property="og:image" content="http://www.forwardlee.com/2019/01/08/SpringCloud-Finchley-SR2配置Sleuth-Rabbit-Zipkin链路追踪/kibana-discover.png">
-<meta property="og:updated_time" content="2019-03-14T06:46:49.832Z">
+<meta property="og:updated_time" content="2019-03-14T06:48:58.066Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="SpringCloud Finchley.SR2配置Sleuth+Rabbit+Zipkin+ELK链路追踪">
 <meta name="twitter:description" content="前言SpringCloud-Sleuth是SpringCloud分布式服务追踪解决方案的一种实现方式。它借鉴了Google的分布式服务追踪技术Dapper的学术术语。 Span是分布式追踪服务的基本工作单元，发送一个RPC请求并得到一个response响应是一个Span，一个Span由64位长度的字符串标识，其中包含描述信息、时间戳、由K-V构成的Tags、触发Span事件的相关Span-ID、I">
@@ -451,6 +451,7 @@
 <p><img src="/2019/01/08/SpringCloud-Finchley-SR2配置Sleuth-Rabbit-Zipkin链路追踪/trace-id.png" alt="Trace Info propagation"></p>
 <p>Zipkin展示服务追踪痕迹</p>
 <p><img src="/2019/01/08/SpringCloud-Finchley-SR2配置Sleuth-Rabbit-Zipkin链路追踪/zipkin-ui.png" alt="Traces Info propagation"></p>
+<a id="more"></a>
 <h1><span id="sleuth-zipkin-elk架构图">Sleuth、Zipkin、ELK架构图</span></h1><p>SpringCloud-Sleuth、Zipkin、ELK通常三者一起配合使用，Zipkin负责对链路追踪的调用链依赖关系和服务之间请求等待时间信息进行监控，ELK可以对Sleuth日志进行存储、查询、分析。</p>
 <p><img src="/2019/01/08/SpringCloud-Finchley-SR2配置Sleuth-Rabbit-Zipkin链路追踪/springcloud-sleuth-zipkin-elk.png" alt=""></p>
 <h1><span id="sleuthzipkin实现服务追踪">Sleuth+Zipkin实现服务追踪</span></h1><p>示例使用springcloud实现的微服务应用3个，创建eureka-server、eureka-service-1、eureka-service-2三个微服务分布式应用，eureka-service-1中实现一个restcontroller接口，接口中eureka-service-1使用feignclient调用eureka-service-2的服务接口。痕迹数据发送给Zipkin有两种方式：HTTP和MQ。</p>
